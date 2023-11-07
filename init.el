@@ -133,11 +133,11 @@
 
 ;; set header line
 (setq-default header-line-format
-	      `(""
-		mode-line-front-space
-		"Welcode to Emacs"
-		mode-line-end-spaces
-		))
+							`(""
+								mode-line-front-space
+								"Welcome to Emacs"
+								mode-line-end-spaces
+								))
 
 
 ;; scroll
