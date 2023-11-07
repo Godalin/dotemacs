@@ -1,0 +1,14 @@
+/*
+
+!.gitignore
+
+!early-init.el
+!init.el
+!/lisp
+
+!/eshell
+/eshell/*
+!/eshell/login
+!/eshell/profile
+
+!start.org

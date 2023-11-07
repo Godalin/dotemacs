@@ -1,0 +1,25 @@
+#+TITLE: Start Your Journey With Emacs!
+#+AUTHOR: Linyu Yang
+
+* Configuration Files
+
+** Emacs
+
+[[~/.emacs.d/init.el]]
+[[~/.emacs.d/lisp/init-packages.el]]
+[[~/.emacs.d/lisp/init-keymaps.el]]
+
+[[~/.emacs.d/lisp/lang/init-haskell.el]]
+[[~/.emacs.d/lisp/lang/init-racket.el]]
+[[~/.emacs.d/lisp/lang/init-tex.el]]
+
+** XMonad
+
+[[~/.config/xmonad]]
+[[~/.config/xmonad/Main.hs]]
+
+** XMobar
+
+[[~/.config/xmobar/xmobar.hs]]
+
+* Projects
