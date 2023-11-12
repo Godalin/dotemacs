@@ -4,34 +4,35 @@
 
 
 (use-package tuareg
-  :ensure t
   :defer t)
 
 
+;; lsp intergation
 (use-package merlin
-  :ensure t
   :defer t
   :after tuareg
-  :init
-  ;; (setq-default merlin-command "~/.opam/default/bin/ocamlmerlin")
-  :config
-  (use-package merlin-iedit
-    :disabled
-    :ensure t
-    :defer t)
-  (use-package merlin-company
-    :ensure t
-    :defer t)
   :hook
   (tuareg-mode . merlin-mode)
   (caml-mode . merlin-mode))
 
 
+;; merlin & company
+(use-package merlin-company
+	:after (merlin company)
+  :defer t)
+
+
+;; easy opam switch
 (use-package opam-switch-mode
   :ensure t
   :defer t
   :hook
   ((coq-mode tuareg-mode) . opam-switch-mode))
+
+
+;; dune config files
+(use-package dune
+	:defer t)
 
 
 (provide 'init-ocaml)

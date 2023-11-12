@@ -1,8 +1,11 @@
 ;;; emacs as a window manager
 (use-package exwm
   :ensure t
-  :config
+	:hook
+	(after-init . display-time-mode)
+	(after-init . display-battery-mode)
 
+  :config
   (setq exwm-workspace-number 9)
 
   ;; to manage the windows (renaming)
@@ -10,19 +13,19 @@
             (lambda ()
               (unless (or (string-prefix-p "sun-awt-X11-" exwm-instance-name)
                           (string= "gimp" exwm-instance-name))
-		(exwm-workspace-rename-buffer exwm-class-name))))
+								(exwm-workspace-rename-buffer exwm-class-name))))
   (add-hook 'exwm-update-title-hook
             (lambda ()
               (when (or (not exwm-instance-name)
-			(string-prefix-p "sun-awt-X11-" exwm-instance-name)
-			(string= "gimp" exwm-instance-name))
-		(exwm-workspace-rename-buffer exwm-title))))
+												(string-prefix-p "sun-awt-X11-" exwm-instance-name)
+												(string= "gimp" exwm-instance-name))
+								(exwm-workspace-rename-buffer exwm-title))))
 
   ;; keybindings
   (setq exwm-input-global-keys
-	`(
-	  ;; rofi
-	  ([?\s-p] . (lambda () (interactive) (shell-command "rofi -drun")))
+				`(
+					;; rofi
+					([?\s-p] . (lambda () (interactive) (shell-command "rofi -drun")))
           ;; Bind "s-r" to exit char-mode and fullscreen mode.
           ([?\s-r] . exwm-reset)
           ;; Bind "s-w" to switch workspace interactively.
@@ -30,19 +33,19 @@
           ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
           ,@(mapcar (lambda (i)
                       `(,(kbd (format "s-%d" i)) .
-			(lambda ()
+												(lambda ()
                           (interactive)
                           (exwm-workspace-switch-create ,i))))
                     (number-sequence 0 9))
           ;; Bind "s-&" to launch applications ('M-&' also works if the output
           ;; buffer does not bother you).
           ([?\s-&] . (lambda (command)
-		       (interactive (list (read-shell-command "$ ")))
-		       (start-process-shell-command command nil command)))
+											 (interactive (list (read-shell-command "$ ")))
+											 (start-process-shell-command command nil command)))
           ;; Bind "s-<f2>" to "slock", a simple X display locker.
           ([s-f2] . (lambda ()
-		      (interactive)
-		      (start-process "" nil "/usr/bin/slock")))))
+											(interactive)
+											(start-process "" nil "/usr/bin/slock")))))
 
 
   ;; simulation keys
@@ -74,11 +77,11 @@
 
   (require 'exwm-randr)
   (setq exwm-randr-workspace-monitor-plist
-	'(0 "eDP-1" 1 "DP-1-0"))
+				'(0 "eDP-1" 1 "DP-1-0"))
   (add-hook 'exwm-randr-screen-change-hook
-	    (lambda ()
-	      (start-process-shell-command
-	       "autorandr" nil "autorandr -l wide")))
+						(lambda ()
+							(start-process-shell-command
+							 "autorandr" nil "autorandr -l wide")))
   (exwm-randr-enable)
 
   (require 'exwm-systemtray)
@@ -87,5 +90,4 @@
 
   ;; (require 'exwm-config)
   ;; (exwm-config-example)
-  (exwm-enable)
-  )
+  (exwm-enable))

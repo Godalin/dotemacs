@@ -5,14 +5,19 @@
 
 ;; set gc
 (setq gc-cons-threshold most-positive-fixnum)
-(add-hook 'after-init-hook #'(lambda () (setq gc-cons-threshold 800000)))
+(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
 
 
 ;; ui settings
 (add-to-list 'default-frame-alist '(tool-bar-mode . nil))
 (add-to-list 'default-frame-alist '(menu-bar-mode . nil))
 (add-to-list 'default-frame-alist '(scroll-bar-mode . nil))
-(add-to-list 'default-frame-alist '(alpha-background . 85))
+(add-to-list 'default-frame-alist '(alpha-background . 90))
+
+
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
 
 (provide 'early-init-file)

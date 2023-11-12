@@ -23,6 +23,12 @@
 
   :hook
   (evil-emacs-state-entry . evil-exit)
+	(evil-normal-state-entry . (lambda ()
+															 (setq display-line-numbers-type 'relative)
+															 (display-line-numbers-mode)))
+	(evil-normal-state-exit . (lambda ()
+															(setq display-line-numbers-type t)
+															(display-line-numbers-mode)))
 
 	:init
   (setq evil-toggle-key "C-z C-z"
@@ -36,8 +42,7 @@
 				evil-shift-round t
 				evil-indent-convert-tabs t
 
-				evil-move-beyond-eol nil
-				)
+				evil-move-beyond-eol nil)
 
   (defun evil-exit ()
     "command to exit evil mode"
@@ -51,15 +56,14 @@
   (evil-define-key '(normal insert visual replace operator motion emacs)
 									 'global (kbd "C-g") 'evil-emacs-state)
 
-
   ;; evil-surround
   (use-package evil-surround
     :ensure t
     :hook
     (evil-mode . global-evil-surround-mode))
 
-  ;; change mode-line color by evil state
-	)
+	(evil-mode)
+	(evil-mode -1))
 
 
 (provide 'init-evil)
