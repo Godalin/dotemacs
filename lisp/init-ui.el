@@ -13,7 +13,7 @@
 	(modus-themes-syntax '(faint yellow-comments green-strings alt-syntax))
 	(modus-themes-mixed-fonts nil)
 	(modus-themes-links '(neutral-underline faint bold italic background))
-	(modus-themes-prompts '(background bold intense))
+	(modus-themes-prompts '(bold intense))
   (modus-themes-mode-line '(accented 3d borderless (padding 2) (height 1.0)))
 	(modus-themes-tab-accented t)
 	(modus-themes-completions '((matches . (extrabold background intense))
@@ -21,7 +21,7 @@
 															(popup . (accented))))
 	(modus-themes-fringe 'intense)
 	(modus-themes-lang-checkers '(straight-underline text-also background faint))
-  (modus-themes-hl-line '(accented intense underline))
+  (modus-themes-hl-line '(accented intense))
 	(modus-themes-subtle-line-numbers t)
 	(modus-themes-intense-mouseovers t)
 	(modus-themes-markup '(intense background))
@@ -73,6 +73,13 @@
 	(setq dashboard-center-content t)
   :config
   (dashboard-setup-startup-hook))
+
+
+;; sml
+(use-package smart-mode-line
+	:disabled
+	:config
+	(sml/setup))
 
 
 (provide 'init-ui)

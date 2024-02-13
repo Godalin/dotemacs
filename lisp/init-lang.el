@@ -7,16 +7,22 @@
 						 (expand-file-name "lisp/lang" user-emacs-directory))
 
 
-(require 'init-haskell)
-(require 'init-racket)
-(require 'init-tex)
-(require 'init-sml)
-(require 'init-ocaml)
+(use-package init-haskell :ensure nil)
+(use-package init-racket :ensure nil)
+(use-package init-tex :ensure nil)
+(use-package init-sml :ensure nil)
+(use-package init-ocaml :ensure nil)
 
 
 ;; agda
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
+
+(setq auto-mode-alist
+   (append
+     '(("\\.agda\\'" . agda2-mode)
+       ("\\.lagda.md\\'" . agda2-mode))
+     auto-mode-alist))
 
 
 ;; markdown
@@ -51,10 +57,44 @@
   (setq inferior-lisp-program "sbcl"))
 
 
+;; elixir mode
+(use-package elixir-mode
+	:defer t)
+
+
+;; lean-4
+(use-package lean4-mode
+	:defer t
+	:vc (:fetcher github :repo leanprover/lean4-mode))
+
+
 ;; edit parentheses
 (use-package paredit
   :bind
   ("<f9>" . paredit-mode))
+
+
+;; kmonad kbd
+(use-package kbd-mode
+	:defer t
+	:vc (:fetcher github :repo kmonad/kbd-mode)
+	:custom
+  (kbd-mode-kill-kmonad "pkill -9 kmonad")
+  (kbd-mode-start-kmonad "kmonad ~/.config/kmonad/best.kbd"))
+
+
+;; typst ts mode
+(use-package typst-ts-mode
+	:defer t
+	:vc (:fetcher sourcehut :repo "meow_king/typst-ts-mode")
+	:custom
+	(typst-ts-mode-watch-options "--open")
+	(typst-ts-mode-indent-offset 2))
+
+
+;; zig mode
+(use-package zig-mode
+	:defer t)
 
 
 (provide 'init-lang)

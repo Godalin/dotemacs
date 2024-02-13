@@ -1,4 +1,4 @@
-;;; package --- Initiation of Ocaml Language
+;;; package --- Initiation for OCaml Language
 ;;; Commentary:
 ;;; Code:
 
@@ -28,6 +28,11 @@
   :defer t
   :hook
   ((coq-mode tuareg-mode) . opam-switch-mode))
+
+
+;; formatter
+(use-package ocamlformat
+	:defer t)
 
 
 ;; dune config files

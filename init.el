@@ -32,6 +32,13 @@
 		(package-refresh-contents)))
 
 
+;; vc use-package, will be removed after emacs 30
+(unless (package-installed-p 'vc-use-package)
+	(package-vc-install "https://github.com/slotThe/vc-use-package.git"))
+(use-package vc-use-package
+	:vc (:fetcher github :repo slotThe/vc-use-package))
+
+
 ;; yes or no
 (use-package emacs
 	:ensure nil
@@ -50,12 +57,12 @@
 	(setq x-select-enable-clipboard-manager t))
 
 
-;; fonts (faces)
-(set-face-attribute 'default nil
-                    :family "Julia Mono"
-                    :height 160
-                    :weight 'normal
-                    :width  'normal)
+;; faces
+;; (set-face-attribute 'default nil
+;;                     :family "Julia Mono"
+;;                     :height 160
+;;                     :weight 'normal
+;;                     :width  'normal)
 (set-fontset-font "fontset-default" 'han "LXGW Wenkai")
 (set-fontset-font "fontset-default" 'symbol "FontAwesome")
 
@@ -65,14 +72,24 @@
   '((t :family "GoMono Nerd Font"))
   "Face for vterm.")
 
-(add-hook 'term-mode-hook 'my/set-term-font)
-
 
 (defun my/set-term-font ()
 	"Set good fonts for terminal modes."
 	(interactive)
 	(set (make-local-variable 'buffer-face-mode-face) 'terminal)
 	(buffer-face-mode))
+
+
+(use-package term
+	:ensure nil
+	:hook
+	(term-mode . my/set-term-font)
+	:bind
+	(:map
+	 term-mode-map
+	 ("C-d" . (lambda () (interactive)
+							(term-handle-exit)
+							(kill-buffer)))))
 
 
 ;; input method
@@ -92,14 +109,14 @@
 (use-package dired
 	:ensure nil
 	:custom
+	(dired-listing-switches "-aBhl --group-directories-first")
 	(dired-kill-when-opening-new-dired-buffer t))
 
 
-;; isearch
-(use-package isearch
+(use-package repeat
 	:ensure nil
-	:custom
-	(isearch-lazy-count t))
+	:hook
+	(after-init . repeat-mode))
 
 
 ;; use visual lines
@@ -108,7 +125,6 @@
 	:init
 	(setq line-move-visual t)
 	(setq track-eol t)
-	(setq next-line-add-newlines nil)
 	:hook
 	(after-init . global-visual-line-mode))
 
@@ -163,16 +179,29 @@
 	(after-init . auto-save-visited-mode)
 	(after-init . auto-image-file-mode)
 	(after-init . global-auto-revert-mode)
-	(after-init . fido-vertical-mode))
+	(after-init . save-place-mode)
+	;; (after-init . fido-vertical-mode)
+	)
+
+
+(use-package so-long
+  :ensure nil
+  :hook
+	(after-init . global-so-long-mode))
 
 
 ;; programming mode
+(setq-default tab-width 2)
+
 
 ;; edit parens (lisp code)
-(setq-default tab-width 2)
-(show-paren-mode)
-(setq show-paren-style 'expression)
-(electric-pair-mode)
+(use-package emacs
+	:ensure nil
+	:init
+	(setq show-paren-style 'expression)
+	:hook
+	(after-init . show-paren-mode)
+	(after-init . electric-pair-mode))
 
 
 ;; programming mode hooks
@@ -185,7 +214,7 @@
 
 
 ;; set abbrev mode
-(use-package emacs
+(use-package abbrev
 	:ensure nil
 	:config
 	(setq-default abbrev-mode t)
@@ -203,28 +232,25 @@
 
 ;; tree sitter
 (use-package treesit-auto
-	:init
-	(setq treesit-auto-install 'prompt)
+	:custom
+	(treesit-auto-install 'prompt)
   :config
   (global-treesit-auto-mode))
-
-
-(use-package saveplace
-	:ensure nil
-	:hook
-	(after-init . save-place-mode))
 
 
 ;; file management
 (use-package recentf
 	:ensure nil
-	:init
-	(setq recentf-max-menu-items 10)
+	:custom
+	(recentf-max-menu-items 10)
 	:hook
 	(after-init . recentf-mode))
 
 
 (setq make-backup-files nil)
+
+
+(keymap-global-set "<remap> <list-buffers>" 'ibuffer-other-window)
 
 
 (defun my/with-face (str &rest face-plist)
@@ -266,17 +292,17 @@
   :custom
   (eshell-prompt-regexp "^[⟩⟫] ")
   (eshell-prompt-function 'my/eshell-prompt)
-
 	:hook
-	(eshell-mode . (lambda () (keymap-set eshell-mode-map "C-d"
+	(eshell-mode . (lambda ()
+									 (keymap-set eshell-mode-map "C-d"
 																	 (lambda () (interactive)
 																		 (eshell-return-to-prompt)
 																		 (end-of-buffer)
 																		 (eshell-kill-input)
 																		 (insert "exit")
 																		 (eshell-send-input)
-																		 (message "eshell")))))
-	)
+																		 (message "eshell")))
+									 (display-line-numbers-mode -1))))
 
 
 ;; email settings
@@ -291,9 +317,9 @@
 				smtpmail-stream-type 'ssl))
 
 
+;; add local config path
 (add-to-list 'load-path
 						 (expand-file-name "lisp" user-emacs-directory))
-
 
 ;; ui settings
 (use-package init-ui

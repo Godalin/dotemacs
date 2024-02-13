@@ -12,6 +12,11 @@
 ;; keycast
 (use-package keycast
   :demand t
+	:custom-face
+	(keycast-key
+	 ((t (:height 120))))
+	(keycast-command
+	 ((t (:height 120))))
   :hook
   (tab-bar-mode . keycast-tab-bar-mode))
 
@@ -49,38 +54,38 @@
 
 
 ;; ivy-counsel-swiper completion
-;; (use-package counsel
-;;   :ensure t
-;;   :init
-;;   (setq ivy-use-virtual-buffers t)
-;;   (setq ivy-count-format "(%d/%d)")
-;;   :config
-;;   (ivy-mode 1)
-;;   :bind
-;;   ("C-s" . 'swiper-isearch)
-;;   ("M-x" . 'counsel-M-x)
-;;   ("C-x C-f" . 'counsel-find-file)
-;;   ("M-y" . 'counsel-yank-pop)
-;;   ("<f1> f" . 'counsel-describe-function)
-;;   ("<f1> v" . 'counsel-describe-variable)
-;;   ("<f1> l" . 'counsel-find-library)
-;;   ("<f2> i" . 'counsel-info-lookup-symbol)
-;;   ("<f2> u" . 'counsel-unicode-char)
-;;   ("<f2> j" . 'counsel-set-variable)
-;;   ("C-x b" . 'ivy-switch-buffer)
-;;   ("C-c v" . 'ivy-push-view)
-;;   ("C-c V" . 'ivy-pop-view)
-;;   )
+(use-package counsel
+	;; :disabled
+  :custom
+  (ivy-use-virtual-buffers t)
+  (ivy-count-format "%d/%d")
+  :hook
+  (after-init . ivy-mode)
+  :bind
+  ("C-s" . 'swiper-isearch)
+  ("M-x" . 'counsel-M-x)
+  ("C-x C-f" . 'counsel-find-file)
+  ("M-y" . 'counsel-yank-pop)
+  ("<f1> f" . 'counsel-describe-function)
+  ("<f1> v" . 'counsel-describe-variable)
+  ("<f1> l" . 'counsel-find-library)
+  ("<f2> i" . 'counsel-info-lookup-symbol)
+  ("<f2> u" . 'counsel-unicode-char)
+  ("<f2> j" . 'counsel-set-variable)
+  ("C-x b" . 'ivy-switch-buffer)
+  ("C-c v" . 'ivy-push-view)
+  ("C-c V" . 'ivy-pop-view)
+	(:map
+	 ivy-minibuffer-map
+	 ("M-<return>" . 'ivy-immediate-done))
+  )
 
-
-;;; Programming Languages
 
 ;; snippet
 (use-package yasnippet
   :defer t
   :config
   (yas-global-mode))
-
 
 (use-package yasnippet-snippets
   :after yasnippet)
@@ -90,6 +95,15 @@
 (use-package magit
   :custom
   (magit-view-git-manual-method 'woman))
+
+
+;; pdf
+(use-package pdf-tools
+	:config
+	(pdf-tools-install)
+	:hook
+	(pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
+	)
 
 
 (provide 'init-packages)
