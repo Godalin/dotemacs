@@ -83,11 +83,13 @@
 
 ;; snippet
 (use-package yasnippet
+	:disabled t
   :defer t
   :config
   (yas-global-mode))
 
 (use-package yasnippet-snippets
+	:disabled t
   :after yasnippet)
 
 

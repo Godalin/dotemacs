@@ -1,4 +1,4 @@
-;;; package --- init.el
+;;; package --- init.el  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -32,13 +32,6 @@
 		(package-refresh-contents)))
 
 
-;; vc use-package, will be removed after emacs 30
-(unless (package-installed-p 'vc-use-package)
-	(package-vc-install "https://github.com/slotThe/vc-use-package.git"))
-(use-package vc-use-package
-	:vc (:fetcher github :repo slotThe/vc-use-package))
-
-
 ;; yes or no
 (use-package emacs
 	:ensure nil
@@ -53,16 +46,11 @@
 	:init
 	(setq inhibit-startup-screen t)
 	(setq initial-scratch-message
-				";; Welcome to Godalin's Emacs\n\n")
+				";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
 	(setq x-select-enable-clipboard-manager t))
 
 
-;; faces
-;; (set-face-attribute 'default nil
-;;                     :family "Julia Mono"
-;;                     :height 160
-;;                     :weight 'normal
-;;                     :width  'normal)
+
 (set-fontset-font "fontset-default" 'han "LXGW Wenkai")
 (set-fontset-font "fontset-default" 'symbol "FontAwesome")
 
@@ -80,6 +68,7 @@
 	(buffer-face-mode))
 
 
+;; term mode
 (use-package term
 	:ensure nil
 	:hook
@@ -104,6 +93,13 @@
 	:hook
 	(after-init . winner-mode))
 
+(use-package emacs
+	:disabled
+	:ensure nil
+	:custom
+	(split-height-threshold nil)
+	(split-width-threshold 0))
+
 
 ;; dired
 (use-package dired
@@ -113,20 +109,11 @@
 	(dired-kill-when-opening-new-dired-buffer t))
 
 
+;; repeat mode
 (use-package repeat
 	:ensure nil
 	:hook
 	(after-init . repeat-mode))
-
-
-;; use visual lines
-(use-package emacs
-	:ensure nil
-	:init
-	(setq line-move-visual t)
-	(setq track-eol t)
-	:hook
-	(after-init . global-visual-line-mode))
 
 
 ;; display
@@ -150,12 +137,12 @@
 
 
 ;; set header line
-(setq-default header-line-format
-							`("%e"
-								mode-line-front-space
-								"Welcome to Emacs"
-								mode-line-end-spaces
-								))
+;; (setq-default header-line-format
+;; 							`("%e"
+;; 								mode-line-front-space
+;; 								"Welcome to Emacs"
+;; 								mode-line-end-spaces
+;; 								))
 
 
 ;; scroll
@@ -169,21 +156,37 @@
 					(lambda () (setq show-trailing-whitespace t
 											indicate-empty-lines t)))
 
+
+;; visual line mode
 (use-package emacs
 	:ensure nil
 	:custom
-	(global-display-line-numbers-type 'relative)
+	(line-move-visual t)
+	(track-eol t)
+	(visual-line-fringe-indicators t)
+	(word-wrap-by-category t)
 	:hook
-	(after-init . global-display-line-numbers-mode)
+	(prog-mode . global-visual-line-mode))
+
+
+;; customization of display
+(use-package emacs
+	:ensure nil
+	:custom
+	(display-line-numbers-type 'relative)
+	:hook
 	(after-init . global-hl-line-mode)
 	(after-init . auto-save-visited-mode)
 	(after-init . auto-image-file-mode)
 	(after-init . global-auto-revert-mode)
 	(after-init . save-place-mode)
+	(prog-mode . display-line-numbers-mode)
+
 	;; (after-init . fido-vertical-mode)
 	)
 
 
+;; so long mode
 (use-package so-long
   :ensure nil
   :hook
@@ -191,7 +194,10 @@
 
 
 ;; programming mode
-(setq-default tab-width 2)
+(use-package emacs
+	:ensure nil
+	:custom
+	(tab-width 2))
 
 
 ;; edit parens (lisp code)
@@ -234,8 +240,8 @@
 (use-package treesit-auto
 	:custom
 	(treesit-auto-install 'prompt)
-  :config
-  (global-treesit-auto-mode))
+  :hook
+  (after-init . global-treesit-auto-mode))
 
 
 ;; file management
@@ -295,14 +301,13 @@
 	:hook
 	(eshell-mode . (lambda ()
 									 (keymap-set eshell-mode-map "C-d"
-																	 (lambda () (interactive)
-																		 (eshell-return-to-prompt)
-																		 (end-of-buffer)
-																		 (eshell-kill-input)
-																		 (insert "exit")
-																		 (eshell-send-input)
-																		 (message "eshell")))
-									 (display-line-numbers-mode -1))))
+															 (lambda () (interactive)
+																 (eshell-return-to-prompt)
+																 (end-of-buffer)
+																 (eshell-kill-input)
+																 (insert "exit")
+																 (eshell-send-input)
+																 (message "eshell"))))))
 
 
 ;; email settings
@@ -315,6 +320,9 @@
 				smtpmail-smtp-server "smtp.qq.com"
 				smtpmail-smtp-service 465
 				smtpmail-stream-type 'ssl))
+
+
+;;; Other files
 
 
 ;; add local config path
@@ -352,4 +360,6 @@
 
 
 (provide 'init)
+
+
 ;;; init.el ends here

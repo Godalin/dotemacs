@@ -1,4 +1,4 @@
-;;; package -- init-ui.el
+;;; package -- init-ui.el  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -37,13 +37,13 @@
 													 (t . (overline semibold))))
   :config
   (load-theme 'modus-vivendi)
-
 	;; get the default mode-line color
 	(setq-default default-mode-line-color
 								(cons (face-background 'mode-line)
 											(face-foreground 'mode-line)))
   :bind
   ("<f12>" . 'modus-themes-toggle))
+
 
 
 (defun my/set-modeline ()
@@ -65,6 +65,7 @@
 		(set-face-foreground 'mode-line (cdr color))))
 
 
+
 ;; dashboard
 (use-package dashboard
 	:disabled
@@ -75,11 +76,13 @@
   (dashboard-setup-startup-hook))
 
 
+
 ;; sml
 (use-package smart-mode-line
 	:disabled
 	:config
 	(sml/setup))
+
 
 
 (provide 'init-ui)

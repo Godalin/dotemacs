@@ -2,19 +2,19 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; 3rd Packages
 
 ;; crux for edit enhancement
 (use-package crux
 	:bind
 	("C-c o" . 'crux-open-with)
-	("C-k" . 'crux-smart-kill-line)
-	)
+	("C-k" . 'crux-smart-kill-line))
 
 
 ;; hungry delete
 (use-package hungry-delete
 	:bind
-	("C-<backspace>" .  'kill-word-or-whitespace-backward))
+	("C-<backspace>" . 'kill-word-or-whitespace-backward))
 
 
 ;; edit: drag lines up and down
@@ -30,33 +30,68 @@
 	("M-o" . 'ace-window))
 
 
+;; edit parentheses
+(use-package paredit
+  :bind
+  (:map
+	 paredit-mode-map
+	 ("C-<left>" . nil)
+	 ("C-<right>" . nil)
+	 ;; slurping and barfing
+	 ("M-0" . 'paredit-forward-slurp-sexp)
+	 ("M-9" . 'paredit-backward-slurp-sexp)
+	 ("M-]" . 'paredit-forward-barf-sexp)
+	 ("M-[" . 'paredit-backward-barf-sexp))
+	:hook
+	(scheme-mode . paredit-mode)
+	(emacs-lisp-mode . paredit-mode)
+	(racket-mode . paredit-mode)
+	(dune-mode . paredit-mode))
+
+
+;;; Global Keybind Modify
+
+
+;; unbind all global C-num/M-num/C-M-num keys
+(dotimes (num 10)
+	(let ((C-num (format "C-%d" num))
+				(M-num (format "M-%d" num))
+				(C-M-num (format "C-M-%d" num)))
+		(keymap-global-unset C-num)
+		(keymap-global-unset M-num)
+		(keymap-global-unset C-M-num)))
+
+
 ;; fcitx and keyboard-quit
-(keymap-global-set "C-g" (defun keyboard-and-fcitx5-quit ()
-													 (interactive)
-													 (shell-command "fcitx5-remote -c")
-													 (keyboard-quit)))
+(keymap-global-set "C-g"
+									 (defun keyboard-and-fcitx5-quit ()
+										 (interactive)
+										 (shell-command "fcitx5-remote -c")
+										 (keyboard-quit)))
+
 
 ;; scroll operation
-(keymap-global-set "C-v" (defun scroll-up-3-lines () (interactive) (scroll-up-line 3)))
-(keymap-global-set "M-v" (defun scroll-down-3-lines () (interactive) (scroll-down-line 3)))
+;; (keymap-global-set "C-v" (defun scroll-up-3-lines () (interactive) (scroll-up-line 3)))
+;; (keymap-global-set "M-v" (defun scroll-down-3-lines () (interactive) (scroll-down-line 3)))
+
 
 ;; flymake
 (keymap-global-set "M-p" 'flymake-goto-prev-error)
 (keymap-global-set "M-n" 'flymake-goto-next-error)
 
+
 ;; flyspell
 (keymap-global-set "<f5>" 'flyspell-mode)
 
 
-;; custom system map (which are dangerous)
+;;; Custom System Map (which are dangerous)
+
 (defvar-keymap custom-system-map
   :prefix 'Custom-System-prefix
-  :doc "This map is for custom system functions such as reboot"
-
+  :doc "This map is for custom system functions such as reboot."
   ;; control emacs
   "C-r" 'restart-emacs
   "C-z" 'suspend-emacs
-
   ;; initiation files
   "C-c d" (defun open-init-dir      () (interactive) (dired "~/.emacs.d"))
   "C-c e" (defun open-init-evil     () (interactive) (find-file "~/.emacs.d/lisp/init-evil.el"))
@@ -68,51 +103,39 @@
   )
 
 
-;; custom function map
+;;; Custom Function Map
+
 (defvar-keymap custom-function-map
   :prefix 'Custom-Function-prefix
-  :doc "This map is for customization"
-
+  :doc "This map is for customization."
 	;; org bindings
   "o a" 'org-agenda
   "o c" 'org-capture
   "o l" 'org-store-link
-
 	"p" 'list-packages										;show all packages
-
   "r f" 'recentf-open										;recentf
   "r r" 'recentf-open-files
-
+	;; search
   "s" 'scratch-buffer										;scratch
-
+	;; whitespace
 	"w c" 'whitespace-mode
   "w w" 'delete-trailing-whitespace			;whitespace
-
+	;; terminals
   "x" 'term															;term
 	"z" 'eshell														;eshell
   )
-
 
 (keymap-global-set "C-z" 'Custom-Function-prefix)
 (keymap-global-set "C-z C-x" 'Custom-System-prefix)
 
 
-(defvar-keymap function-toggle-map
-	:prefix 'Function-Toggle-Prefix
-	:doc "This is a keymap for toggling some functions"
-	"q" 'paredit-mode
-	"p" 'modus-themes-toggle
-	)
-
-;; (keymap-global-set "C-m" 'Function-Toggle-Prefix)
-
-;; custom commands
+;;; Custom Commands
 
 
-;; configuration
+;; quickly open language configuration
 (defun open-init-language (lang)
   "Open a configuration file with the given language.
-LANG: The programming language"
+LANG: the programming language"
   (interactive "sSelect language: ")
   (let ((init-file (format "~/.emacs.d/lisp/lang/init-%s.el" lang)))
     (cond ((file-exists-p init-file) (find-file init-file))
@@ -121,6 +144,9 @@ LANG: The programming language"
 
 ;; best backward kill command
 (defun kill-word-or-whitespace-backward (n &optional killflag)
+	"Kill word if non-whitespace, or all whitespace if any.
+N
+KILLFLAG"
 	(interactive "p\nP")
 	(let ((last-char (preceding-char)))
 		(if (member last-char (list ?\s ?\n ?\t ?\v))
@@ -129,4 +155,5 @@ LANG: The programming language"
 
 
 (provide 'init-keymaps)
+
 ;;; init-keymaps.el ends here

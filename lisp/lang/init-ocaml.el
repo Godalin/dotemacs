@@ -24,7 +24,6 @@
 
 ;; easy opam switch
 (use-package opam-switch-mode
-  :ensure t
   :defer t
   :hook
   ((coq-mode tuareg-mode) . opam-switch-mode))
