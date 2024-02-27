@@ -24,6 +24,11 @@
 				 ("\\.lagda.md\\'" . agda2-mode))
 			 auto-mode-alist))
 
+;; (keymap-set agda2-mode-map "C-c C-l"
+;; 						(defun agda2-save-and-load ()
+;; 							(interactive)
+;; 							(save-buffer)
+;; 							(agda2-load)))
 
 ;;; markdown
 (use-package markdown-mode

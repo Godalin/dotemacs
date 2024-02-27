@@ -9,7 +9,8 @@
   (setq TeX-parse-self t)
   (setq-default TeX-master nil)
 
-  (push (list 'output-pdf "Zathura") TeX-view-program-selection))
+  ;; (push (list 'output-pdf "Zathura") TeX-view-program-selection)
+	)
 
 
 (use-package cdlatex

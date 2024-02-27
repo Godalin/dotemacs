@@ -117,6 +117,8 @@
   "r r" 'recentf-open-files
 	;; search
   "s" 'scratch-buffer										;scratch
+	;; tab line mode
+	"t t" 'tab-line-mode									;toggle tab line
 	;; whitespace
 	"w c" 'whitespace-mode
   "w w" 'delete-trailing-whitespace			;whitespace
