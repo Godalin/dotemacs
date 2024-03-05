@@ -104,25 +104,25 @@
 	:after prolog-mode)
 
 
-;;; lean-4
+;; lean-4
 (use-package lean4-mode
 	:defer t
-	:vc (:url "https://github.com/leanprover/lean4-mode"))
+	:vc (:fetcher github :repo leanprover/lean4-mode))
 
 
-;;; kmonad kbd
+;; kmonad kbd
 (use-package kbd-mode
 	:defer t
-	:vc (:url "https://github.com/kmonad/kbd-mode")
+	:vc (:fetcher github :repo kmonad/kbd-mode)
 	:custom
   (kbd-mode-kill-kmonad "pkill -9 kmonad")
   (kbd-mode-start-kmonad "kmonad ~/.config/kmonad/best.kbd"))
 
 
-;;; typst ts mode
+;; typst ts mode
 (use-package typst-ts-mode
 	:defer t
-	:vc (:url "https://git.sr.ht/~meow_king/typst-ts-mode")
+	:vc (:fetcher sourcehut :repo "meow_king/typst-ts-mode")
 	:custom
 	(typst-ts-mode-watch-options "--open")
 	(typst-ts-mode-indent-offset 2))
