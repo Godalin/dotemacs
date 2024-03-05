@@ -32,6 +32,13 @@
 		(package-refresh-contents)))
 
 
+;; vc use-package, will be removed after emacs 30
+(unless (package-installed-p 'vc-use-package)
+	(package-vc-install "https://github.com/slotThe/vc-use-package.git"))
+(use-package vc-use-package
+	:vc (:fetcher github :repo slotThe/vc-use-package))
+
+
 ;; yes or no
 (use-package emacs
 	:ensure nil
