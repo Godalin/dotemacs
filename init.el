@@ -20,10 +20,8 @@
 (use-package package
 	:ensure nil
   :config
-  (setq package-archives
-				'(("gnu"    . "http://mirrors.tuna.tsinghua.edu.cn/elpa/gnu/")
-					("nongnu" . "http://mirrors.tuna.tsinghua.edu.cn/elpa/nongnu/")
-					("melpa"  . "http://mirrors.tuna.tsinghua.edu.cn/elpa/melpa/")))
+  (add-to-list 'package-archives
+               '("melpa" . "https://melpa.org/packages/"))
 
   ;; if not initialized then initialize it
   (unless (bound-and-true-p package--initialized)
