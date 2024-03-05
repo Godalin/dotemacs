@@ -62,16 +62,16 @@
 	:defer t)
 
 
-;; lean-4
-(use-package lean4-mode
-	:defer t
-	:vc (:fetcher github :repo leanprover/lean4-mode))
-
-
 ;; edit parentheses
 (use-package paredit
   :bind
   ("<f9>" . paredit-mode))
+
+
+;; lean-4
+(use-package lean4-mode
+	:defer t
+	:vc (:fetcher github :repo leanprover/lean4-mode))
 
 
 ;; kmonad kbd
