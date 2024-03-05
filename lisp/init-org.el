@@ -61,6 +61,7 @@
 
 ;; org-mode for notes: roam
 (use-package org-roam
+	:disabled
 	:defer t
 	:hook
 	(after-init . org-roam-db-autosync-mode)
@@ -70,6 +71,7 @@
 	(setq org-roam-directory (file-truename "~/org-roam")))
 
 (use-package org-roam-ui
+	:disabled
 	:defer t
 	:after org-roam)
 
