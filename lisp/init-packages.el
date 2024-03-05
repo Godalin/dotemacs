@@ -39,11 +39,10 @@
   :bind
   (:map
    company-active-map
-   ("RET"    . 'newline-and-indent)
-   ([return] . 'newline-and-indent)
+   ("RET"    . 'company-abort)
+   ([return] . 'company-abort)
    ("TAB"    . 'company-complete-selection)
-   ([tab]    . 'company-complete-selection))
-  )
+   ([tab]    . 'company-complete-selection)))
 
 
 ;; format-all (not completed)

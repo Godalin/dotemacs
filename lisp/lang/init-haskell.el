@@ -7,8 +7,6 @@
 (use-package haskell-mode
   :ensure t
   :defer t
-  :init
-  (setq haskell-tags-on-save t)
   :bind
   (:map
    haskell-mode-map			;haskell files

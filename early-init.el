@@ -18,7 +18,7 @@
 (add-to-list 'default-frame-alist '(font . "Julia Mono-16"))
 
 ;; full screen
-;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 
 ;; (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))

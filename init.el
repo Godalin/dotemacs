@@ -230,7 +230,15 @@
 ;; set eglot mode: lsp
 (use-package eglot
 	:ensure nil
+	;; :custom
+	;; (eglot-autoshutdown t)
+	;; (eglot-confirm-server-initiated-edits nil)
+	:config
+	(setq-default eglot-workspace-configuration
+								'((:haskell
+									 (:formattingProvider . "fourmolu"))))
   :bind
+	("C-c e r" . 'eglot-reconnect)
   ("C-c e s" . 'eglot-ensure)
   ("C-c e f" . 'eglot-format)
   ("C-c e e" . 'eglot-code-actions))

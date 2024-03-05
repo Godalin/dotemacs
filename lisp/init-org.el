@@ -5,8 +5,8 @@
 
 (use-package org
 	:ensure nil
-	:init
-	(setq org-hide-emphasis-markers t)
+	;; :init
+	;; (setq org-hide-emphasis-markers t)
 	:config
 	(setq org-format-latex-options
 				(plist-put org-format-latex-options :scale 2.0))
