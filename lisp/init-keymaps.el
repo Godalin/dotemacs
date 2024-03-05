@@ -30,6 +30,18 @@
 	("M-o" . 'ace-window))
 
 
+;;; Global Keymap Modifying
+
+;; new window and focus
+(keymap-global-set "C-x C-2" (defun split-window-focus-below ()
+                               (interactive)
+                               (split-window-below)
+                               (other-window 1)))
+(keymap-global-set "C-x C-3" (defun split-window-focus-right ()
+                               (interactive)
+                               (split-window-right)
+                               (other-window 1)))
+
 ;; fcitx and keyboard-quit
 (keymap-global-set "C-g" (defun keyboard-and-fcitx5-quit ()
 													 (interactive)
@@ -46,6 +58,9 @@
 
 ;; flyspell
 (keymap-global-set "<f5>" 'flyspell-mode)
+
+
+;;; Custom Keymaps
 
 
 ;; custom system map (which are dangerous)
