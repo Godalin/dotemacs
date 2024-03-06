@@ -1,4 +1,4 @@
-;;; package --- init.el
+;;; package --- init.el  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -292,13 +292,13 @@
   :hook
   (eshell-mode . (lambda ()
                    (keymap-set eshell-mode-map "C-d"
-                                   (lambda () (interactive)
-                                     (eshell-return-to-prompt)
-                                     (end-of-buffer)
-                                     (eshell-kill-input)
-                                     (insert "exit")
-                                     (eshell-send-input)
-                                     (message "eshell")))
+                               (lambda () (interactive)
+                                 (eshell-return-to-prompt)
+                                 (end-of-buffer)
+                                 (eshell-kill-input)
+                                 (insert "exit")
+                                 (eshell-send-input)
+                                 (message "eshell")))
                    (display-line-numbers-mode -1))))
 
 
