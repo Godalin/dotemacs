@@ -4,8 +4,7 @@
 
 
 (use-package sml-mode
-  :ensure t
-  )
+  :ensure t)
 
 
 (provide 'init-sml)

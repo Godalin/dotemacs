@@ -6,47 +6,47 @@
 
 ;; crux for edit enhancement
 (use-package crux
-	:bind
-	("C-c o" . 'crux-open-with)
-	("C-k" . 'crux-smart-kill-line))
+  :bind
+  ("C-c o" . 'crux-open-with)
+  ("C-k" . 'crux-smart-kill-line))
 
 
 ;; hungry delete
 (use-package hungry-delete
-	:bind
-	("C-<backspace>" . 'kill-word-or-whitespace-backward))
+  :bind
+  ("C-<backspace>" . 'kill-word-or-whitespace-backward))
 
 
 ;; edit: drag lines up and down
 (use-package drag-stuff
-	:bind
-	("M-<up>" . 'drag-stuff-up)
-	("M-<down>" . 'drag-stuff-down))
+  :bind
+  ("M-<up>" . 'drag-stuff-up)
+  ("M-<down>" . 'drag-stuff-down))
 
 
 ;; window movement
 (use-package ace-window
-	:bind
-	("M-o" . 'ace-window))
+  :bind
+  ("M-o" . 'ace-window))
 
 
 ;; edit parentheses
 (use-package paredit
   :bind
   (:map
-	 paredit-mode-map
-	 ("C-<left>" . nil)
-	 ("C-<right>" . nil)
-	 ;; slurping and barfing
-	 ("M-0" . 'paredit-forward-slurp-sexp)
-	 ("M-9" . 'paredit-backward-slurp-sexp)
-	 ("M-]" . 'paredit-forward-barf-sexp)
-	 ("M-[" . 'paredit-backward-barf-sexp))
-	:hook
-	(scheme-mode . paredit-mode)
-	(emacs-lisp-mode . paredit-mode)
-	(racket-mode . paredit-mode)
-	(dune-mode . paredit-mode))
+   paredit-mode-map
+   ("C-<left>" . nil)
+   ("C-<right>" . nil)
+   ;; slurping and barfing
+   ("M-0" . 'paredit-forward-slurp-sexp)
+   ("M-9" . 'paredit-backward-slurp-sexp)
+   ("M-]" . 'paredit-forward-barf-sexp)
+   ("M-[" . 'paredit-backward-barf-sexp))
+  :hook
+  (scheme-mode . paredit-mode)
+  (emacs-lisp-mode . paredit-mode)
+  (racket-mode . paredit-mode)
+  (dune-mode . paredit-mode))
 
 
 ;;; Global Keybind Modify
@@ -54,20 +54,20 @@
 
 ;; unbind all global C-num/M-num/C-M-num keys
 (dotimes (num 10)
-	(let ((C-num (format "C-%d" num))
-				(M-num (format "M-%d" num))
-				(C-M-num (format "C-M-%d" num)))
-		(keymap-global-unset C-num)
-		(keymap-global-unset M-num)
-		(keymap-global-unset C-M-num)))
+  (let ((C-num (format "C-%d" num))
+        (M-num (format "M-%d" num))
+        (C-M-num (format "C-M-%d" num)))
+    (keymap-global-unset C-num)
+    (keymap-global-unset M-num)
+    (keymap-global-unset C-M-num)))
 
 
 ;; fcitx and keyboard-quit
 (keymap-global-set "C-g"
-									 (defun keyboard-and-fcitx5-quit ()
-										 (interactive)
-										 (shell-command "fcitx5-remote -c")
-										 (keyboard-quit)))
+                   (defun keyboard-and-fcitx5-quit ()
+                     (interactive)
+                     (shell-command "fcitx5-remote -c")
+                     (keyboard-quit)))
 
 
 ;; scroll operation
@@ -108,23 +108,23 @@
 (defvar-keymap custom-function-map
   :prefix 'Custom-Function-prefix
   :doc "This map is for customization."
-	;; org bindings
+  ;; org bindings
   "o a" 'org-agenda
   "o c" 'org-capture
   "o l" 'org-store-link
-	"p" 'list-packages										;show all packages
-  "r f" 'recentf-open										;recentf
+  "p" 'list-packages                    ;show all packages
+  "r f" 'recentf-open                   ;recentf
   "r r" 'recentf-open-files
-	;; search
-  "s" 'scratch-buffer										;scratch
-	;; tab line mode
-	"t t" 'tab-line-mode									;toggle tab line
-	;; whitespace
-	"w c" 'whitespace-mode
-  "w w" 'delete-trailing-whitespace			;whitespace
-	;; terminals
-  "x" 'term															;term
-	"z" 'eshell														;eshell
+  ;; search
+  "s" 'scratch-buffer                   ;scratch
+  ;; tab line mode
+  "t t" 'tab-line-mode                  ;toggle tab line
+  ;; whitespace
+  "w c" 'whitespace-mode
+  "w w" 'delete-trailing-whitespace     ;whitespace
+  ;; terminals
+  "x" 'term                             ;term
+  "z" 'eshell                           ;eshell
   )
 
 (keymap-global-set "C-z" 'Custom-Function-prefix)
@@ -141,19 +141,19 @@ LANG: the programming language"
   (interactive "sSelect language: ")
   (let ((init-file (format "~/.emacs.d/lisp/lang/init-%s.el" lang)))
     (cond ((file-exists-p init-file) (find-file init-file))
-					(t (message "language init file not found.")))))
+          (t (message "language init file not found.")))))
 
 
 ;; best backward kill command
 (defun kill-word-or-whitespace-backward (n &optional killflag)
-	"Kill word if non-whitespace, or all whitespace if any.
+  "Kill word if non-whitespace, or all whitespace if any.
 N
 KILLFLAG"
-	(interactive "p\nP")
-	(let ((last-char (preceding-char)))
-		(if (member last-char (list ?\s ?\n ?\t ?\v))
-				(hungry-delete-backward n killflag)
-			(backward-kill-word n))))
+  (interactive "p\nP")
+  (let ((last-char (preceding-char)))
+    (if (member last-char (list ?\s ?\n ?\t ?\v))
+        (hungry-delete-backward n killflag)
+      (backward-kill-word n))))
 
 
 (provide 'init-keymaps)

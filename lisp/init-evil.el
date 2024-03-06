@@ -18,31 +18,31 @@
 
 (use-package evil
   :ensure t
-	:bind
-	("C-z C-z" . 'evil-mode)
+  :bind
+  ("C-z C-z" . 'evil-mode)
 
   :hook
   (evil-emacs-state-entry . evil-exit)
-	(evil-normal-state-entry . (lambda ()
-															 (setq display-line-numbers-type 'relative)
-															 (display-line-numbers-mode)))
-	(evil-normal-state-exit . (lambda ()
-															(setq display-line-numbers-type t)
-															(display-line-numbers-mode)))
+  (evil-normal-state-entry . (lambda ()
+                               (setq display-line-numbers-type 'relative)
+                               (display-line-numbers-mode)))
+  (evil-normal-state-exit . (lambda ()
+                              (setq display-line-numbers-type t)
+                              (display-line-numbers-mode)))
 
-	:init
+  :init
   (setq evil-toggle-key "C-z C-z"
-				evil-want-C-i-jump t
-				evil-want-C-u-delete t
+        evil-want-C-i-jump t
+        evil-want-C-u-delete t
 
-				evil-default-state 'normal
+        evil-default-state 'normal
 
-				evil-auto-indent t
-				evil-shift-width 2
-				evil-shift-round t
-				evil-indent-convert-tabs t
+        evil-auto-indent t
+        evil-shift-width 2
+        evil-shift-round t
+        evil-indent-convert-tabs t
 
-				evil-move-beyond-eol nil)
+        evil-move-beyond-eol nil)
 
   (defun evil-exit ()
     "command to exit evil mode"
@@ -54,7 +54,7 @@
   :config
   ;; exit evil
   (evil-define-key '(normal insert visual replace operator motion emacs)
-									 'global (kbd "C-g") 'evil-emacs-state)
+                   'global (kbd "C-g") 'evil-emacs-state)
 
   ;; evil-surround
   (use-package evil-surround
@@ -62,8 +62,8 @@
     :hook
     (evil-mode . global-evil-surround-mode))
 
-	(evil-mode)
-	(evil-mode -1))
+  (evil-mode)
+  (evil-mode -1))
 
 
 (provide 'init-evil)

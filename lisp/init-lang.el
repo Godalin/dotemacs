@@ -4,7 +4,7 @@
 
 
 (add-to-list 'load-path
-						 (expand-file-name "lisp/lang" user-emacs-directory))
+             (expand-file-name "lisp/lang" user-emacs-directory))
 
 
 (use-package init-haskell :ensure nil)
@@ -19,27 +19,27 @@
              (shell-command-to-string "agda-mode locate")))
 
 (setq auto-mode-alist
-			(append
-			 '(("\\.agda\\'" . agda2-mode)
-				 ("\\.lagda.md\\'" . agda2-mode))
-			 auto-mode-alist))
+      (append
+       '(("\\.agda\\'" . agda2-mode)
+         ("\\.lagda.md\\'" . agda2-mode))
+       auto-mode-alist))
 
 ;; (keymap-set agda2-mode-map "C-c C-l"
-;; 						(defun agda2-save-and-load ()
-;; 							(interactive)
-;; 							(save-buffer)
-;; 							(agda2-load)))
+;;            (defun agda2-save-and-load ()
+;;              (interactive)
+;;              (save-buffer)
+;;              (agda2-load)))
 
 ;;; markdown
 (use-package markdown-mode
-	:defer t
+  :defer t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
 
 ;;; bqn
 (use-package bqn-mode
-	:defer t)
+  :defer t)
 
 
 ;;; julia
@@ -52,10 +52,10 @@
   :defer t)
 
 (use-package company-coq
-	:after proof-general
+  :after proof-general
   :defer t
   :hook
-	(coq-mode . company-coq-mode))
+  (coq-mode . company-coq-mode))
 
 
 ;;; common lisp
@@ -67,70 +67,70 @@
 
 ;;; scheme
 (use-package scheme-mode
-	:ensure nil
-	:defer t
-	:custom
-	(scheme-program-name "chez"))
+  :ensure nil
+  :defer t
+  :custom
+  (scheme-program-name "chez"))
 
 (use-package geiser-chez
-	:defer t
-	:custom
-	(geiser-chez-binary "chez"))
+  :defer t
+  :custom
+  (geiser-chez-binary "chez"))
 
 (use-package geiser-guile
-	:defer t)
+  :defer t)
 
 
 ;;; elixir mode
 (use-package elixir-mode
-	:defer t)
+  :defer t)
 
 
 ;;; prolog mode
 (use-package prolog-mode
-	:ensure nil
-	:defer t
-	:custom
-	(prolog-electric-if-then-else-flag t)
-	:bind
-	(("<f10>" . 'ediprolog-dwim)
-	 :map
-	 prolog-mode-map
-	 ("C-c l" . (lambda () (interactive)
-								(skeleton-insert '(nil ":- use_module(library(" _ "))."))))))
+  :ensure nil
+  :defer t
+  :custom
+  (prolog-electric-if-then-else-flag t)
+  :bind
+  (("<f10>" . 'ediprolog-dwim)
+   :map
+   prolog-mode-map
+   ("C-c l" . (lambda () (interactive)
+                (skeleton-insert '(nil ":- use_module(library(" _ "))."))))))
 
 (use-package ediprolog
-	:defer t
-	:after prolog-mode)
+  :defer t
+  :after prolog-mode)
 
 
 ;; lean-4
 (use-package lean4-mode
-	:defer t
-	:vc (:fetcher github :repo leanprover/lean4-mode))
+  :defer t
+  :vc (:fetcher github :repo leanprover/lean4-mode))
 
 
 ;; kmonad kbd
 (use-package kbd-mode
-	:defer t
-	:vc (:fetcher github :repo kmonad/kbd-mode)
-	:custom
+  :defer t
+  :vc (:fetcher github :repo kmonad/kbd-mode)
+  :custom
   (kbd-mode-kill-kmonad "pkill -9 kmonad")
   (kbd-mode-start-kmonad "kmonad ~/.config/kmonad/best.kbd"))
 
 
 ;; typst ts mode
 (use-package typst-ts-mode
-	:defer t
-	:vc (:fetcher sourcehut :repo "meow_king/typst-ts-mode")
-	:custom
-	(typst-ts-mode-watch-options "--open")
-	(typst-ts-mode-indent-offset 2))
+  :defer t
+  :vc (:fetcher sourcehut :repo "meow_king/typst-ts-mode")
+  :custom
+  (typst-ts-mode-watch-options "--open")
+  (typst-ts-mode-indent-offset 2))
 
 
 ;;; zig mode
 (use-package zig-mode
-	:defer t)
+  :defer t)
 
 
 (provide 'init-lang)

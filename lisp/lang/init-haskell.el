@@ -9,7 +9,7 @@
   :defer t
   :bind
   (:map
-   haskell-mode-map			;haskell files
+   haskell-mode-map     ;haskell files
    ;; editing
    ("C-c C-d" . 'haskell-mode-jump-to-def)
    ("C-c C-m" . 'haskell-navigate-imports)
@@ -26,7 +26,7 @@
    ("C-c C-v" . 'haskell-cabal-visit-file)
 
    :map
-   haskell-cabal-mode-map		;cabal files
+   haskell-cabal-mode-map   ;cabal files
    ("C-c C-c" . 'haskell-compile)
    ("C-c C-`" . 'haskell-interactive-bring)
    ("C-c C-k" . 'haskell-interactive-mode-clear)

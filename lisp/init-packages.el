@@ -12,11 +12,11 @@
 ;; keycast
 (use-package keycast
   :demand t
-	:custom-face
-	(keycast-key
-	 ((t (:height 120))))
-	(keycast-command
-	 ((t (:height 120))))
+  :custom-face
+  (keycast-key
+   ((t (:height 120))))
+  (keycast-command
+   ((t (:height 120))))
   :hook
   (tab-bar-mode . keycast-tab-bar-mode))
 
@@ -27,15 +27,15 @@
   :demand t
   :custom
   (company-minimum-prefix-length 1)
-	(company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
-	(company-tooltip-align-annotations t)
-	(company-tooltip-margin 2)
+  (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
+  (company-tooltip-align-annotations t)
+  (company-tooltip-margin 2)
   :hook
   (after-init . global-company-mode)
   (haskell-mode . (lambda ()
-										(set (make-local-variable 'company-backends)
-												 (append '((company-capf company-dabbrev-code))
-																 company-backends))))
+                    (set (make-local-variable 'company-backends)
+                         (append '((company-capf company-dabbrev-code))
+                                 company-backends))))
   :bind
   (:map
    company-active-map
@@ -54,7 +54,7 @@
 
 ;; ivy-counsel-swiper completion
 (use-package counsel
-	;; :disabled
+  ;; :disabled
   :custom
   (ivy-use-virtual-buffers t)
   (ivy-count-format "%d/%d")
@@ -74,21 +74,21 @@
   ("C-x b" . 'ivy-switch-buffer)
   ("C-c v" . 'ivy-push-view)
   ("C-c V" . 'ivy-pop-view)
-	(:map
-	 ivy-minibuffer-map
-	 ("M-<return>" . 'ivy-immediate-done))
+  (:map
+   ivy-minibuffer-map
+   ("M-<return>" . 'ivy-immediate-done))
   )
 
 
 ;; snippet
 (use-package yasnippet
-	:disabled t
+  :disabled t
   :defer t
   :config
   (yas-global-mode))
 
 (use-package yasnippet-snippets
-	:disabled t
+  :disabled t
   :after yasnippet)
 
 
@@ -100,11 +100,11 @@
 
 ;; pdf
 (use-package pdf-tools
-	:config
-	(pdf-tools-install)
-	:hook
-	(pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
-	)
+  :config
+  (pdf-tools-install)
+  :hook
+  (pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
+  )
 
 
 (provide 'init-packages)

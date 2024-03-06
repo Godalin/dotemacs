@@ -18,7 +18,7 @@
 
 ;; merlin & company
 (use-package merlin-company
-	:after (merlin company)
+  :after (merlin company)
   :defer t)
 
 
@@ -31,12 +31,12 @@
 
 ;; formatter
 (use-package ocamlformat
-	:defer t)
+  :defer t)
 
 
 ;; dune config files
 (use-package dune
-	:defer t)
+  :defer t)
 
 
 (provide 'init-ocaml)
