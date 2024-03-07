@@ -24,12 +24,6 @@
   ("M-<down>" . 'drag-stuff-down))
 
 
-;; window movement
-(use-package ace-window
-  :bind
-  ("M-o" . 'ace-window))
-
-
 ;; edit parentheses
 (use-package paredit
   :bind
@@ -51,6 +45,18 @@
 
 ;;; Global Keybind Modify
 
+;; windows: split and focus
+(keymap-global-set "C-x C-2"
+									 (defun split-window-below-focus ()
+										 (interactive)
+										 (split-window-below)
+										 (other-window 1)))
+
+(keymap-global-set "C-x C-3"
+									 (defun split-window-below-focus ()
+										 (interactive)
+										 (split-window-right)
+										 (other-window 1)))
 
 ;; unbind all global C-num/M-num/C-M-num keys
 (dotimes (num 10)
@@ -68,11 +74,6 @@
                      (interactive)
                      (shell-command "fcitx5-remote -c")
                      (keyboard-quit)))
-
-
-;; scroll operation
-;; (keymap-global-set "C-v" (defun scroll-up-3-lines () (interactive) (scroll-up-line 3)))
-;; (keymap-global-set "M-v" (defun scroll-down-3-lines () (interactive) (scroll-down-line 3)))
 
 
 ;; flymake
