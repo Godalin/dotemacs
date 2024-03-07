@@ -111,12 +111,12 @@
 
 
 ;; kmonad kbd
-(use-package kbd-mode
-  :defer t
-  :vc (:fetcher github :repo kmonad/kbd-mode)
-  :custom
-  (kbd-mode-kill-kmonad "pkill -9 kmonad")
-  (kbd-mode-start-kmonad "kmonad ~/.config/kmonad/best.kbd"))
+;; (use-package kbd-mode
+;;   :defer t
+;;   :vc (:fetcher github :repo kmonad/kbd-mode)
+;;   :custom
+;;   (kbd-mode-kill-kmonad "pkill -9 kmonad")
+;;   (kbd-mode-start-kmonad "kmonad ~/.config/kmonad/best.kbd"))
 
 
 ;; typst ts mode
