@@ -3,18 +3,21 @@
 ;;; Code:
 
 
+
 ;; theme: modus
 (use-package emacs
+  ;; :disabled nil
   :ensure nil
   :custom
   (modus-themes-italic-constructs t)
   (modus-themes-bold-constructs t)
   (modus-themes-italic-constructs t)
   (modus-themes-syntax '(faint yellow-comments green-strings alt-syntax))
+	;; (modus-themes-syntax '(yellow-comments green-strings alt-syntax))
   (modus-themes-mixed-fonts nil)
   (modus-themes-links '(neutral-underline faint bold italic background))
   (modus-themes-prompts '(bold intense))
-  (modus-themes-mode-line '(accented 3d borderless (padding 2) (height 1.0)))
+  ;; (modus-themes-mode-line '(accented 3d borderless (padding 2) (height 1.0)))
   (modus-themes-tab-accented t)
   (modus-themes-completions '((matches . (extrabold background intense))
                               (selection . (italic semibold accented intense))
@@ -25,7 +28,7 @@
   (modus-themes-subtle-line-numbers t)
   (modus-themes-intense-mouseovers t)
   (modus-themes-markup '(intense background))
-  (modus-themes-paren-match '(bold intense underline))
+  (modus-themes-paren-match '(bold intense))
   (modus-themes-region '(accented))
   (modus-themes-diffs 'desaturated)
   (modus-themes-org-blocks 'gray-background)
@@ -44,6 +47,10 @@
   :bind
   ("<f12>" . 'modus-themes-toggle))
 
+
+(use-package rainbow-delimiters
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
 
 
 (defun my/set-modeline ()

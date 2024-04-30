@@ -5,6 +5,8 @@
 
 (add-to-list 'load-path
              (expand-file-name "lisp/lang" user-emacs-directory))
+(add-to-list 'load-path
+             (expand-file-name "lisp/lang/modes" user-emacs-directory))
 
 
 (use-package init-haskell :ensure nil)
@@ -17,18 +19,9 @@
 ;;; agda
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
+(add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
+(add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
 
-(setq auto-mode-alist
-      (append
-       '(("\\.agda\\'" . agda2-mode)
-         ("\\.lagda.md\\'" . agda2-mode))
-       auto-mode-alist))
-
-;; (keymap-set agda2-mode-map "C-c C-l"
-;;            (defun agda2-save-and-load ()
-;;              (interactive)
-;;              (save-buffer)
-;;              (agda2-load)))
 
 ;;; markdown
 (use-package markdown-mode
@@ -56,6 +49,25 @@
   :defer t
   :hook
   (coq-mode . company-coq-mode))
+
+
+;;; scala
+(use-package scala-mode
+  :defer t
+  :after eglot
+  :interpreter
+  ("scala3" . scala-mode)
+  :hook
+  (scala-mode . eglot-ensure))
+
+;; (use-package sbt-mode
+;;   :commands sbt-start sbt-command
+;;   :config
+;;   ;; WORKAROUND: allows using SPACE when in the minibuffer
+;;   (substitute-key-definition
+;;    'minibuffer-complete-word
+;;    'self-insert-command
+;;    minibuffer-local-completion-map))
 
 
 ;;; common lisp

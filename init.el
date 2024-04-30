@@ -12,8 +12,8 @@
 ;; use the use-package package
 (use-package use-package
   :ensure nil
-  :init
-  (setq use-package-always-ensure t))
+  :custom ((use-package-always-ensure t "Default :ensure to t in `use-package'.")
+					 (use-package-enable-imenu-support t)))
 
 
 ;; use-package deal with package
@@ -60,12 +60,6 @@
 (set-fontset-font "fontset-default" 'symbol "FontAwesome")
 
 
-;; terminal face
-(defface terminal
-  '((t :family "GoMono Nerd Font"))
-  "Face for vterm.")
-
-
 (defun my/set-term-font ()
   "Set good fonts for terminal modes."
   (interactive)
@@ -76,14 +70,15 @@
 ;; term mode
 (use-package term
   :ensure nil
+	:custom-face
+	(terminal ((t :family "GoMono Nerd Font")))
   :hook
   (term-mode . my/set-term-font)
   :bind
   (:map
    term-mode-map
-   ("C-d" . (lambda () (interactive)
-              (term-handle-exit)
-              (kill-buffer)))))
+   ("C-c C-d" . (lambda () (interactive)
+									(kill-buffer (current-buffer))))))
 
 
 ;; input method
@@ -97,6 +92,7 @@
   :ensure nil
   :hook
   (after-init . winner-mode))
+
 
 (use-package emacs
   :disabled
@@ -112,6 +108,14 @@
   :custom
   (dired-listing-switches "-aBhl --group-directories-first")
   (dired-kill-when-opening-new-dired-buffer t))
+
+
+;; dictionary
+(use-package dictionary
+	:ensure nil
+	:custom ((dictionary-use-single-buffer t)
+					 (dictionary-server "localhost"))
+	:bind (("M-#" . #'dictionary-lookup-definition)))
 
 
 ;; repeat mode
@@ -171,7 +175,8 @@
   (visual-line-fringe-indicators t)
   (word-wrap-by-category t)
   :hook
-  (prog-mode . global-visual-line-mode))
+  (prog-mode . global-visual-line-mode)
+	(text-mode . global-visual-line-mode))
 
 
 ;; customization of display
@@ -198,21 +203,34 @@
   (after-init . global-so-long-mode))
 
 
-;; programming mode
+;; tab related
 (use-package emacs
   :ensure nil
   :custom
-  (tab-width 2))
+  (tab-width 2)
+	(indent-tabs-mode nil))
 
 
-;; edit parens (lisp code)
-(use-package emacs
+;; parentheses
+(use-package show-paren-mode
   :ensure nil
-  :init
-  (setq show-paren-style 'expression)
+	:custom ((show-paren-highlight-openparen t)
+					 (show-paren-style 'mixed)
+					 (show-paren-when-point-inside-paren t)
+					 (show-paren-when-point-in-periphery t)
+					 (show-paren-context-when-offscreen t))
   :hook
-  (after-init . show-paren-mode)
-  (after-init . electric-pair-mode))
+	(after-init . show-paren-mode))
+
+(use-package electric-pair-mode
+	:ensure nil
+	:custom
+	(electric-pair-preserve-balance t)
+	(electric-pair-delete-adjacent-pairs t)
+	(electric-pair-open-newline-between-pairs t)
+	(electric-pair-skip-whitespace t)
+	:hook
+	(after-init . electric-pair-mode))
 
 
 ;; programming mode hooks
@@ -228,7 +246,7 @@
 (use-package abbrev
   :ensure nil
   :config
-  (setq-default abbrev-mode t)
+  (setq-default abbrev-mode nil)
   (setq save-abbrevs 'silently))
 
 
@@ -249,24 +267,32 @@
   ("C-c e e" . 'eglot-code-actions))
 
 
-;; tree sitter
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :hook
-  (after-init . global-treesit-auto-mode))
-
-
 ;; file management
 (use-package recentf
   :ensure nil
   :custom
-  (recentf-max-menu-items 10)
+  (recentf-max-menu-items 30)
   :hook
   (after-init . recentf-mode))
 
-
 (setq make-backup-files nil)
+
+
+;; docview
+(use-package doc-view
+  :ensure nil
+  :custom
+  (doc-view-ghost-program "mupdf")
+  (doc-view-continuous t)
+  (doc-view-resolution 300)
+  (doc-view-scale-internally t)
+  :bind
+  (:map
+   doc-view-mode-map
+   ("<wheel-up>" . 'doc-view-previous-page)
+   ("<wheel-down>" . 'doc-view-next-line-or-next-page))
+  :hook
+  (doc-view-mode . doc-view-hide-modeline-mode))
 
 
 (keymap-global-set "<remap> <list-buffers>" 'ibuffer-other-window)
@@ -313,14 +339,11 @@
   (eshell-prompt-function 'my/eshell-prompt)
   :hook
   (eshell-mode . (lambda ()
-                   (keymap-set eshell-mode-map "C-d"
-                               (lambda () (interactive)
-                                 (eshell-return-to-prompt)
-                                 (end-of-buffer)
-                                 (eshell-kill-input)
-                                 (insert "exit")
-                                 (eshell-send-input)
-                                 (message "eshell"))))))
+									 (keymap-set
+										eshell-mode-map
+										"C-d"
+										(lambda () (interactive)
+											(kill-buffer (current-buffer)))))))
 
 
 ;; email settings
@@ -367,12 +390,21 @@
   :ensure nil)
 
 
+
+;; my custom lisp library(s)
+(add-to-list 'load-path "~/Projects/ELisp")
+(use-package escvil
+	:ensure nil
+	:commands escvil-mode
+	:defer t
+	:hook
+	(prog-mode . escvil-mode)
+	(text-mode . escvil-mode))
+
+
+
 ;; editor or wm
-(if (not (shell-command-to-string "wmctrl -m | grep LG3D"))
-    (load "init-exwm.el"))
-
-
-(provide 'init)
-
-
-;;; init.el ends here
+;; (if (not window-system)
+;; 		(progn
+;; 			(use-package init-exwm :ensure nil)
+;; 			(exwm-enable)))

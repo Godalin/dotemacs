@@ -82,13 +82,13 @@
 
 ;; snippet
 (use-package yasnippet
-  :disabled t
+  :disabled
   :defer t
   :config
   (yas-global-mode))
 
 (use-package yasnippet-snippets
-  :disabled t
+  :disabled
   :after yasnippet)
 
 
@@ -96,15 +96,6 @@
 (use-package magit
   :custom
   (magit-view-git-manual-method 'woman))
-
-
-;; pdf
-(use-package pdf-tools
-  :config
-  (pdf-tools-install)
-  :hook
-  (pdf-view-mode . (lambda () (display-line-numbers-mode -1)))
-  )
 
 
 (provide 'init-packages)

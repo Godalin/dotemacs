@@ -4,13 +4,6 @@
 
 ;;; 3rd Packages
 
-;; crux for edit enhancement
-(use-package crux
-  :bind
-  ("C-c o" . 'crux-open-with)
-  ("C-k" . 'crux-smart-kill-line))
-
-
 ;; hungry delete
 (use-package hungry-delete
   :bind
@@ -45,6 +38,10 @@
 
 ;;; Global Keybind Modify
 
+;; unset annoying keys
+(keymap-global-unset "C-x C-c")
+(keymap-global-unset "C-x C-z")
+
 ;; windows: split and focus
 (keymap-global-set "C-x C-2"
 									 (defun split-window-below-focus ()
@@ -53,7 +50,7 @@
 										 (other-window 1)))
 
 (keymap-global-set "C-x C-3"
-									 (defun split-window-below-focus ()
+									 (defun split-window-right-focus ()
 										 (interactive)
 										 (split-window-right)
 										 (other-window 1)))
@@ -91,16 +88,17 @@
   :prefix 'Custom-System-prefix
   :doc "This map is for custom system functions such as reboot."
   ;; control emacs
+	"c" 'kill-emacs
   "C-r" 'restart-emacs
   "C-z" 'suspend-emacs
   ;; initiation files
-  "C-c d" (defun open-init-dir      () (interactive) (dired "~/.emacs.d"))
-  "C-c e" (defun open-init-evil     () (interactive) (find-file "~/.emacs.d/lisp/init-evil.el"))
-  "C-c i" (defun open-init          () (interactive) (find-file "~/.emacs.d/init.el"))
-  "C-c k" (defun open-init-keymaps  () (interactive) (find-file "~/.emacs.d/lisp/init-keymaps.el"))
+  "C-c d" (defun open-init-dir      () (interactive) (dired "~/.config/emacs"))
+  "C-c e" (defun open-init-evil     () (interactive) (find-file "~/.config/emacs/lisp/init-evil.el"))
+  "C-c i" (defun open-init          () (interactive) (find-file "~/.config/emacs/init.el"))
+  "C-c k" (defun open-init-keymaps  () (interactive) (find-file "~/.config/emacs/lisp/init-keymaps.el"))
   "C-c l" 'open-init-language
-  "C-c o" (defun open-init-org      () (interactive) (find-file "~/.emacs.d/lisp/init-org.el"))
-  "C-c p" (defun open-init-packages () (interactive) (find-file "~/.emacs.d/lisp/init-packages.el"))
+  "C-c o" (defun open-init-org      () (interactive) (find-file "~/.config/emacs/lisp/init-org.el"))
+  "C-c p" (defun open-init-packages () (interactive) (find-file "~/.config/emacs/lisp/init-packages.el"))
   )
 
 
@@ -121,7 +119,11 @@
   ;; tab line mode
   "t t" 'tab-line-mode                  ;toggle tab line
   ;; whitespace
-  "w c" 'whitespace-mode
+  "w c" 'whitespace-mode								;whitespace mode
+	"w t" (defun untabify-buffer ()				;untabify the whole buffer
+					(interactive)
+					(mark-whole-buffer)
+					(untabify))
   "w w" 'delete-trailing-whitespace     ;whitespace
   ;; terminals
   "x" 'term                             ;term
@@ -140,7 +142,7 @@
   "Open a configuration file with the given language.
 LANG: the programming language"
   (interactive "sSelect language: ")
-  (let ((init-file (format "~/.emacs.d/lisp/lang/init-%s.el" lang)))
+  (let ((init-file (format "~/.config/emacs/lisp/lang/init-%s.el" lang)))
     (cond ((file-exists-p init-file) (find-file init-file))
           (t (message "language init file not found.")))))
 

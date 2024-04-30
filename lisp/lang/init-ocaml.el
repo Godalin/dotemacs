@@ -15,12 +15,17 @@
   (tuareg-mode . merlin-mode)
   (caml-mode . merlin-mode))
 
-
 ;; merlin & company
 (use-package merlin-company
   :after (merlin company)
   :defer t)
 
+;; merlin eldoc
+(use-package merlin-eldoc
+  :after merlin
+  :defer t
+  :hook
+  (merlin-mode . merlin-eldoc-setup))
 
 ;; easy opam switch
 (use-package opam-switch-mode

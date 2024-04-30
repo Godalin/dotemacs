@@ -1,15 +1,18 @@
 ;;; package --- init-exwm.el: emacs as a window manager
 ;;; Commentary:
 ;;; Code:
+
+
+
 (use-package exwm
-  :ensure t
   :hook
   (after-init . display-time-mode)
   (after-init . display-battery-mode)
+  :custom
+  (exwm-workspace-number 9)
 
-  :config
-  (setq exwm-workspace-number 9)
-
+	:config
+	(require 'exwm)
   ;; to manage the windows (renaming)
   (add-hook 'exwm-update-class-hook
             (lambda ()
@@ -25,53 +28,40 @@
 
   ;; keybindings
   (setq exwm-input-global-keys
-        `(
-          ;; rofi
-          ([?\s-p] . (lambda () (interactive) (shell-command "rofi -drun")))
-          ;; Bind "s-r" to exit char-mode and fullscreen mode.
-          ([?\s-r] . exwm-reset)
-          ;; Bind "s-w" to switch workspace interactively.
+        `(([?\s-p] . (lambda () (interactive) (shell-command "dmenu")))
+          ([?\s-q] . exwm-reset)
           ([?\s-w] . exwm-workspace-switch)
-          ;; Bind "s-0" to "s-9" to switch to a workspace by its index.
           ,@(mapcar (lambda (i)
                       `(,(kbd (format "s-%d" i)) .
-                        (lambda ()
-                          (interactive)
+                        (lambda () (interactive)
                           (exwm-workspace-switch-create ,i))))
                     (number-sequence 0 9))
-          ;; Bind "s-&" to launch applications ('M-&' also works if the output
-          ;; buffer does not bother you).
-          ([?\s-&] . (lambda (command)
-                       (interactive (list (read-shell-command "$ ")))
+          ([?\s-&] . (lambda (command) (interactive (list (read-shell-command "$ ")))
                        (start-process-shell-command command nil command)))
-          ;; Bind "s-<f2>" to "slock", a simple X display locker.
-          ([s-f2] . (lambda ()
-                      (interactive)
-                      (start-process "" nil "/usr/bin/slock")))))
-
-
+          ([?\s-f] . exwm-layout-set-fullscreen)))
+	(keymap-set exwm-mode-map "C-q" 'exwm-input-send-next-key)
   ;; simulation keys
-  ;; (setq exwm-input-simulation-keys
-  ;;  '(
-  ;;         ;; movement
-  ;;         ([?\C-b] . [left])
-  ;;         ([?\M-b] . [C-left])
-  ;;         ([?\C-f] . [right])
-  ;;         ([?\M-f] . [C-right])
-  ;;         ([?\C-p] . [up])
-  ;;         ([?\C-n] . [down])
-  ;;         ([?\C-a] . [home])
-  ;;         ([?\C-e] . [end])
-  ;;         ([?\M-v] . [prior])
-  ;;         ([?\C-v] . [next])
-  ;;         ([?\C-d] . [delete])
-  ;;         ([?\C-k] . [S-end delete])
-  ;;         ;; cut/paste.
-  ;;         ([?\C-w] . [?\C-x])
-  ;;         ([?\M-w] . [?\C-c])
-  ;;         ([?\C-y] . [?\C-v])
-  ;;         ;; search
-  ;;         ([?\C-s] . [?\C-f])))
+  (setq exwm-input-simulation-keys
+				'(
+          ;; movement
+          ([?\C-b] . [left])
+          ([?\M-b] . [C-left])
+          ([?\C-f] . [right])
+          ([?\M-f] . [C-right])
+          ([?\C-p] . [up])
+          ([?\C-n] . [down])
+          ([?\C-a] . [home])
+          ([?\C-e] . [end])
+          ([?\M-v] . [prior])
+          ([?\C-v] . [next])
+          ([?\C-d] . [delete])
+          ([?\C-k] . [S-end delete])
+          ;; cut/paste.
+          ([?\C-w] . [?\C-x])
+          ([?\M-w] . [?\C-c])
+          ([?\C-y] . [?\C-v])
+          ;; search
+          ([?\C-s] . [?\C-f])))
 
   ;; hide minibuffer and echo area when not used
   ;; (setq exwm-workspace-minibuffer-position 'bottom)
@@ -87,12 +77,7 @@
   (exwm-randr-enable)
 
   (require 'exwm-systemtray)
-  (exwm-systemtray-enable)
-
-
-  ;; (require 'exwm-config)
-  ;; (exwm-config-example)
-  (exwm-enable))
+  (exwm-systemtray-enable))
 
 
 (provide 'init-exwm)
