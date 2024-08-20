@@ -239,7 +239,7 @@
   :hook
   (prog-mode . flymake-mode)
   (prog-mode . hs-minor-mode)
-  (prog-mode . prettify-symbols-mode))
+  (emacs-lisp-mode . prettify-symbols-mode))
 
 
 ;; set abbrev mode

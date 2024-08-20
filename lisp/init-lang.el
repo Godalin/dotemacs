@@ -14,6 +14,7 @@
 (use-package init-tex :ensure nil)
 (use-package init-sml :ensure nil)
 (use-package init-ocaml :ensure nil)
+(use-package init-clojure :ensure nil)
 
 
 ;;; agda
@@ -22,6 +23,10 @@
 (add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
 (add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
 
+;;; cubicaltt
+(load-file "$HOME/Projects/cubicaltt/cubicaltt.el")
+;; (autoload 'cubicaltt-mode "cubicaltt" "cubical editing mode" t)
+(add-to-list 'auto-mode-alist '("\\.ctt$" . cubicaltt-mode))
 
 ;;; markdown
 (use-package markdown-mode
@@ -42,32 +47,32 @@
 
 ;;; coq
 (use-package proof-general
-  :defer t)
+  :defer t
+  :config
+  (setq proof-electric-terminator-enable nil)
+  :bind
+  (:repeat-map
+   coq-repeat-mode-map
+   ("n" . #'proof-assert-next-command-interactive)
+   ("p" . #'proof-undo-last-successful-command)
+   ("u" . #'proof-undo-last-successful-command)
+   ("C-n" . #'proof-assert-next-command-interactive)
+   ("C-p" . #'proof-undo-last-successful-command)
+   ("C-u" . #'proof-undo-last-successful-command)
+   :exit
+   ("g" . #'keyboard-quit)))
 
 (use-package company-coq
-  :after proof-general
+  :ensure t
   :defer t
   :hook
-  (coq-mode . company-coq-mode))
+  (coq-mode . #'company-coq-mode))
 
 
-;;; scala
-(use-package scala-mode
+(use-package nix-mode
+  :ensure t
   :defer t
-  :after eglot
-  :interpreter
-  ("scala3" . scala-mode)
-  :hook
-  (scala-mode . eglot-ensure))
-
-;; (use-package sbt-mode
-;;   :commands sbt-start sbt-command
-;;   :config
-;;   ;; WORKAROUND: allows using SPACE when in the minibuffer
-;;   (substitute-key-definition
-;;    'minibuffer-complete-word
-;;    'self-insert-command
-;;    minibuffer-local-completion-map))
+  :mode "\\.nix\\'")
 
 
 ;;; common lisp
@@ -140,9 +145,9 @@
   (typst-ts-mode-indent-offset 2))
 
 
-;;; zig mode
-(use-package zig-mode
-  :defer t)
+;; LF twelf
+(setq twelf-root "/home/godalin/Projects/twelf/")
+(load (concat twelf-root "emacs/twelf-init.el"))
 
 
 (provide 'init-lang)

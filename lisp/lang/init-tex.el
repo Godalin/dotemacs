@@ -15,8 +15,7 @@
 	(:map
 	 TeX-mode-map
 	 ("C-c 4" . 'dollars)
-	 ("C-c C-4" . 'double-dollars))
-  )
+	 ("C-c C-4" . 'double-dollars)))
 
 
 (use-package cdlatex
