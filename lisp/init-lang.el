@@ -14,7 +14,7 @@
 (use-package init-tex :ensure nil)
 (use-package init-sml :ensure nil)
 (use-package init-ocaml :ensure nil)
-(use-package init-clojure :ensure nil)
+;; (use-package init-clojure :ensure nil)
 
 
 ;;; agda
@@ -23,10 +23,12 @@
 (add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
 (add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
 
+
 ;;; cubicaltt
-(load-file "$HOME/Projects/cubicaltt/cubicaltt.el")
+;;(load-file "$HOME/Projects/cubicaltt/cubicaltt.el")
 ;; (autoload 'cubicaltt-mode "cubicaltt" "cubical editing mode" t)
-(add-to-list 'auto-mode-alist '("\\.ctt$" . cubicaltt-mode))
+;;(add-to-list 'auto-mode-alist '("\\.ctt$" . cubicaltt-mode))
+
 
 ;;; markdown
 (use-package markdown-mode
@@ -76,9 +78,16 @@
 
 
 ;;; common lisp
-(use-package sly
+;; (use-package sly
+;;   :defer t
+;;   :config
+;;   ;; (load (expand-file-name "~/.quicklisp/slime-helper.el"))
+;;   (setq inferior-lisp-program "sbcl"))
+
+(use-package slime
   :defer t
   :config
+  (load (expand-file-name "~/.quicklisp/slime-helper.el"))
   (setq inferior-lisp-program "sbcl"))
 
 
@@ -146,8 +155,8 @@
 
 
 ;; LF twelf
-(setq twelf-root "/home/godalin/Projects/twelf/")
-(load (concat twelf-root "emacs/twelf-init.el"))
+;; (setq twelf-root "/home/godalin/Projects/twelf/")
+;; (load (concat twelf-root "emacs/twelf-init.el"))
 
 
 (provide 'init-lang)

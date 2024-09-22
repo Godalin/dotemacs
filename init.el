@@ -55,9 +55,10 @@
   (setq x-select-enable-clipboard-manager t))
 
 
-
-(set-fontset-font "fontset-default" 'han "LXGW Wenkai")
-(set-fontset-font "fontset-default" 'symbol "FontAwesome")
+(when (fboundp 'set-fontset-font)
+  (set-fontset-font "fontset-default" 'han "LXGW Wenkai")
+  ;; (set-fontset-font "fontset-default" 'symbol "FontAwesome")
+  )
 
 
 (defun my/set-term-font ()
@@ -105,9 +106,13 @@
 ;; dired
 (use-package dired
   :ensure nil
-  :custom
-  (dired-listing-switches "-aBhl --group-directories-first")
-  (dired-kill-when-opening-new-dired-buffer t))
+  :config
+  (setq dired-listing-switches "-aBhl --group-directories-first"
+        dired-use-ls-dired nil
+        dired-kill-when-opening-new-dired-buffer t)
+  (when (eq system-type 'darwin)
+    (setq insert-directory-program "gls"
+          dired-use-ls-dired t)))
 
 
 ;; dictionary
@@ -392,14 +397,14 @@
 
 
 ;; my custom lisp library(s)
-(add-to-list 'load-path "~/Projects/ELisp")
-(use-package escvil
-	:ensure nil
-	:commands escvil-mode
-	:defer t
-	:hook
-	(prog-mode . escvil-mode)
-	(text-mode . escvil-mode))
+;; (add-to-list 'load-path "~/Projects/ELisp")
+;; (use-package escvil
+;; 	:ensure nil
+;; 	:commands escvil-mode
+;; 	:defer t
+;; 	:hook
+;; 	(prog-mode . escvil-mode)
+;; 	(text-mode . escvil-mode))
 
 
 
@@ -408,3 +413,6 @@
 ;; 		(progn
 ;; 			(use-package init-exwm :ensure nil)
 ;; 			(exwm-enable)))
+
+(load-file (let ((coding-system-for-read 'utf-8))
+                (shell-command-to-string "agda-mode locate")))
