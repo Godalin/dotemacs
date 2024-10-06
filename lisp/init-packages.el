@@ -92,8 +92,12 @@
   :after yasnippet)
 
 
+;;; version control
+
 ;; magit
 (use-package magit
+  :defer t
+  :commands (magit)
   :custom
   (magit-view-git-manual-method 'woman))
 
