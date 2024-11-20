@@ -111,7 +111,7 @@
 
 ;; linux specific settings
 (when (eq system-type 'gnu/linux)
-
+  (message "This is linux!")
   ;; clipboard for linux
   (setq x-select-enable-clipboard-manager t))
 
