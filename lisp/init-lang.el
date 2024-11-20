@@ -18,10 +18,33 @@
 
 
 ;;; agda
-(load-file (let ((coding-system-for-read 'utf-8))
-             (shell-command-to-string "agda-mode locate")))
-(add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
-(add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
+;; (defvar agda2-directory (file-name-directory load-file-name)
+;;   "Path to the directory that contains agda2.el(c).")
+
+;; (add-to-list 'load-path (or agda2-directory (car load-path)))
+
+;; (autoload 'agda2-mode "agda2-mode"
+;;   "Major mode for editing Agda files (version ≥ 2)." t)
+;; (add-to-list 'auto-mode-alist '("\\.l?agda\\'" . agda2-mode))
+;; (modify-coding-system-alist 'file "\\.l?agda\\'" 'utf-8)
+
+
+;; (use-package agda2-mode
+;;   :disabled
+;;   :defer t
+;;   :ensure nil
+;;   :load-path
+;;   (lambda ()
+;;     (list (let ((coding-system-for-read 'utf-8))
+;;             (file-name-directory
+;;              (shell-command-to-string "agda-mode locate"))))))
+
+
+
+;; (load-file (let ((coding-system-for-read 'utf-8))
+;;              (shell-command-to-string "agda-mode locate")))
+;; (add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
+;; (add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
 
 
 ;;; cubicaltt
@@ -67,28 +90,17 @@
 (use-package company-coq
   :ensure t
   :defer t
+  :after opam-switch-mode
   :hook
-  (coq-mode . #'company-coq-mode))
+  (coq-mode . company-coq-mode)
+  (coq-mode . opam-switch-mode))
 
 
-(use-package nix-mode
-  :ensure t
-  :defer t
-  :mode "\\.nix\\'")
-
-
-;;; common lisp
-;; (use-package sly
-;;   :defer t
-;;   :config
-;;   ;; (load (expand-file-name "~/.quicklisp/slime-helper.el"))
-;;   (setq inferior-lisp-program "sbcl"))
-
-(use-package slime
-  :defer t
-  :config
-  (load (expand-file-name "~/.quicklisp/slime-helper.el"))
-  (setq inferior-lisp-program "sbcl"))
+;;; common lisp mode
+(add-hook 'lisp-mode-hook
+          (lambda ()
+            (load (expand-file-name "~/.quicklisp/slime-helper.el"))
+            (setq inferior-lisp-program "sbcl")))
 
 
 ;;; scheme
@@ -131,9 +143,9 @@
 
 
 ;; lean-4
-(use-package lean4-mode
-  :defer t
-  :vc (:fetcher github :repo leanprover/lean4-mode))
+;; (use-package lean4-mode
+;;   :defer t
+;;   :vc (:fetcher github :repo leanprover/lean4-mode))
 
 
 ;; kmonad kbd
@@ -146,12 +158,12 @@
 
 
 ;; typst ts mode
-(use-package typst-ts-mode
-  :defer t
-  :vc (:fetcher sourcehut :repo "meow_king/typst-ts-mode")
-  :custom
-  (typst-ts-mode-watch-options "--open")
-  (typst-ts-mode-indent-offset 2))
+;; (use-package typst-ts-mode
+;;   :defer t
+;;   :vc (:fetcher sourcehut :repo "meow_king/typst-ts-mode")
+;;   :custom
+;;   (typst-ts-mode-watch-options "--open")
+;;   (typst-ts-mode-indent-offset 2))
 
 
 ;; LF twelf

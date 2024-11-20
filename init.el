@@ -3,17 +3,130 @@
 ;;; Code:
 
 
+
+
+;; print emacs startup time
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message
+             "Emacs ready in %s with %d garbage collections."
+             (format "%.2f seconds"
+                     (float-time
+                      (time-subtract after-init-time before-init-time)))
+             gcs-done)))
+
+
 ;; custom file
 (setq custom-file
       (expand-file-name "custom.el" user-emacs-directory))
+;; (add-hook 'after-init-hook
+;;           (lambda () (load custom-file 'no-error 'no-message)))
 (load custom-file 'no-error 'no-message)
+
+
+;; yes or no
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+;; auto kill processes
+(setq confirm-kill-processes nil)
+
+;; startup options
+(setq inhibit-startup-screen t)
+(setq initial-scratch-message
+      ";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
+
+(when (fboundp 'set-fontset-font)
+  (set-fontset-font "fontset-default" 'han "LXGW Wenkai")
+  ;; (set-fontset-font "fontset-default" 'symbol "FontAwesome")
+  )
+
+;; input method
+(setq read-quoted-char-radix 16)
+
+;; space/tab related
+(setq tab-width 2)
+(setq indent-tabs-mode nil)
+
+
+
+;; display
+(add-hook 'after-init-hook #'tab-bar-mode)
+(add-hook 'after-init-hook #'pixel-scroll-precision-mode)
+
+;; scroll
+(setq scroll-preserve-screen-position t)
+
+(add-hook 'after-init-hook #'size-indication-mode)
+(add-hook 'after-init-hook #'line-number-mode)
+(add-hook 'after-init-hook #'column-number-mode)
+
+;; no backup files
+(setq make-backup-files nil)
+
+;; set header line
+;; (setq-default header-line-format
+;;                `("%e"
+;;                  mode-line-front-space
+;;                  "Welcome to Emacs"
+;;                  mode-line-end-spaces
+;;                  ))
+
+
+
+;; white-space and indention
+(add-hook 'prog-mode-hook
+          (lambda () (setq show-trailing-whitespace t
+		      indicate-empty-lines t)))
+(add-hook 'text-mode-hook
+          (lambda () (setq show-trailing-whitespace t
+		      indicate-empty-lines t)))
+
+;; visual line mode
+(setq line-move-visual t)
+(setq track-eol t)
+(setq visual-line-fringe-indicators t)
+(setq word-wrap-by-category t)
+(add-hook 'prog-mode-hook #'global-visual-line-mode)
+(add-hook 'text-mode-hook #'global-visual-line-mode)
+
+
+
+;; customization of display
+(setq display-line-numbers-type 'relative)
+(add-hook 'after-init-hook #'global-hl-line-mode)
+(add-hook 'after-init-hook #'auto-save-visited-mode)
+(add-hook 'after-init-hook #'auto-image-file-mode)
+(add-hook 'after-init-hook #'global-auto-revert-mode)
+(add-hook 'after-init-hook #'save-place-mode)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
+;; (add-hook 'after-init-hook #'fido-vertical-mode)
+
+;; programming mode hooks
+(add-hook 'prog-mode-hook #'flymake-mode)
+(add-hook 'prog-mode-hook #'hs-minor-mode)
+(add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
+
+
+
+;; linux specific settings
+(when (eq system-type 'gnu/linux)
+
+  ;; clipboard for linux
+  (setq x-select-enable-clipboard-manager t))
+
+
+
+
 
 
 ;; use the use-package package
 (use-package use-package
   :ensure nil
-  :custom ((use-package-always-ensure t "Default :ensure to t in `use-package'.")
-					 (use-package-enable-imenu-support t)))
+  :custom
+  ((use-package-always-ensure t "Default :ensure to t in `use-package'.")
+   (use-package-enable-imenu-support t)))
+
 
 
 ;; use-package deal with package
@@ -26,40 +139,34 @@
   ;; if not initialized then initialize it
   (unless (bound-and-true-p package--initialized)
     (package-initialize))
-  (unless package-archive-contents
-    (package-refresh-contents)))
-
-
-;; vc use-package, will be removed after emacs 30
-(unless (package-installed-p 'vc-use-package)
-  (package-vc-install "https://github.com/slotThe/vc-use-package.git"))
-(use-package vc-use-package
-  :vc (:fetcher github :repo slotThe/vc-use-package))
-
-
-;; yes or no
-(use-package emacs
-  :ensure nil
-  :config
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (setq confirm-kill-processes nil))
-
-
-;; startup options
-(use-package emacs
-  :ensure nil
-  :init
-  (setq inhibit-startup-screen t)
-  (setq initial-scratch-message
-        ";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
-  (setq x-select-enable-clipboard-manager t))
-
-
-(when (fboundp 'set-fontset-font)
-  (set-fontset-font "fontset-default" 'han "LXGW Wenkai")
-  ;; (set-fontset-font "fontset-default" 'symbol "FontAwesome")
+  ;; (unless (and package-archive-contents
+  ;;              (not (null package-archive-contents)))
+  ;;   (package-refresh-contents))
   )
 
+
+;; mode line info
+(use-package time
+  :ensure nil
+  :defer t
+  :config
+  (setq display-time-24hr-format t)
+  (setq display-time-mail-icon t))
+
+
+
+;; term mode
+(use-package term
+  :ensure nil
+  :custom-face
+  (terminal ((t :family "GoMono Nerd Font")))
+  :hook
+  (term-mode . my/set-term-font)
+  :bind
+  (:map
+   term-mode-map
+   ("C-c C-d" . (lambda () (interactive)
+		  (kill-buffer (current-buffer))))))
 
 (defun my/set-term-font ()
   "Set good fonts for terminal modes."
@@ -68,44 +175,19 @@
   (buffer-face-mode))
 
 
-;; term mode
-(use-package term
-  :ensure nil
-	:custom-face
-	(terminal ((t :family "GoMono Nerd Font")))
-  :hook
-  (term-mode . my/set-term-font)
-  :bind
-  (:map
-   term-mode-map
-   ("C-c C-d" . (lambda () (interactive)
-									(kill-buffer (current-buffer))))))
-
-
-;; input method
-(use-package emacs
-  :custom
-  (read-quoted-char-radix 16))
-
 
 ;; winner
 (use-package winner-mode
   :ensure nil
+  :defer t
   :hook
   (after-init . winner-mode))
-
-
-(use-package emacs
-  :disabled
-  :ensure nil
-  :custom
-  (split-height-threshold nil)
-  (split-width-threshold 0))
 
 
 ;; dired
 (use-package dired
   :ensure nil
+  :defer t
   :config
   (setq dired-listing-switches "-aBhl --group-directories-first"
         dired-use-ls-dired nil
@@ -118,6 +200,8 @@
 ;; dictionary
 (use-package dictionary
 	:ensure nil
+  :defer t
+  :commands (dictionary-lookup-definition)
 	:custom ((dictionary-use-single-buffer t)
 					 (dictionary-server "localhost"))
 	:bind (("M-#" . #'dictionary-lookup-definition)))
@@ -130,76 +214,6 @@
   (after-init . repeat-mode))
 
 
-;; display
-(use-package emacs
-  :ensure nil
-  :hook
-  (after-init . tab-bar-mode)
-  (after-init . pixel-scroll-precision-mode))
-
-
-;; mode line info
-(use-package emacs
-  :ensure nil
-  :custom
-  (display-time-24hr-format t)
-  (display-time-mail-icon t)
-  :hook
-  (after-init . size-indication-mode)
-  (after-init . line-number-mode)
-  (after-init . column-number-mode))
-
-
-;; set header line
-;; (setq-default header-line-format
-;;                `("%e"
-;;                  mode-line-front-space
-;;                  "Welcome to Emacs"
-;;                  mode-line-end-spaces
-;;                  ))
-
-
-;; scroll
-(setq scroll-preserve-screen-position t)
-
-;; white-space and indention
-(add-hook 'prog-mode-hook
-          (lambda () (setq show-trailing-whitespace t
-                      indicate-empty-lines t)))
-(add-hook 'text-mode-hook
-          (lambda () (setq show-trailing-whitespace t
-                      indicate-empty-lines t)))
-
-
-;; visual line mode
-(use-package emacs
-  :ensure nil
-  :custom
-  (line-move-visual t)
-  (track-eol t)
-  (visual-line-fringe-indicators t)
-  (word-wrap-by-category t)
-  :hook
-  (prog-mode . global-visual-line-mode)
-	(text-mode . global-visual-line-mode))
-
-
-;; customization of display
-(use-package emacs
-  :ensure nil
-  :custom
-  (display-line-numbers-type 'relative)
-  :hook
-  (after-init . global-hl-line-mode)
-  (after-init . auto-save-visited-mode)
-  (after-init . auto-image-file-mode)
-  (after-init . global-auto-revert-mode)
-  (after-init . save-place-mode)
-  (prog-mode . display-line-numbers-mode)
-
-  ;; (after-init . fido-vertical-mode)
-  )
-
 
 ;; so long mode
 (use-package so-long
@@ -208,43 +222,28 @@
   (after-init . global-so-long-mode))
 
 
-;; tab related
-(use-package emacs
-  :ensure nil
-  :custom
-  (tab-width 2)
-	(indent-tabs-mode nil))
-
 
 ;; parentheses
 (use-package show-paren-mode
   :ensure nil
-	:custom ((show-paren-highlight-openparen t)
-					 (show-paren-style 'mixed)
-					 (show-paren-when-point-inside-paren t)
-					 (show-paren-when-point-in-periphery t)
-					 (show-paren-context-when-offscreen t))
+  :custom ((show-paren-highlight-openparen t)
+	   (show-paren-style 'mixed)
+	   (show-paren-when-point-inside-paren t)
+	   (show-paren-when-point-in-periphery t)
+	   (show-paren-context-when-offscreen t))
   :hook
-	(after-init . show-paren-mode))
+  (after-init . show-paren-mode))
 
 (use-package electric-pair-mode
-	:ensure nil
-	:custom
-	(electric-pair-preserve-balance t)
-	(electric-pair-delete-adjacent-pairs t)
-	(electric-pair-open-newline-between-pairs t)
-	(electric-pair-skip-whitespace t)
-	:hook
-	(after-init . electric-pair-mode))
-
-
-;; programming mode hooks
-(use-package emacs
   :ensure nil
+  :custom
+  (electric-pair-preserve-balance t)
+  (electric-pair-delete-adjacent-pairs t)
+  (electric-pair-open-newline-between-pairs t)
+  (electric-pair-skip-whitespace t)
   :hook
-  (prog-mode . flymake-mode)
-  (prog-mode . hs-minor-mode)
-  (emacs-lisp-mode . prettify-symbols-mode))
+  (after-init . electric-pair-mode))
+
 
 
 ;; set abbrev mode
@@ -255,12 +254,18 @@
   (setq save-abbrevs 'silently))
 
 
+
 ;; set eglot mode: lsp
 (use-package eglot
   :ensure nil
+  :defer t
   ;; :custom
   ;; (eglot-autoshutdown t)
   ;; (eglot-confirm-server-initiated-edits nil)
+  :commands (eglot-ensure
+             eglot-reconnect
+             eglot-format
+             eglot-code-actions)
   :config
   (setq-default eglot-workspace-configuration
                 '((:haskell
@@ -275,12 +280,11 @@
 ;; file management
 (use-package recentf
   :ensure nil
+  :defer t
   :custom
   (recentf-max-menu-items 30)
   :hook
   (after-init . recentf-mode))
-
-(setq make-backup-files nil)
 
 
 ;; docview
@@ -344,11 +348,11 @@
   (eshell-prompt-function 'my/eshell-prompt)
   :hook
   (eshell-mode . (lambda ()
-									 (keymap-set
-										eshell-mode-map
-										"C-d"
-										(lambda () (interactive)
-											(kill-buffer (current-buffer)))))))
+		   (keymap-set
+		    eshell-mode-map
+		    "C-d"
+		    (lambda () (interactive)
+		      (kill-buffer (current-buffer)))))))
 
 
 ;; email settings
@@ -356,6 +360,7 @@
 (setq send-mail-function 'smtpmail-send-it)
 (use-package smtpmail
   :ensure nil
+  :defer t
   :init
   (setq smtpmail-smtp-user "yly1228@foxmail.com"
         smtpmail-smtp-server "smtp.qq.com"
@@ -363,56 +368,47 @@
         smtpmail-stream-type 'ssl))
 
 
+
 ;;; Other files
 
 
-;; add local config path
+;; add additional config path
 (add-to-list 'load-path
              (expand-file-name "lisp" user-emacs-directory))
 
 ;; ui settings
-(use-package init-ui
-  :ensure nil)
+(use-package init-ui :ensure nil)
 
 ;; load packages
-(use-package init-packages
-  :ensure nil)
+(use-package init-packages :ensure nil)
 
 ;; keymaps
-(use-package init-keymaps
-  :ensure nil)
+(use-package init-keymaps :ensure nil)
 
 ;; evil bindings
-(use-package init-evil
-  :ensure nil)
+;; (use-package init-evil :ensure nil)
 
 ;; org mode settings
-(use-package init-org
-  :ensure nil)
+(use-package init-org :ensure nil)
 
 ;; programming languages
-(use-package init-lang
-  :ensure nil)
+(use-package init-lang :ensure nil)
 
 
 
 ;; my custom lisp library(s)
-;; (add-to-list 'load-path "~/Projects/ELisp")
-;; (use-package escvil
-;; 	:ensure nil
-;; 	:commands escvil-mode
-;; 	:defer t
-;; 	:hook
-;; 	(prog-mode . escvil-mode)
-;; 	(text-mode . escvil-mode))
+(when (file-directory-p "~/Projects/ELisp")
+  (add-to-list 'load-path "~/Projects/ELisp")
+  (use-package escvil
+    :ensure nil
+    :commands escvil-mode
+    :defer t
+    :hook
+    (prog-mode . escvil-mode)
+    (text-mode . escvil-mode))
+  )
 
+;;; send that to a reasonable value
+(setq gc-cons-threshold (* 2 1000 1000))
 
-
-;; editor or wm
-;; (if (not window-system)
-;; 		(progn
-;; 			(use-package init-exwm :ensure nil)
-;; 			(exwm-enable)))
-
-(load-file (let ((coding-system-for-read 'utf-8))
-                (shell-command-to-string "agda-mode locate")))
+;;; init.el ends here.

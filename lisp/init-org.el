@@ -5,11 +5,16 @@
 
 (use-package org
   :ensure nil
+  :defer t
   ;; :init
   ;; (setq org-hide-emphasis-markers t)
   :config
   (setq org-format-latex-options
         (plist-put org-format-latex-options :scale 2.0))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (haskell . t)))
   :bind
   (:map org-mode-map
         ("C-c C-4" . (lambda () (interactive)
@@ -31,12 +36,6 @@
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
 
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((python . t)
-   (haskell . t)))
-
-
 (use-package zotxt
   :defer t
   :hook
@@ -53,6 +52,7 @@
 
 ;; org-mode for blog: hugo
 (use-package ox-hugo
+  :defer t
   :after ox
   :init
   ;; change this to your Hugo root

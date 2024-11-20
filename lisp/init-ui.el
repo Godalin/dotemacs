@@ -6,14 +6,12 @@
 
 ;; theme: modus
 (use-package emacs
-  ;; :disabled nil
   :ensure nil
   :custom
   (modus-themes-italic-constructs t)
   (modus-themes-bold-constructs t)
-  (modus-themes-italic-constructs t)
   (modus-themes-syntax '(faint yellow-comments green-strings alt-syntax))
-	;; (modus-themes-syntax '(yellow-comments green-strings alt-syntax))
+  ;; (modus-themes-syntax '(yellow-comments green-strings alt-syntax))
   (modus-themes-mixed-fonts nil)
   (modus-themes-links '(neutral-underline faint bold italic background))
   (modus-themes-prompts '(bold intense))
@@ -38,57 +36,49 @@
                            (3 . (background overline rainbow 1.4))
                            (4 . (background overline rainbow 1.2))
                            (t . (overline semibold))))
-  :config
-  (load-theme 'modus-vivendi)
-  ;; get the default mode-line color
-  (setq-default default-mode-line-color
-                (cons (face-background 'mode-line)
-                      (face-foreground 'mode-line)))
   :bind
-  ("<f12>" . 'modus-themes-toggle))
-
-
-(use-package rainbow-delimiters
+  ("<f12>" . #'modus-themes-toggle)
   :hook
-  (prog-mode . rainbow-delimiters-mode))
-
-
-(defun my/set-modeline ()
-  "Change the color of the modeline."
-  (let ((color
-         (cond ((minibufferp) '("#f5426f" . "#66ccff"))
-               ((and (fboundp 'evil-normal-state-p)
-                     (evil-normal-state-p)) '("#66ccff" . "#000000"))
-               ((and (fboundp 'evil-insert-state-p)
-                     (evil-insert-state-p)) '("#9cf542" . "#000000"))
-               ((and (fboundp 'evil-visual-state-p)
-                     (evil-visual-state-p)) '("#473ce6" . "#ffffff"))
-               ((and (fboundp 'evil-replace-state-p)
-                     (evil-replace-state-p)) '("#8e8f94" . "#ffffff"))
-               ((and (fboundp 'evil-operator-state-p)
-                     (evil-operator-state-p)) '("#8e8f94" . "#ffffff"))
-               (t default-mode-line-color))))
-    (set-face-background 'mode-line (car color))
-    (set-face-foreground 'mode-line (cdr color))))
+  (emacs-startup . (lambda ()
+                     (load-theme 'modus-vivendi))))
 
 
 
-;; dashboard
+;;; rainbow delimiters
+;; (use-package rainbow-delimiters
+;;   :defer 1
+;;   :hook
+;;   (prog-mode . rainbow-delimiters-mode))
+
+
+
+;; (defun my/set-modeline ()
+;;   "Change the color of the modeline."
+;;   (let ((color
+;;          (cond ((minibufferp) '("#f5426f" . "#66ccff"))
+;;                ((and (fboundp 'evil-normal-state-p)
+;;                      (evil-normal-state-p)) '("#66ccff" . "#000000"))
+;;                ((and (fboundp 'evil-insert-state-p)
+;;                      (evil-insert-state-p)) '("#9cf542" . "#000000"))
+;;                ((and (fboundp 'evil-visual-state-p)
+;;                      (evil-visual-state-p)) '("#473ce6" . "#ffffff"))
+;;                ((and (fboundp 'evil-replace-state-p)
+;;                      (evil-replace-state-p)) '("#8e8f94" . "#ffffff"))
+;;                ((and (fboundp 'evil-operator-state-p)
+;;                      (evil-operator-state-p)) '("#8e8f94" . "#ffffff"))
+;;                (t default-mode-line-color))))
+;;     (set-face-background 'mode-line (car color))
+;;     (set-face-foreground 'mode-line (cdr color))))
+
+
+
+;;; dashboard
 (use-package dashboard
-  :disabled
   :pin melpa
   :init
   (setq dashboard-center-content t)
   :config
   (dashboard-setup-startup-hook))
-
-
-
-;; sml
-(use-package smart-mode-line
-  :disabled
-  :config
-  (sml/setup))
 
 
 

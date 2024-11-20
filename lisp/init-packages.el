@@ -3,15 +3,33 @@
 ;;; Code:
 
 
+(use-package esup
+  :defer t
+  :pin melpa
+  :commands (esup)
+  :config
+  (setq esup-depth 0))
+
+
+(use-package benchmark-init
+  :ensure t
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
+
 ;; which key
 (use-package which-key
+  :defer t
+  :commands (which-key-mode)
   :hook
   (after-init . which-key-mode))
 
 
 ;; keycast
 (use-package keycast
-  :demand t
+  :defer t
+  :commands (keycast-tab-bar-mode)
   :custom-face
   (keycast-key
    ((t (:height 120))))
@@ -23,7 +41,6 @@
 
 ;; company
 (use-package company
-  :ensure t
   :demand t
   :custom
   (company-minimum-prefix-length 1)
@@ -54,10 +71,10 @@
 
 ;; ivy-counsel-swiper completion
 (use-package counsel
-  ;; :disabled
-  :custom
-  (ivy-use-virtual-buffers t)
-  (ivy-count-format "%d/%d")
+  :defer t
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-count-format "%d/%d")
   :hook
   (after-init . ivy-mode)
   :bind
