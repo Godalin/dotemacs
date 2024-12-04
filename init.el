@@ -3,6 +3,7 @@
 ;;; Code:
 
 
+(setq gc-cons-threshold most-positive-fixnum)
 
 
 ;; print emacs startup time
@@ -15,13 +16,28 @@
                       (time-subtract after-init-time before-init-time)))
              gcs-done)))
 
-
 ;; custom file
 (setq custom-file
       (expand-file-name "custom.el" user-emacs-directory))
-;; (add-hook 'after-init-hook
-;;           (lambda () (load custom-file 'no-error 'no-message)))
 (load custom-file 'no-error 'no-message)
+
+
+
+;; use the use-package package
+(use-package use-package
+  :ensure nil
+  :init
+  (setq use-package-always-ensure t
+	use-package-enable-imenu-support t))
+
+;; use-package deal with package
+(use-package package
+  :ensure nil
+  :init
+  (add-to-list 'package-archives
+               '("melpa" . "https://melpa.org/packages/")))
+
+
 
 
 ;; yes or no
@@ -63,16 +79,6 @@
 ;; no backup files
 (setq make-backup-files nil)
 
-;; set header line
-;; (setq-default header-line-format
-;;                `("%e"
-;;                  mode-line-front-space
-;;                  "Welcome to Emacs"
-;;                  mode-line-end-spaces
-;;                  ))
-
-
-
 ;; white-space and indention
 (add-hook 'prog-mode-hook
           (lambda () (setq show-trailing-whitespace t
@@ -92,7 +98,11 @@
 
 
 ;; customization of display
-(setq display-line-numbers-type 'relative)
+(use-package display-line-numbers
+  :ensure nil
+  :init
+  (setq display-line-numbers-type 'relative))
+
 (add-hook 'after-init-hook #'global-hl-line-mode)
 (add-hook 'after-init-hook #'auto-save-visited-mode)
 (add-hook 'after-init-hook #'auto-image-file-mode)
@@ -109,40 +119,11 @@
 
 
 
-;; linux specific settings
-(when (eq system-type 'gnu/linux)
-  (message "This is linux!")
-  ;; clipboard for linux
-  (setq x-select-enable-clipboard-manager t))
+;; clipboard
+(use-package select
+  :init
+  (setq select-enable-clipboard t))
 
-
-
-
-
-
-;; use the use-package package
-(use-package use-package
-  :ensure nil
-  :custom
-  ((use-package-always-ensure t "Default :ensure to t in `use-package'.")
-   (use-package-enable-imenu-support t)))
-
-
-
-;; use-package deal with package
-(use-package package
-  :ensure nil
-  :config
-  (add-to-list 'package-archives
-               '("melpa" . "https://melpa.org/packages/"))
-
-  ;; if not initialized then initialize it
-  (unless (bound-and-true-p package--initialized)
-    (package-initialize))
-  ;; (unless (and package-archive-contents
-  ;;              (not (null package-archive-contents)))
-  ;;   (package-refresh-contents))
-  )
 
 
 ;; mode line info
@@ -199,12 +180,13 @@
 
 ;; dictionary
 (use-package dictionary
-	:ensure nil
+  :ensure nil
   :defer t
   :commands (dictionary-lookup-definition)
-	:custom ((dictionary-use-single-buffer t)
-					 (dictionary-server "localhost"))
-	:bind (("M-#" . #'dictionary-lookup-definition)))
+  :custom ((dictionary-use-single-buffer t)
+	   (dictionary-server "localhost"))
+  :bind
+  ("M-#" . #'dictionary-lookup-definition))
 
 
 ;; repeat mode
@@ -271,10 +253,10 @@
                 '((:haskell
                    (:formattingProvider . "fourmolu"))))
   :bind
-  ("C-c e r" . 'eglot-reconnect)
-  ("C-c e s" . 'eglot-ensure)
-  ("C-c e f" . 'eglot-format)
-  ("C-c e e" . 'eglot-code-actions))
+  ("C-c e r" . #'eglot-reconnect)
+  ("C-c e s" . #'eglot-ensure)
+  ("C-c e f" . #'eglot-format)
+  ("C-c e e" . #'eglot-code-actions))
 
 
 ;; file management
@@ -290,6 +272,9 @@
 ;; docview
 (use-package doc-view
   :ensure nil
+  :defer t
+  :commands (doc-view-previous-page
+	     doc-view-next-line-or-next-page)
   :custom
   (doc-view-ghost-program "mupdf")
   (doc-view-continuous t)
@@ -298,8 +283,8 @@
   :bind
   (:map
    doc-view-mode-map
-   ("<wheel-up>" . 'doc-view-previous-page)
-   ("<wheel-down>" . 'doc-view-next-line-or-next-page))
+   ("<wheel-up>" . #'doc-view-previous-page)
+   ("<wheel-down>" . #'doc-view-next-line-or-next-page))
   :hook
   (doc-view-mode . doc-view-hide-modeline-mode))
 
@@ -312,60 +297,60 @@
   (propertize str 'face face-plist))
 
 
-(defun my/eshell-prompt ()
-  "The prompt for eshell."
-  (concat
-   ;; begin
-   "⟫ "
-   ;; username
-   (my/with-face
-    (concat (user-login-name) " ⟩ ")
-    :foreground "orange")
-   ;; path
-   (my/with-face
-    (concat (let ((pwd (eshell/pwd))
-                  (home (getenv "HOME")))
-              (if (string-prefix-p home pwd)
-                  (concat "~" (substring pwd (length home)))
-                pwd))
-            " ⟩ ")
-    :foreground "red")
-   ;; time
-   (my/with-face
-    (format-time-string "♥ %H:%M ⟩" (current-time))
-    :foreground "#66ccff")
-   ;; newline
-   "\n"
-   ;; character
-   (if (= (user-uid) 0) "⟩ " "⟫ ")))
+;; (defun my/eshell-prompt ()
+;;   "The prompt for eshell."
+;;   (concat
+;;    ;; begin
+;;    "⟫ "
+;;    ;; username
+;;    (my/with-face
+;;     (concat (user-login-name) " ⟩ ")
+;;     :foreground "orange")
+;;    ;; path
+;;    (my/with-face
+;;     (concat (let ((pwd (eshell/pwd))
+;;                   (home (getenv "HOME")))
+;;               (if (string-prefix-p home pwd)
+;;                   (concat "~" (substring pwd (length home)))
+;;                 pwd))
+;;             " ⟩ ")
+;;     :foreground "red")
+;;    ;; time
+;;    (my/with-face
+;;     (format-time-string "♥ %H:%M ⟩" (current-time))
+;;     :foreground "#66ccff")
+;;    ;; newline
+;;    "\n"
+;;    ;; character
+;;    (if (= (user-uid) 0) "⟩ " "⟫ ")))
 
 
 ;; eshell
-(use-package eshell
-  :ensure nil
-  :custom
-  (eshell-prompt-regexp "^[⟩⟫] ")
-  (eshell-prompt-function 'my/eshell-prompt)
-  :hook
-  (eshell-mode . (lambda ()
-		   (keymap-set
-		    eshell-mode-map
-		    "C-d"
-		    (lambda () (interactive)
-		      (kill-buffer (current-buffer)))))))
+;; (use-package eshell
+;;   :ensure nil
+;;   :custom
+;;   (eshell-prompt-regexp "^[⟩⟫] ")
+;;   (eshell-prompt-function 'my/eshell-prompt)
+;;   :hook
+;;   (eshell-mode . (lambda ()
+;; 		   (keymap-set
+;; 		    eshell-mode-map
+;; 		    "C-d"
+;; 		    (lambda () (interactive)
+;; 		      (kill-buffer (current-buffer)))))))
 
 
 ;; email settings
-(setq user-mail-address "yly1228@foxmail.com")
-(setq send-mail-function 'smtpmail-send-it)
-(use-package smtpmail
-  :ensure nil
-  :defer t
-  :init
-  (setq smtpmail-smtp-user "yly1228@foxmail.com"
-        smtpmail-smtp-server "smtp.qq.com"
-        smtpmail-smtp-service 465
-        smtpmail-stream-type 'ssl))
+;; (setq user-mail-address "yly1228@foxmail.com")
+;; (setq send-mail-function 'smtpmail-send-it)
+;; (use-package smtpmail
+;;   :ensure nil
+;;   :defer t
+;;   :init
+;;   (setq smtpmail-smtp-user "yly1228@foxmail.com"
+;;         smtpmail-smtp-server "smtp.qq.com"
+;;         smtpmail-smtp-service 465
+;;         smtpmail-stream-type 'ssl))
 
 
 
@@ -389,7 +374,7 @@
 ;; (use-package init-evil :ensure nil)
 
 ;; org mode settings
-(use-package init-org :ensure nil)
+;; (use-package init-org :ensure nil)
 
 ;; programming languages
 (use-package init-lang :ensure nil)
@@ -398,6 +383,7 @@
 
 ;; my custom lisp library(s)
 (when (file-directory-p "~/Projects/ELisp")
+  (message "We have user libs!")
   (add-to-list 'load-path "~/Projects/ELisp")
   (use-package escvil
     :ensure nil
@@ -408,7 +394,12 @@
     (text-mode . escvil-mode))
   )
 
+
+
 ;;; send that to a reasonable value
-(setq gc-cons-threshold (* 2 1000 1000))
+;; (setq gc-cons-threshold (* 2 1000 1000))
+
+
 
 ;;; init.el ends here.
+

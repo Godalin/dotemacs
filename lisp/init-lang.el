@@ -41,10 +41,10 @@
 
 
 
-;; (load-file (let ((coding-system-for-read 'utf-8))
-;;              (shell-command-to-string "agda-mode locate")))
-;; (add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
-;; (add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
+(load-file (let ((coding-system-for-read 'utf-8))
+             (shell-command-to-string "agda-mode locate")))
+(add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
+(add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
 
 
 ;;; cubicaltt
@@ -73,8 +73,15 @@
 ;;; coq
 (use-package proof-general
   :defer t
+  :commands (proof-assert-next-command-interactive
+	     proof-undo-last-successful-command)
+  :custom
+  (proof-electric-terminator-enable t)
+  (proof-toolbar-enable t)
+  (PA-script-indent t)
+  (proof-follow-mode 'follow)
   :config
-  (setq proof-electric-terminator-enable nil)
+  (setq electric-indent-mode nil)
   :bind
   (:repeat-map
    coq-repeat-mode-map
@@ -92,8 +99,17 @@
   :defer t
   :after opam-switch-mode
   :hook
-  (coq-mode . company-coq-mode)
-  (coq-mode . opam-switch-mode))
+  (coq-mode . company-coq-mode))
+
+
+
+;; (add-hook 'coq-mode-hook
+;; 	  (lambda ()
+;; 	    (message "hello, Coq")
+;; 	    ;; (opam-switch-set-switch "coq-env")
+;; 	    (company-coq-mode t)))
+
+
 
 
 ;;; common lisp mode

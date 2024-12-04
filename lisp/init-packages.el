@@ -41,7 +41,9 @@
 
 ;; company
 (use-package company
-  :demand t
+  :defer t
+  :commands (company-abort
+	     company-complele-selection)
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
@@ -56,10 +58,13 @@
   :bind
   (:map
    company-active-map
-   ("RET"    . 'company-abort)
-   ([return] . 'company-abort)
-   ("TAB"    . 'company-complete-selection)
-   ([tab]    . 'company-complete-selection)))
+   ("RET" . #'company-abort)
+   ([return] . #'company-abort)
+   ("TAB" . #'company-complete-selection)
+   ([tab] . #'company-complete-selection)
+   ;;("SPC" . #'company-complete-selection)
+   ;;([space] . #'company-complete-selection)
+   ))
 
 
 ;; format-all (not completed)
@@ -97,18 +102,6 @@
   )
 
 
-;; snippet
-(use-package yasnippet
-  :disabled
-  :defer t
-  :config
-  (yas-global-mode))
-
-(use-package yasnippet-snippets
-  :disabled
-  :after yasnippet)
-
-
 ;;; version control
 
 ;; magit
@@ -117,6 +110,10 @@
   :commands (magit)
   :custom
   (magit-view-git-manual-method 'woman))
+
+;; direnv
+(use-package envrc
+  :hook (after-init . envrc-global-mode))
 
 
 (provide 'init-packages)
