@@ -3,10 +3,7 @@
 ;;; Code:
 
 
-(setq gc-cons-threshold most-positive-fixnum)
-
-
-;; print emacs startup time
+;;; print emacs startup time
 (add-hook 'emacs-startup-hook
           (lambda ()
             (message
@@ -16,21 +13,21 @@
                       (time-subtract after-init-time before-init-time)))
              gcs-done)))
 
-;; custom file
+;;; custom file
 (setq custom-file
       (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'no-error 'no-message)
 
 
 
-;; use the use-package package
+;;; use the use-package package
 (use-package use-package
   :ensure nil
   :init
   (setq use-package-always-ensure t
-	use-package-enable-imenu-support t))
+	      use-package-enable-imenu-support t))
 
-;; use-package deal with package
+;;; use-package deal with package
 (use-package package
   :ensure nil
   :init
@@ -39,55 +36,49 @@
 
 
 
+(defalias 'yes-or-no-p 'y-or-n-p)       ; yes or no
+(setq confirm-kill-processes nil)       ; auto kill processes when exit
 
-;; yes or no
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-;; auto kill processes
-(setq confirm-kill-processes nil)
-
-;; startup options
-(setq inhibit-startup-screen t)
+(setq inhibit-startup-screen nil)       ; startup options
 (setq initial-scratch-message
       ";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
 
 (when (fboundp 'set-fontset-font)
-  (set-fontset-font "fontset-default" 'han "LXGW Wenkai")
-  ;; (set-fontset-font "fontset-default" 'symbol "FontAwesome")
-  )
-
-;; input method
-(setq read-quoted-char-radix 16)
-
-;; space/tab related
-(setq tab-width 2)
-(setq indent-tabs-mode nil)
+  (set-fontset-font "fontset-default" 'han "LXGW Wenkai"))
 
 
 
-;; display
+(setq read-quoted-char-radix 16)        ; input method, use hex code
+
+
+
+;;; space/tab related
+(setq-default tab-width 2)             ; 2 spaces = 1 tab
+(setq-default indent-tabs-mode nil)    ; do not use tabs for indention
+
+
+
+;;; display
 (add-hook 'after-init-hook #'tab-bar-mode)
 (add-hook 'after-init-hook #'pixel-scroll-precision-mode)
 
-;; scroll
-(setq scroll-preserve-screen-position t)
+(setq scroll-preserve-screen-position t) ; remember point positions
 
 (add-hook 'after-init-hook #'size-indication-mode)
 (add-hook 'after-init-hook #'line-number-mode)
 (add-hook 'after-init-hook #'column-number-mode)
 
-;; no backup files
-(setq make-backup-files nil)
+(setq make-backup-files nil)            ; do not create backup files
 
-;; white-space and indention
+;;; white-space and indention
 (add-hook 'prog-mode-hook
           (lambda () (setq show-trailing-whitespace t
-		      indicate-empty-lines t)))
+		                  indicate-empty-lines t)))
 (add-hook 'text-mode-hook
           (lambda () (setq show-trailing-whitespace t
-		      indicate-empty-lines t)))
+		                  indicate-empty-lines t)))
 
-;; visual line mode
+;;; visual line mode
 (setq line-move-visual t)
 (setq track-eol t)
 (setq visual-line-fringe-indicators t)
@@ -97,7 +88,7 @@
 
 
 
-;; customization of display
+;;; customization of display
 (use-package display-line-numbers
   :ensure nil
   :init
@@ -112,27 +103,12 @@
 
 ;; (add-hook 'after-init-hook #'fido-vertical-mode)
 
-;; programming mode hooks
+;;; programming mode hooks
 (add-hook 'prog-mode-hook #'flymake-mode)
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 
-
-
-;; clipboard
-(use-package select
-  :init
-  (setq select-enable-clipboard t))
-
-
-
-;; mode line info
-(use-package time
-  :ensure nil
-  :defer t
-  :config
-  (setq display-time-24hr-format t)
-  (setq display-time-mail-icon t))
+(setq select-enable-clipboard t)        ; enable clipboard
 
 
 
@@ -147,7 +123,7 @@
   (:map
    term-mode-map
    ("C-c C-d" . (lambda () (interactive)
-		  (kill-buffer (current-buffer))))))
+		              (kill-buffer (current-buffer))))))
 
 (defun my/set-term-font ()
   "Set good fonts for terminal modes."
@@ -157,15 +133,10 @@
 
 
 
-;; winner
-(use-package winner-mode
-  :ensure nil
-  :defer t
-  :hook
-  (after-init . winner-mode))
+(add-hook 'after-init #'winner-mode)    ; save and switch window layouts
 
 
-;; dired
+;;; dired
 (use-package dired
   :ensure nil
   :defer t
@@ -178,41 +149,36 @@
           dired-use-ls-dired t)))
 
 
-;; dictionary
+;;; dictionary
 (use-package dictionary
   :ensure nil
   :defer t
   :commands (dictionary-lookup-definition)
   :custom ((dictionary-use-single-buffer t)
-	   (dictionary-server "localhost"))
+	         (dictionary-server "localhost"))
   :bind
   ("M-#" . #'dictionary-lookup-definition))
 
 
-;; repeat mode
+;;; repeat mode
 (use-package repeat
   :ensure nil
   :hook
   (after-init . repeat-mode))
 
 
-
-;; so long mode
-(use-package so-long
-  :ensure nil
-  :hook
-  (after-init . global-so-long-mode))
+(add-hook 'after-init-hook #'global-so-long-mode) ; so long mode
 
 
 
-;; parentheses
+;;; parentheses
 (use-package show-paren-mode
   :ensure nil
   :custom ((show-paren-highlight-openparen t)
-	   (show-paren-style 'mixed)
-	   (show-paren-when-point-inside-paren t)
-	   (show-paren-when-point-in-periphery t)
-	   (show-paren-context-when-offscreen t))
+	         (show-paren-style 'mixed)
+	         (show-paren-when-point-inside-paren t)
+	         (show-paren-when-point-in-periphery t)
+	         (show-paren-context-when-offscreen t))
   :hook
   (after-init . show-paren-mode))
 
@@ -227,17 +193,11 @@
   (after-init . electric-pair-mode))
 
 
-
-;; set abbrev mode
-(use-package abbrev
-  :ensure nil
-  :config
-  (setq-default abbrev-mode nil)
-  (setq save-abbrevs 'silently))
+(setq-default abbrev-mode nil)          ; set abbrev mode
+(setq save-abbrevs 'silently)           ; silently save abbrevs
 
 
-
-;; set eglot mode: lsp
+;;; set eglot mode: lsp
 (use-package eglot
   :ensure nil
   :defer t
@@ -259,22 +219,20 @@
   ("C-c e e" . #'eglot-code-actions))
 
 
-;; file management
+;;; file management
 (use-package recentf
   :ensure nil
-  :defer t
   :custom
   (recentf-max-menu-items 30)
   :hook
   (after-init . recentf-mode))
 
-
-;; docview
+;;; docview
 (use-package doc-view
   :ensure nil
   :defer t
   :commands (doc-view-previous-page
-	     doc-view-next-line-or-next-page)
+	           doc-view-next-line-or-next-page)
   :custom
   (doc-view-ghost-program "mupdf")
   (doc-view-continuous t)
@@ -289,12 +247,15 @@
   (doc-view-mode . doc-view-hide-modeline-mode))
 
 
+
+;;; remap the buffer view
 (keymap-global-set "<remap> <list-buffers>" 'ibuffer-other-window)
 
 
-(defun my/with-face (str &rest face-plist)
-  "Add face to string."
-  (propertize str 'face face-plist))
+
+;; (defun my/with-face (str &rest face-plist)
+;;   "Add face to string."
+;;   (propertize str 'face face-plist))
 
 
 ;; (defun my/eshell-prompt ()
@@ -361,23 +322,12 @@
 (add-to-list 'load-path
              (expand-file-name "lisp" user-emacs-directory))
 
-;; ui settings
-(use-package init-ui :ensure nil)
-
-;; load packages
-(use-package init-packages :ensure nil)
-
-;; keymaps
-(use-package init-keymaps :ensure nil)
-
-;; evil bindings
-;; (use-package init-evil :ensure nil)
-
-;; org mode settings
-;; (use-package init-org :ensure nil)
-
-;; programming languages
-(use-package init-lang :ensure nil)
+(use-package init-ui :ensure nil)       ; ui settings
+(use-package init-packages :ensure nil) ; load packages
+(use-package init-keymaps :ensure nil)  ; keymaps
+;; (use-package init-evil :ensure nil)     ; evil bindings
+;; (use-package init-org :ensure nil)      ; org mode settings
+(use-package init-lang :ensure nil)     ; programming languages
 
 
 
@@ -394,12 +344,4 @@
     (text-mode . escvil-mode))
   )
 
-
-
-;;; send that to a reasonable value
-;; (setq gc-cons-threshold (* 2 1000 1000))
-
-
-
 ;;; init.el ends here.
-

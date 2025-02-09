@@ -116,5 +116,26 @@
   :hook (after-init . envrc-global-mode))
 
 
+
+;; Rime
+(use-package rime
+  :defer t
+  :commands (rime-send-keybinding)
+  :custom
+  (default-input-method "rime")
+  (rime-librime-root
+   "/opt/homebrew/Cellar/librime/1.13.0")
+  (rime-emacs-module-header-root
+   "/Applications/Emacs.app/Contents/Resources/include")
+  (rime-show-candidate 'popup)
+  :bind
+  (:map
+   rime-mode-map
+   ("C-`" . #'rime-send-keybinding)
+   ("<f4>" . #'rime-send-keybinding))
+  )
+
+
+
 (provide 'init-packages)
 ;;; init-packages.el ends here

@@ -45,10 +45,10 @@
 
 
 ;;; rainbow delimiters
-;; (use-package rainbow-delimiters
-;;   :defer 1
-;;   :hook
-;;   (prog-mode . rainbow-delimiters-mode))
+(use-package rainbow-delimiters
+  :defer 1
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
 
 
 
@@ -74,6 +74,7 @@
 
 ;;; dashboard
 (use-package dashboard
+  :disabled
   :pin melpa
   :init
   (setq dashboard-center-content t)

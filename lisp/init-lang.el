@@ -18,39 +18,11 @@
 
 
 ;;; agda
-;; (defvar agda2-directory (file-name-directory load-file-name)
-;;   "Path to the directory that contains agda2.el(c).")
-
-;; (add-to-list 'load-path (or agda2-directory (car load-path)))
-
-;; (autoload 'agda2-mode "agda2-mode"
-;;   "Major mode for editing Agda files (version ≥ 2)." t)
-;; (add-to-list 'auto-mode-alist '("\\.l?agda\\'" . agda2-mode))
-;; (modify-coding-system-alist 'file "\\.l?agda\\'" 'utf-8)
-
-
-;; (use-package agda2-mode
-;;   :disabled
-;;   :defer t
-;;   :ensure nil
-;;   :load-path
-;;   (lambda ()
-;;     (list (let ((coding-system-for-read 'utf-8))
-;;             (file-name-directory
-;;              (shell-command-to-string "agda-mode locate"))))))
-
-
-
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
 (add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
 (add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
 
-
-;;; cubicaltt
-;;(load-file "$HOME/Projects/cubicaltt/cubicaltt.el")
-;; (autoload 'cubicaltt-mode "cubicaltt" "cubical editing mode" t)
-;;(add-to-list 'auto-mode-alist '("\\.ctt$" . cubicaltt-mode))
 
 
 ;;; markdown
@@ -60,28 +32,27 @@
   :init (setq markdown-command "multimarkdown"))
 
 
-;;; bqn
-(use-package bqn-mode
-  :defer t)
-
-
-;;; julia
-(use-package julia-mode
-  :defer t)
-
 
 ;;; coq
 (use-package proof-general
-  :defer t
   :commands (proof-assert-next-command-interactive
-	     proof-undo-last-successful-command)
+	           proof-undo-last-successful-command
+	           proof-goto-point)
   :custom
-  (proof-electric-terminator-enable t)
+  (proof-electric-terminator-enable nil)
   (proof-toolbar-enable t)
   (PA-script-indent t)
-  (proof-follow-mode 'follow)
+  (proof-follow-mode 'followdown)
   :config
-  (setq electric-indent-mode nil)
+  (eval-after-load "proof-script"
+    '(progn
+       (keymap-set 'proof-mode-map "C-M-<down>"
+                   #'proof-assert-next-command-interactive)
+       (keymap-set 'proof-mode-map "C-M-<up>"
+                   #'proof-undo-last-successful-command)
+       (keymap-set 'proof-mode-map "C-M-<right>"
+                   #'proof-goto-point)
+       ))
   :bind
   (:repeat-map
    coq-repeat-mode-map
@@ -92,23 +63,24 @@
    ("C-p" . #'proof-undo-last-successful-command)
    ("C-u" . #'proof-undo-last-successful-command)
    :exit
-   ("g" . #'keyboard-quit)))
+   ("g" . #'keyboard-quit))
+  :hook
+  (coq-mode
+   . (lambda ()                                ; prepare the coq mode
+		   (opam-switch-set-switch "coq-env") ; switch to a good coq-env
+		   (company-coq-mode t)               ; enable company-coq-mode
+       (setq-local tab-always-indent nil)
+       ))
+  )
 
 (use-package company-coq
-  :ensure t
   :defer t
-  :after opam-switch-mode
+  :after (opam-switch-mode proof-general)
   :hook
-  (coq-mode . company-coq-mode))
-
-
-
-;; (add-hook 'coq-mode-hook
-;; 	  (lambda ()
-;; 	    (message "hello, Coq")
-;; 	    ;; (opam-switch-set-switch "coq-env")
-;; 	    (company-coq-mode t)))
-
+  (coq-mode . company-coq-mode)
+  (company-coq-mode
+   . (lambda ()
+       (add-to-list 'company-coq-disabled-features 'prettify-symbols))))
 
 
 
@@ -117,6 +89,7 @@
           (lambda ()
             (load (expand-file-name "~/.quicklisp/slime-helper.el"))
             (setq inferior-lisp-program "sbcl")))
+
 
 
 ;;; scheme
@@ -157,34 +130,6 @@
   :defer t
   :after prolog-mode)
 
-
-;; lean-4
-;; (use-package lean4-mode
-;;   :defer t
-;;   :vc (:fetcher github :repo leanprover/lean4-mode))
-
-
-;; kmonad kbd
-;; (use-package kbd-mode
-;;   :defer t
-;;   :vc (:fetcher github :repo kmonad/kbd-mode)
-;;   :custom
-;;   (kbd-mode-kill-kmonad "pkill -9 kmonad")
-;;   (kbd-mode-start-kmonad "kmonad ~/.config/kmonad/best.kbd"))
-
-
-;; typst ts mode
-;; (use-package typst-ts-mode
-;;   :defer t
-;;   :vc (:fetcher sourcehut :repo "meow_king/typst-ts-mode")
-;;   :custom
-;;   (typst-ts-mode-watch-options "--open")
-;;   (typst-ts-mode-indent-offset 2))
-
-
-;; LF twelf
-;; (setq twelf-root "/home/godalin/Projects/twelf/")
-;; (load (concat twelf-root "emacs/twelf-init.el"))
 
 
 (provide 'init-lang)
