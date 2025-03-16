@@ -141,7 +141,7 @@
   "w w" 'delete-trailing-whitespace     ; whitespace
   ;; terminals
   "x" 'term                             ; term
-  "z" 'eshell                           ; eshell
+  "z" #'eshell-toggle                   ; eshell
   )
 
 (keymap-global-set "C-z" 'Custom-Function-prefix)

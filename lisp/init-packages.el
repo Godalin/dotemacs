@@ -3,128 +3,190 @@
 ;;; Code:
 
 
-(use-package esup
-  :defer t
-  :pin melpa
-  :commands (esup)
-  :config
-  (setq esup-depth 0))
 
-
-(use-package benchmark-init
-  :ensure t
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
-
-;; which key
-(use-package which-key
-  :defer t
-  :commands (which-key-mode)
-  :hook
-  (after-init . which-key-mode))
-
-
-;; keycast
-(use-package keycast
-  :defer t
-  :commands (keycast-tab-bar-mode)
-  :custom-face
-  (keycast-key
-   ((t (:height 120))))
-  (keycast-command
-   ((t (:height 120))))
-  :hook
-  (tab-bar-mode . keycast-tab-bar-mode))
-
-
-;; company
+;;; company
 (use-package company
   :defer t
   :commands (company-abort
-	     company-complele-selection)
+	           company-complele-selection)
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
   (company-tooltip-align-annotations t)
   (company-tooltip-margin 2)
-  :hook
-  (after-init . global-company-mode)
-  (haskell-mode . (lambda ()
-                    (set (make-local-variable 'company-backends)
-                         (append '((company-capf company-dabbrev-code))
-                                 company-backends))))
   :bind
   (:map
    company-active-map
    ("RET" . #'company-abort)
    ([return] . #'company-abort)
    ("TAB" . #'company-complete-selection)
-   ([tab] . #'company-complete-selection)
-   ;;("SPC" . #'company-complete-selection)
-   ;;([space] . #'company-complete-selection)
-   ))
+   ([tab] . #'company-complete-selection))
+  :hook
+  (emacs-startup . global-company-mode))
 
+(use-package company-box
+  :defer t
+  :after company
+  :hook
+  (company-mode . company-box-mode))
 
-;; format-all (not completed)
-(use-package format-all
+(use-package company-posframe
   :disabled
-  :ensure t
-  :defer t)
+  :defer t
+  :after company
+  :hook
+  (company-mode . company-posframe-mode))
 
-
-;; ivy-counsel-swiper completion
+;;; ivy-counsel-swiper completion
 (use-package counsel
   :defer t
   :config
   (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "%d/%d")
-  :hook
-  (after-init . ivy-mode)
+  (setq ivy-count-format "[ %d/%d ]")
   :bind
-  ("C-s" . 'swiper-isearch)
-  ("M-x" . 'counsel-M-x)
-  ("C-x C-f" . 'counsel-find-file)
-  ("M-y" . 'counsel-yank-pop)
-  ("<f1> f" . 'counsel-describe-function)
-  ("<f1> v" . 'counsel-describe-variable)
-  ("<f1> l" . 'counsel-find-library)
-  ("<f2> i" . 'counsel-info-lookup-symbol)
-  ("<f2> u" . 'counsel-unicode-char)
-  ("<f2> j" . 'counsel-set-variable)
-  ("C-x b" . 'ivy-switch-buffer)
-  ("C-c v" . 'ivy-push-view)
-  ("C-c V" . 'ivy-pop-view)
+  ([remap isearch-forward]  . #'swiper-isearch)
+  ([remap isearch-backward] . #'swiper-isearch)
+  ([remap execute-extended-command] . #'counsel-M-x)
+  ([remap find-file] . #'counsel-find-file)
+  ([remap yank-pop] . #'counsel-yank-pop)
+  ([remap describe-function] . #'counsel-describe-function)
+  ([remap describe-variable] . #'counsel-describe-variable)
+  ([remap find-library] . #'counsel-find-library)
+  ([remap info-lookup-symbol] . #'counsel-info-lookup-symbol)
+  ([remap switch-to-buffer] . #'ivy-switch-buffer)
+  ([remap recentf-open] . #'counsel-recentf)
+  ([remap bookmark-jump] . #'counsel-bookmark)
+  ("<f2> i" . #'info-lookup-symbol)
+  ("<f2> u" . #'counsel-unicode-char)
+  ("<f2> j" . #'counsel-set-variable)
+  ("<f2> v" . #'ivy-push-view)
+  ("<f2> s" . #'ivy-save-view)
+  ("<f2> V" . #'ivy-pop-view)
   (:map
    ivy-minibuffer-map
-   ("M-<return>" . 'ivy-immediate-done))
-  )
+   ("M-RET" . #'ivy-immediate-done))
+  :hook
+  (emacs-startup . ivy-mode))
 
+(use-package marginalia
+  :defer t
+  :bind
+  (:map
+   minibuffer-local-map
+   ("M-A" . marginalia-cycle))
+  :hook
+  (emacs-startup . marginalia-mode))
 
-;;; version control
+;;; avy is awesome
+(use-package avy
+  :defer t
+  :config
+  (setq avy-timeout-seconds 0.8)
+  :bind
+  ("C-:" . #'avy-goto-char)
+  ("C-;" . #'avy-goto-char-timer)
+  ("C-'" . #'avy-goto-char-2)
+  ("M-g f" . #'avy-goto-line)
+  ("M-g w" . #'avy-goto-word-1)
+  ("M-g e" . #'avy-goto-word-0))
 
-;; magit
+;;; ace-window
+(use-package ace-window
+  :defer t
+  :bind
+  ("M-o" . #'ace-window))
+
+;;; magit
 (use-package magit
   :defer t
   :commands (magit)
   :custom
   (magit-view-git-manual-method 'woman))
 
-;; direnv
+;;; highlight the line diff
+(use-package diff-hl
+  :defer t
+  :hook
+  (emacs-startup . global-diff-hl-mode))
+
+;;; yet an other snippet
+(use-package yasnippet
+  :defer t
+  :after yasnippet-snippets
+  :hook
+  (emacs-startup . yas-global-mode))
+
+(use-package yasnippet-snippets
+  :defer t)
+
+;;; keycast
+(use-package keycast
+  :defer t
+  :commands (keycast-tab-bar-mode)
+  :custom-face
+  (keycast-key ((t (:height 100))))
+  (keycast-command ((t (:height 100))))
+  :hook
+  (tab-bar-mode . keycast-tab-bar-mode))
+
+;;; multiple cursors
+(use-package multiple-cursors
+  :defer t
+  :bind
+  ("C-S-c C-<" . #'mc/mark-all-like-this)
+  ("C-<" . #'mc/mark-previous-like-this)
+  ("C->" . #'mc/mark-next-like-this)
+  ("C-S-c C-S-<right>" . #'mc/mark-next-like-this-word)
+  ("C-S-c C-S-<left>" . #'mc/mark-previous-like-this-word))
+
+;;; sexy mode line
+(use-package smart-mode-line
+  :defer t
+  :init
+  (setq sml/no-confirm-load-theme t)
+  :hook
+  (emacs-startup . sml/setup))
+
+;;; mini mode line
+(use-package mini-modeline
+  :disabled
+  :after smart-mode-line
+  :config
+  (mini-modeline-mode))
+
+;;; mini frame
+(use-package mini-frame
+  :disabled
+  :defer t
+  :custom (mini-frame-show-parameters
+           '((top . 0.3)
+             (width . 0.7)
+             (left . 0.5)))
+  :hook
+  (emacs-startup . mini-frame-mode))
+
+;;; sr-speedbar
+(use-package sr-speedbar
+  :defer t)
+
+;;; eshell
+(use-package eshell-toggle
+  :defer t
+  :commands (eshell-toggle))
+
+;;; diren
 (use-package envrc
-  :hook (after-init . envrc-global-mode))
+  :hook
+  (emacs-startup . envrc-global-mode))
 
-
-
-;; Rime
+;;; Rime
 (use-package rime
   :defer t
   :commands (rime-send-keybinding)
   :custom
   (default-input-method "rime")
   (rime-librime-root
-   "/opt/homebrew/Cellar/librime/1.13.0")
+   "/opt/homebrew/Cellar/librime/*")
   (rime-emacs-module-header-root
    "/Applications/Emacs.app/Contents/Resources/include")
   (rime-show-candidate 'popup)
@@ -132,10 +194,7 @@
   (:map
    rime-mode-map
    ("C-`" . #'rime-send-keybinding)
-   ("<f4>" . #'rime-send-keybinding))
-  )
-
-
+   ("<f4>" . #'rime-send-keybinding)))
 
 (provide 'init-packages)
 ;;; init-packages.el ends here

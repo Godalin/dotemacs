@@ -5,11 +5,11 @@
 
 ;;; haskell-mode
 (use-package haskell-mode
-  :ensure t
   :defer t
+  :after (company)
   :bind
   (:map
-   haskell-mode-map     ;haskell files
+   haskell-mode-map                     ;haskell files
    ;; editing
    ("C-c C-d" . 'haskell-mode-jump-to-def)
    ("C-c C-m" . 'haskell-navigate-imports)
@@ -25,7 +25,7 @@
    ("C-c c" . 'haskell-process-cabal)
    ("C-c C-v" . 'haskell-cabal-visit-file)
    :map
-   haskell-cabal-mode-map   ;cabal files
+   haskell-cabal-mode-map               ;cabal files
    ("C-c C-c" . 'haskell-compile)
    ("C-c C-`" . 'haskell-interactive-bring)
    ("C-c C-k" . 'haskell-interactive-mode-clear)
@@ -34,7 +34,11 @@
   :hook
   ((haskell-mode . eglot-ensure)
    (haskell-mode . haskell-auto-insert-module-template)
-   (haskell-mode . haskell-decl-scan-mode)))
+   (haskell-mode . haskell-decl-scan-mode)
+   (haskell-mode . (lambda ()
+                     (set (make-local-variable 'company-backends)
+                          (append '((company-capf company-dabbrev-code))
+                                  company-backends))))))
 
 
 (use-package haskell-interactive-mode

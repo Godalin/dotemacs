@@ -25,30 +25,20 @@
 
 ;;; New version
 
+;; UI Settings
+(setf (alist-get 'tool-bar-mode default-frame-alist) nil
+      (alist-get 'menu-bar-mode default-frame-alist) nil
+      (alist-get 'scroll-bar-mode default-frame-alist) nil
+      (alist-get 'alpha-background default-frame-alist) 0.3
+      )
 
-;; setup gc
-;; this will be recovered in `init.el'
-;; (setq gc-cons-threshold (* 50 1000 1000))
-
-
-
-;; UI 设置
-;; (setf (alist-get 'tool-bar-mode default-frame-alist) nil
-;;       (alist-get 'menu-bar-mode default-frame-alist) nil
-;;       ;; (alist-get 'scroll-bar-mode default-frame-alist) nil
-;;       (alist-get 'alpha-background default-frame-alist) 0.7)
-
-;; 字体
+;; fonts
 (add-to-list 'default-frame-alist '(font . "JuliaMono Nerd Font-16"))
+(add-to-list 'default-frame-alist '(width . 160))
+(add-to-list 'default-frame-alist '(height . 50))
 
-;; 最大化窗口
+;; maximize the window. I'm not sure whether this is good
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
-
-;; (setq tool-bar-mode nil
-;;       menu-bar-mode nil
-;;       ;; scroll-bar-mode nil
-;;       )
-
 
 
 ;;; early-init.el ends here.

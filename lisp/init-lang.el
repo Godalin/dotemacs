@@ -13,8 +13,9 @@
 (use-package init-racket :ensure nil)
 (use-package init-tex :ensure nil)
 (use-package init-sml :ensure nil)
+
 (use-package init-ocaml :ensure nil)
-;; (use-package init-clojure :ensure nil)
+(use-package init-coq :ensure nil)
 
 
 ;;; agda
@@ -24,7 +25,6 @@
 (add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
 
 
-
 ;;; markdown
 (use-package markdown-mode
   :defer t
@@ -32,64 +32,11 @@
   :init (setq markdown-command "multimarkdown"))
 
 
-
-;;; coq
-(use-package proof-general
-  :commands (proof-assert-next-command-interactive
-	           proof-undo-last-successful-command
-	           proof-goto-point)
-  :custom
-  (proof-electric-terminator-enable nil)
-  (proof-toolbar-enable t)
-  (PA-script-indent t)
-  (proof-follow-mode 'followdown)
-  :config
-  (eval-after-load "proof-script"
-    '(progn
-       (keymap-set 'proof-mode-map "C-M-<down>"
-                   #'proof-assert-next-command-interactive)
-       (keymap-set 'proof-mode-map "C-M-<up>"
-                   #'proof-undo-last-successful-command)
-       (keymap-set 'proof-mode-map "C-M-<right>"
-                   #'proof-goto-point)
-       ))
-  :bind
-  (:repeat-map
-   coq-repeat-mode-map
-   ("n" . #'proof-assert-next-command-interactive)
-   ("p" . #'proof-undo-last-successful-command)
-   ("u" . #'proof-undo-last-successful-command)
-   ("C-n" . #'proof-assert-next-command-interactive)
-   ("C-p" . #'proof-undo-last-successful-command)
-   ("C-u" . #'proof-undo-last-successful-command)
-   :exit
-   ("g" . #'keyboard-quit))
-  :hook
-  (coq-mode
-   . (lambda ()                                ; prepare the coq mode
-		   (opam-switch-set-switch "coq-env") ; switch to a good coq-env
-		   (company-coq-mode t)               ; enable company-coq-mode
-       (setq-local tab-always-indent nil)
-       ))
-  )
-
-(use-package company-coq
-  :defer t
-  :after (opam-switch-mode proof-general)
-  :hook
-  (coq-mode . company-coq-mode)
-  (company-coq-mode
-   . (lambda ()
-       (add-to-list 'company-coq-disabled-features 'prettify-symbols))))
-
-
-
 ;;; common lisp mode
 (add-hook 'lisp-mode-hook
           (lambda ()
             (load (expand-file-name "~/.quicklisp/slime-helper.el"))
             (setq inferior-lisp-program "sbcl")))
-
 
 
 ;;; scheme
@@ -130,6 +77,11 @@
   :defer t
   :after prolog-mode)
 
+
+(use-package typst-ts-mode
+  :ensure t
+  :vc (typst-ts-mode
+       :url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
 
 (provide 'init-lang)

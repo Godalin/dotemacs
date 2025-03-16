@@ -4,14 +4,16 @@
 
 
 ;;; print emacs startup time
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            (message
-             "Emacs ready in %s with %d garbage collections."
-             (format "%.2f seconds"
-                     (float-time
-                      (time-subtract after-init-time before-init-time)))
-             gcs-done)))
+;; (add-hook 'emacs-startup-hook
+;;           (lambda ()
+;;             (message
+;;              "Emacs ready in %s with %d garbage collections."
+;;              (format "%.2f seconds"
+;;                      (float-time
+;;                       (time-subtract after-init-time before-init-time)))
+;;              gcs-done)))
+
+
 
 ;;; custom file
 (setq custom-file
@@ -36,25 +38,24 @@
 
 
 
-(defalias 'yes-or-no-p 'y-or-n-p)       ; yes or no
-(setq confirm-kill-processes nil)       ; auto kill processes when exit
+(defalias 'yes-or-no-p 'y-or-n-p)       ;yes or no
+(setq confirm-kill-processes nil)       ;auto kill processes when exit
 
-(setq inhibit-startup-screen nil)       ; startup options
+(setq inhibit-startup-screen nil)       ;startup options
 (setq initial-scratch-message
       ";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
 
 (when (fboundp 'set-fontset-font)
   (set-fontset-font "fontset-default" 'han "LXGW Wenkai"))
 
-
-
-(setq read-quoted-char-radix 16)        ; input method, use hex code
+(setq read-quoted-char-radix 16)        ;input method, use hex code
 
 
 
 ;;; space/tab related
-(setq-default tab-width 2)             ; 2 spaces = 1 tab
-(setq-default indent-tabs-mode nil)    ; do not use tabs for indention
+(setq-default tab-width 2)             ;2 spaces = 1 tab
+(setq-default indent-tabs-mode nil)    ;do not use tabs for indention
+(setq-default indent-line-function #'tab-to-tab-stop) ;use a trivial indention function
 
 
 
@@ -89,10 +90,7 @@
 
 
 ;;; customization of display
-(use-package display-line-numbers
-  :ensure nil
-  :init
-  (setq display-line-numbers-type 'relative))
+(setq display-line-numbers-type 'relative)
 
 (add-hook 'after-init-hook #'global-hl-line-mode)
 (add-hook 'after-init-hook #'auto-save-visited-mode)
@@ -100,6 +98,7 @@
 (add-hook 'after-init-hook #'global-auto-revert-mode)
 (add-hook 'after-init-hook #'save-place-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(add-hook 'text-mode-hook #'display-line-numbers-mode)
 
 ;; (add-hook 'after-init-hook #'fido-vertical-mode)
 
@@ -111,25 +110,18 @@
 (setq select-enable-clipboard t)        ; enable clipboard
 
 
+;;; editorconfig mode
+(editorconfig-mode)
+
 
 ;; term mode
 (use-package term
   :ensure nil
-  :custom-face
-  (terminal ((t :family "GoMono Nerd Font")))
-  :hook
-  (term-mode . my/set-term-font)
   :bind
   (:map
    term-mode-map
    ("C-c C-d" . (lambda () (interactive)
 		              (kill-buffer (current-buffer))))))
-
-(defun my/set-term-font ()
-  "Set good fonts for terminal modes."
-  (interactive)
-  (set (make-local-variable 'buffer-face-mode-face) 'terminal)
-  (buffer-face-mode))
 
 
 
@@ -159,13 +151,11 @@
   :bind
   ("M-#" . #'dictionary-lookup-definition))
 
-
 ;;; repeat mode
 (use-package repeat
   :ensure nil
   :hook
   (after-init . repeat-mode))
-
 
 (add-hook 'after-init-hook #'global-so-long-mode) ; so long mode
 
@@ -184,18 +174,20 @@
 
 (use-package electric-pair-mode
   :ensure nil
-  :custom
-  (electric-pair-preserve-balance t)
-  (electric-pair-delete-adjacent-pairs t)
-  (electric-pair-open-newline-between-pairs t)
-  (electric-pair-skip-whitespace t)
+  :init
+  (setq electric-pair-preserve-balance t)
+  (setq electric-pair-delete-adjacent-pairs t)
+  (setq electric-pair-open-newline-between-pairs t)
+  (setq electric-pair-skip-whitespace t)
   :hook
-  (after-init . electric-pair-mode))
+  (emacs-startup . electric-pair-mode))
 
-
+;;; abbrev-mode
 (setq-default abbrev-mode nil)          ; set abbrev mode
 (setq save-abbrevs 'silently)           ; silently save abbrevs
 
+;; which key
+(add-hook 'after-init-hook #'which-key-mode)
 
 ;;; set eglot mode: lsp
 (use-package eglot
@@ -222,8 +214,8 @@
 ;;; file management
 (use-package recentf
   :ensure nil
-  :custom
-  (recentf-max-menu-items 30)
+  :config
+  (setq recentf-max-menu-items 30)
   :hook
   (after-init . recentf-mode))
 
@@ -287,18 +279,18 @@
 
 
 ;; eshell
-;; (use-package eshell
-;;   :ensure nil
-;;   :custom
-;;   (eshell-prompt-regexp "^[⟩⟫] ")
-;;   (eshell-prompt-function 'my/eshell-prompt)
-;;   :hook
-;;   (eshell-mode . (lambda ()
-;; 		   (keymap-set
-;; 		    eshell-mode-map
-;; 		    "C-d"
-;; 		    (lambda () (interactive)
-;; 		      (kill-buffer (current-buffer)))))))
+(use-package eshell
+  :ensure nil
+  ;; :custom
+  ;; (eshell-prompt-regexp "^[⟩⟫] ")
+  ;; (eshell-prompt-function 'my/eshell-prompt)
+  :hook
+  (eshell-mode . (lambda ()
+		               (keymap-set
+		                eshell-mode-map
+		                "C-d"
+		                (lambda () (interactive)
+		                  (kill-buffer (current-buffer)))))))
 
 
 ;; email settings
@@ -341,7 +333,6 @@
     :defer t
     :hook
     (prog-mode . escvil-mode)
-    (text-mode . escvil-mode))
-  )
+    (text-mode . escvil-mode)))
 
 ;;; init.el ends here.

@@ -17,12 +17,14 @@
 	 ("C-c 4" . 'dollars)
 	 ("C-c C-4" . 'double-dollars)))
 
-
 (use-package cdlatex
+  :after tex
   :defer t
   :hook
   ;; (LaTeX-mode . 'turn-on-cdlatex)
   (org-mode . turn-on-org-cdlatex))
+
+
 
 (define-skeleton dollars
 	"Insert Dollars."
