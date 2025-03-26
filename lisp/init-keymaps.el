@@ -3,6 +3,7 @@
 ;;; Code:
 
 ;;; 3rd Packages
+(require 'eshell-toggle)
 
 ;;; hungry delete
 (use-package hungry-delete

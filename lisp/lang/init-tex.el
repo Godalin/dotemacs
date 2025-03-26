@@ -6,6 +6,7 @@
 (use-package tex
   :ensure auctex
 	:defer t
+  :custom (preview-image-type 'dvipng)
   :config
   (setq TeX-auto-save t)
   (setq TeX-parse-self t)

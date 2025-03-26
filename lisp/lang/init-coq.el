@@ -55,6 +55,8 @@
 		            (opam-switch-set-switch "coq-env") ;switch to a good coq environment
                 (setq indent-line-function #'tab-to-tab-stop) ;adjust the indent function
                 (company-coq-mode t)             ;enable company mode
+                (company-box-mode -1)
+                ;; (html-autoview-mode -1)
                 ))
   (coq-mode . window-tool-bar-mode))
 

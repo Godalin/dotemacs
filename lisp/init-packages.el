@@ -4,6 +4,16 @@
 
 
 
+;;; env
+;; (use-package exec-path-from-shell
+;;   :defer t
+;;   ;; :config
+;;   ;; (when (memq window-system '(mac ns x))
+;;   ;;   (exec-path-from-shell-initialize))
+;;   :hook
+;;   (emacs-startup . exec-path-from-shell-initialize)
+;;   )
+
 ;;; company
 (use-package company
   :defer t
@@ -71,9 +81,9 @@
 (use-package marginalia
   :defer t
   :bind
-  (:map
-   minibuffer-local-map
-   ("M-A" . marginalia-cycle))
+  ;; (:map
+  ;;  minibuffer-local-map
+  ;;  ("M-A" . marginalia-cycle))
   :hook
   (emacs-startup . marginalia-mode))
 
@@ -172,6 +182,7 @@
 ;;; eshell
 (use-package eshell-toggle
   :defer t
+  :custom (eshell-toggle-find-project-root-package 'project)
   :commands (eshell-toggle))
 
 ;;; diren
@@ -185,16 +196,29 @@
   :commands (rime-send-keybinding)
   :custom
   (default-input-method "rime")
-  (rime-librime-root
-   "/opt/homebrew/Cellar/librime/*")
+  (rime-librime-root "/opt/homebrew/")
   (rime-emacs-module-header-root
    "/Applications/Emacs.app/Contents/Resources/include")
-  (rime-show-candidate 'popup)
+  (rime-show-candidate 'posframe)
   :bind
   (:map
    rime-mode-map
    ("C-`" . #'rime-send-keybinding)
    ("<f4>" . #'rime-send-keybinding)))
+
+;;; hydra
+(use-package hydra
+  :defer t)
+
+;;; tree sitter
+(use-package treesit-auto
+  :defer t
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  :hook
+  (emacs-startup . global-treesit-auto-mode))
 
 (provide 'init-packages)
 ;;; init-packages.el ends here
