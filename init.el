@@ -2,25 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
-
-;;; print emacs startup time
-;; (add-hook 'emacs-startup-hook
-;;           (lambda ()
-;;             (message
-;;              "Emacs ready in %s with %d garbage collections."
-;;              (format "%.2f seconds"
-;;                      (float-time
-;;                       (time-subtract after-init-time before-init-time)))
-;;              gcs-done)))
-
-
-
 ;;; custom file
 (setq custom-file
       (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'no-error 'no-message)
-
-
 
 ;;; use the use-package package
 (use-package use-package
@@ -36,28 +21,21 @@
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/")))
 
-
-
-(defalias 'yes-or-no-p 'y-or-n-p)       ;yes or no
-(setq confirm-kill-processes nil)       ;auto kill processes when exit
-
-(setq inhibit-startup-screen nil)       ;startup options
+(defalias 'yes-or-no-p 'y-or-n-p)      ; yes or no
+(setq confirm-kill-processes nil)      ; auto kill processes when exit
+(setq inhibit-startup-screen nil)      ; startup options
 (setq initial-scratch-message
       ";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
 
 (when (fboundp 'set-fontset-font)
   (set-fontset-font "fontset-default" 'han "LXGW Wenkai"))
 
-(setq read-quoted-char-radix 16)        ;input method, use hex code
-
-
+(setq read-quoted-char-radix 16)        ; input method, use hex code
 
 ;;; space/tab related
-(setq-default tab-width 2)             ;2 spaces = 1 tab
-(setq-default indent-tabs-mode nil)    ;do not use tabs for indention
+(setq-default tab-width 2)             ; 2 spaces = 1 tab
+(setq-default indent-tabs-mode nil)    ; do not use tabs for indention
 (setq-default indent-line-function #'tab-to-tab-stop) ;use a trivial indention function
-
-
 
 ;;; display
 (add-hook 'after-init-hook #'tab-bar-mode)
@@ -87,8 +65,6 @@
 (add-hook 'prog-mode-hook #'global-visual-line-mode)
 (add-hook 'text-mode-hook #'global-visual-line-mode)
 
-
-
 ;;; customization of display
 (setq display-line-numbers-type 'relative)
 
@@ -109,24 +85,19 @@
 
 (setq select-enable-clipboard t)        ; enable clipboard
 
-
 ;;; editorconfig mode
-(editorconfig-mode)
-
+(add-hook 'emacs-startup-hook #'editorconfig-mode)
 
 ;; term mode
-(use-package term
-  :ensure nil
-  :bind
-  (:map
-   term-mode-map
-   ("C-c C-d" . (lambda () (interactive)
-		              (kill-buffer (current-buffer))))))
+;; (use-package term
+;;   :ensure nil
+;;   :bind
+;;   (:map
+;;    term-mode-map
+;;    ("C-c C-d" . (lambda () (interactive)
+;; 		              (kill-buffer (current-buffer))))))
 
-
-
-(add-hook 'after-init #'winner-mode)    ; save and switch window layouts
-
+(add-hook 'after-init-hook #'winner-mode) ; save and switch window layouts
 
 ;;; dired
 (use-package dired
@@ -139,7 +110,6 @@
   (when (eq system-type 'darwin)
     (setq insert-directory-program "gls"
           dired-use-ls-dired t)))
-
 
 ;;; dictionary
 (use-package dictionary
@@ -158,8 +128,6 @@
   (after-init . repeat-mode))
 
 (add-hook 'after-init-hook #'global-so-long-mode) ; so long mode
-
-
 
 ;;; parentheses
 (use-package show-paren-mode
@@ -210,12 +178,11 @@
   ("C-c e f" . #'eglot-format)
   ("C-c e e" . #'eglot-code-actions))
 
-
 ;;; file management
 (use-package recentf
   :ensure nil
-  :config
-  (setq recentf-max-menu-items 30)
+  :custom
+  (recentf-max-menu-items 30)
   :hook
   (after-init . recentf-mode))
 
@@ -285,12 +252,13 @@
   ;; (eshell-prompt-regexp "^[⟩⟫] ")
   ;; (eshell-prompt-function 'my/eshell-prompt)
   :hook
-  (eshell-mode . (lambda ()
-		               (keymap-set
-		                eshell-mode-map
-		                "C-d"
-		                (lambda () (interactive)
-		                  (kill-buffer (current-buffer)))))))
+  (eshell-mode
+   . (lambda ()
+		   (keymap-set
+		    eshell-mode-map
+		    "C-d"
+		    (lambda () (interactive)
+		      (kill-buffer (current-buffer)))))))
 
 
 ;; email settings
@@ -309,7 +277,6 @@
 
 ;;; Other files
 
-
 ;; add additional config path
 (add-to-list 'load-path
              (expand-file-name "lisp" user-emacs-directory))
@@ -317,8 +284,8 @@
 (use-package init-ui :ensure nil)       ; ui settings
 (use-package init-packages :ensure nil) ; load packages
 (use-package init-keymaps :ensure nil)  ; keymaps
-;; (use-package init-evil :ensure nil)     ; evil bindings
-;; (use-package init-org :ensure nil)      ; org mode settings
+(use-package init-evil :ensure nil)     ; evil bindings
+(use-package init-org :ensure nil)      ; org mode settings
 (use-package init-lang :ensure nil)     ; programming languages
 
 
@@ -335,4 +302,7 @@
     (prog-mode . escvil-mode)
     (text-mode . escvil-mode)))
 
+;;; Local Variables:
+;;; byte-compile-warnings: (not free-vars)
+;;; End:
 ;;; init.el ends here.

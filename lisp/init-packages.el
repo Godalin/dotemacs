@@ -143,11 +143,19 @@
 (use-package multiple-cursors
   :defer t
   :bind
+  ("C-S-c C-S-c" . #'mc/edit-lines)
+  ("C-S-c C-S-a" . #'mc/edit-beginnings-of-lines)
+  ("C-S-c C-S-e" . #'mc/edit-beginnings-of-lines)
   ("C-S-c C-<" . #'mc/mark-all-like-this)
   ("C-<" . #'mc/mark-previous-like-this)
   ("C->" . #'mc/mark-next-like-this)
   ("C-S-c C-S-<right>" . #'mc/mark-next-like-this-word)
   ("C-S-c C-S-<left>" . #'mc/mark-previous-like-this-word))
+
+;;; iedit
+(use-package iedit
+  :disabled
+  :defer t)
 
 ;;; sexy mode line
 (use-package smart-mode-line

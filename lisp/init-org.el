@@ -22,7 +22,6 @@
         ("C-c C-5" . (lambda () (interactive)
                        (skeleton-insert '(nil "\\[" \n _ \n "\\]"))))))
 
-
 (use-package ox-latex
   :ensure nil
   :defer t
@@ -35,7 +34,6 @@
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-
 (use-package zotxt
   :defer t
   :hook
@@ -45,10 +43,8 @@
         ("C-c \" \"" . (lambda () (interactive)
                          (org-zotxt-insert-reference-link '(4))))))
 
-
 (use-package org-ref
   :defer t)
-
 
 ;; org-mode for blog: hugo
 (use-package ox-hugo
@@ -57,7 +53,6 @@
   :init
   ;; change this to your Hugo root
   (setq-default org-hugo-base-dir "~/Projects/HugoBlog/"))
-
 
 ;; org-mode for notes: roam
 (use-package org-roam
@@ -72,7 +67,6 @@
 (use-package org-roam-ui
   :defer t
   :after org-roam)
-
 
 (provide 'init-org)
 ;;; init-org.el ends here
