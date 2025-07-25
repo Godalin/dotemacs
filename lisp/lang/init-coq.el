@@ -50,14 +50,18 @@
    company-coq-map
    ("RET" . nil))
   :hook
-  (coq-mode . (lambda ()                                ;prepare for the coq mode
-                (interactive)
-		            (opam-switch-set-switch "coq-env") ;switch to a good coq environment
-                (setq indent-line-function #'tab-to-tab-stop) ;adjust the indent function
-                (company-coq-mode t)             ;enable company mode
-                (company-box-mode -1)
-                ;; (html-autoview-mode -1)
-                ))
+  (coq-mode
+   . (lambda ()                              ;prepare for the coq mode
+       (interactive)
+		   ;; (opam-switch-set-switch "coq-env") ;switch to a good coq environment
+       ;; (let ((local-env (project-root (project-current))))
+       ;;   (if local-env
+       ;;       (opam-switch-set-switch (expand-file-name local-env))))
+
+       (setq indent-line-function #'tab-to-tab-stop) ;adjust the indent function
+       (company-coq-mode t)             ;enable company mode
+       (setq-local company-box-doc-enable nil)
+       ))
   (coq-mode . window-tool-bar-mode))
 
 

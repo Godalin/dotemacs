@@ -294,13 +294,23 @@
 (when (file-directory-p "~/Projects/ELisp")
   (message "We have user libs!")
   (add-to-list 'load-path "~/Projects/ELisp")
+
   (use-package escvil
+    :disabled
     :ensure nil
     :commands escvil-mode
     :defer t
     :hook
     (prog-mode . escvil-mode)
-    (text-mode . escvil-mode)))
+    (text-mode . escvil-mode))
+
+  (use-package handy-evil
+    :ensure nil
+    :commands handy-evil-mode
+    :defer t
+    :hook
+    (prog-mode . handy-evil-mode)
+    (text-mode . handy-evil-mode)))
 
 ;;; Local Variables:
 ;;; byte-compile-warnings: (not free-vars)

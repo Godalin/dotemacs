@@ -39,7 +39,7 @@
   :bind
   ("<f12>" . #'modus-themes-toggle)
   :hook
-  (emacs-startup . (lambda () (load-theme 'modus-operandi-tinted))))
+  (emacs-startup . (lambda () (load-theme 'modus-operandi))))
 
 
 
@@ -49,8 +49,6 @@
   :hook
   (after-init . rainbow-delimiters-mode))
 
-
-
 ;;; dashboard
 (use-package dashboard
   :pin melpa
@@ -58,8 +56,6 @@
   (dashboard-center-content t)
   :config
   (dashboard-setup-startup-hook))
-
-
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
