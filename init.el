@@ -21,6 +21,13 @@
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/")))
 
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize))
+  (when (daemonp)
+    (exec-path-from-shell-initialize)))
+
 (defalias 'yes-or-no-p 'y-or-n-p)      ; yes or no
 (setq confirm-kill-processes nil)      ; auto kill processes when exit
 (setq inhibit-startup-screen nil)      ; startup options
