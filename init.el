@@ -21,6 +21,7 @@
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/")))
 
+;;; load environment variables
 (use-package exec-path-from-shell
   :config
   (when (memq window-system '(mac ns x))
