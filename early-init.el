@@ -33,8 +33,8 @@
       )
 
 ;; fonts
-;; (add-to-list 'default-frame-alist '(font . "JuliaMono Nerd Font-16"))
-(add-to-list 'default-frame-alist '(font . "DejaVuSansM Nerd Font Mono-16"))
+(add-to-list 'default-frame-alist '(font . "JuliaMono Nerd Font-16"))
+;; (add-to-list 'default-frame-alist '(font . "DejaVuSansM Nerd Font Mono-16"))
 (add-to-list 'default-frame-alist '(width . 160))
 (add-to-list 'default-frame-alist '(height . 50))
 
