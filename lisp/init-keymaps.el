@@ -5,6 +5,12 @@
 ;;; 3rd Packages
 (require 'eshell-toggle)
 
+
+;;; crux
+(use-package crux
+  :defer t)
+
+
 ;;; hungry delete
 (use-package hungry-delete
   :defer t
@@ -143,6 +149,13 @@
   ;; terminals
   "x" 'term                             ; term
   "z" #'eshell-toggle                   ; eshell
+
+  ;; crux
+  "SPC o" 'crux-open-with
+  "SPC e" 'crux-eval-and-replace
+  "SPC d" 'crux-duplicate-current-line-or-region
+  "SPC c d" 'crux-duplicate-and-comment-current-line-or-region
+  "SPC SPC" (lambda () (interactive) (message "hello")) ; test
   )
 
 (keymap-global-set "C-z" 'Custom-Function-prefix)

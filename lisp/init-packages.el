@@ -4,16 +4,6 @@
 
 
 
-;;; env
-;; (use-package exec-path-from-shell
-;;   :defer t
-;;   ;; :config
-;;   ;; (when (memq window-system '(mac ns x))
-;;   ;;   (exec-path-from-shell-initialize))
-;;   :hook
-;;   (emacs-startup . exec-path-from-shell-initialize)
-;;   )
-
 ;;; company
 (use-package company
   :defer t
