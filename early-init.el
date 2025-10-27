@@ -37,8 +37,10 @@
 ;; (add-to-list 'default-frame-alist '(font . "DejaVuSansM Nerd Font Mono-16"))
 (add-to-list 'default-frame-alist '(width . 160))
 (add-to-list 'default-frame-alist '(height . 50))
-(add-to-list 'default-frame-alist '(alpha . (80 . 70)))
-(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+
+(when (eq system-type 'darwin)
+  (add-to-list 'default-frame-alist '(alpha . (80 70)))
+  (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t)))
 
 
 
