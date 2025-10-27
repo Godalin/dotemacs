@@ -37,9 +37,14 @@
 ;; (add-to-list 'default-frame-alist '(font . "DejaVuSansM Nerd Font Mono-16"))
 (add-to-list 'default-frame-alist '(width . 160))
 (add-to-list 'default-frame-alist '(height . 50))
+(add-to-list 'default-frame-alist '(alpha . (80 . 70)))
+(add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
+
+
 
 ;; maximize the window. I'm not sure whether this is good
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
 
 
 ;;; early-init.el ends here.
