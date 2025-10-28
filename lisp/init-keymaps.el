@@ -109,7 +109,11 @@
   :prefix 'Custom-System-prefix
   :doc "This map is for custom system functions such as reboot."
   ;; control emacs
-  "c" 'kill-emacs
+  "c" (lambda ()
+        (interactive)
+        (if (frame-parameter nil 'client)
+            (delete-frame)  ;; 仅关闭当前 frame
+          (save-buffers-kill-emacs)))
   "C-r" 'restart-emacs
   "C-z" 'suspend-emacs
   ;; initiation files
