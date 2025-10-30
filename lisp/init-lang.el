@@ -17,6 +17,9 @@
 (use-package init-ocaml :ensure nil)
 (use-package init-coq :ensure nil)
 
+(use-package init-nix :ensure nil)
+
+
 
 ;;; agda
 (load-file (let ((coding-system-for-read 'utf-8))
