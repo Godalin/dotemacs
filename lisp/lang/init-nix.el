@@ -16,12 +16,18 @@
              nix-shell-build))
 
 (use-package nix-repl
+  :defer t
   :ensure nix-mode
   :commands (nix-repl))
 
-(use-package nixos-options)
+(use-package nixos-options
+  :defer t)
 
-(use-package company-nixos-options)
+(use-package company-nixos-options
+  :defer t
+  :config
+  (add-to-list 'company-backends
+               'company-nixos-options))
 
 (use-package nix-sandbox)
 
