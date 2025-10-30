@@ -117,7 +117,12 @@
         dired-kill-when-opening-new-dired-buffer t)
   (when (eq system-type 'darwin)
     (setq insert-directory-program "gls"
-          dired-use-ls-dired t)))
+          dired-use-ls-dired t))
+  :bind
+  (:map
+   dired-mode-map
+   ("TAB" . 'dired-next-line)
+   ("<backtab>" . 'dired-previous-line)))
 
 ;;; dictionary
 (use-package dictionary
