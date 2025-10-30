@@ -3,23 +3,29 @@
 ;;; Code:
 
 ;;; custom file
-(setq custom-file
-      (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file 'no-error 'no-message)
+(use-package emacs
+  :init
+  (setq custom-file
+        (expand-file-name "custom.el" user-emacs-directory))
+  (load custom-file 'no-error 'no-message))
 
 ;;; use the use-package package
 (use-package use-package
   :ensure nil
-  :init
-  (setq use-package-always-ensure t
-	      use-package-enable-imenu-support t))
+  :custom
+  (use-package-always-ensure t)
+  (use-package-always-defer nil)
+	(use-package-enable-imenu-support t))
 
-;;; use-package deal with package
+;;; use `use-package' to deal with `package'
 (use-package package
   :ensure nil
   :init
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/")))
+
+;;; `dimish' for the minor modes in mod line
+(use-package diminish)
 
 ;;; load environment variables
 (use-package exec-path-from-shell
@@ -29,21 +35,22 @@
   (when (daemonp)
     (exec-path-from-shell-initialize)))
 
-(defalias 'yes-or-no-p 'y-or-n-p)      ; yes or no
-(setq confirm-kill-processes nil)      ; auto kill processes when exit
-(setq inhibit-startup-screen nil)      ; startup options
-(setq initial-scratch-message
-      ";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
+(setopt use-short-answers t)
+(setopt confirm-kill-processes nil)    ; auto kill processes when exit
+(setopt inhibit-startup-screen nil)    ; startup options
+(setopt initial-scratch-message
+        ";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
 
+;;; Xia Wu WenKai
 (when (fboundp 'set-fontset-font)
   (set-fontset-font "fontset-default" 'han "LXGW Wenkai"))
 
-(setq read-quoted-char-radix 16)        ; input method, use hex code
+(setopt read-quoted-char-radix 16)      ; input method, use hex code
 
 ;;; space/tab related
-(setq-default tab-width 2)             ; 2 spaces = 1 tab
-(setq-default indent-tabs-mode nil)    ; do not use tabs for indention
-(setq-default indent-line-function #'tab-to-tab-stop) ;use a trivial indention function
+(setopt tab-width 2)                   ; 2 spaces = 1 tab
+(setopt indent-tabs-mode nil)          ; do not use tabs for indention
+(setq indent-line-function #'tab-to-tab-stop) ; use a trivial indention function
 
 ;;; display
 (add-hook 'after-init-hook #'tab-bar-mode)
