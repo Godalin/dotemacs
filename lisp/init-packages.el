@@ -7,26 +7,24 @@
 ;;; company
 (use-package company
   :defer t
-  :commands (company-abort
-	           company-complele-selection)
+  :diminish company-mode
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
   (company-tooltip-align-annotations t)
   (company-tooltip-margin 2)
   :bind
-  (:map
-   company-active-map
-   ("RET" . #'company-abort)
-   ([return] . #'company-abort)
-   ("TAB" . #'company-complete-selection)
-   ([tab] . #'company-complete-selection))
-  :hook
-  (emacs-startup . global-company-mode))
+  (:map company-active-map
+        ("RET"    . company-abort)
+        ([return] . company-abort)
+        ("TAB"    . company-complete-selection)
+        ([tab]    . company-complete-selection))
+  :hook (emacs-startup . global-company-mode))
 
 (use-package company-box
   :defer t
   :after company
+  :diminish company-box-mode
   :hook
   (company-mode . company-box-mode))
 
@@ -122,9 +120,8 @@
 ;;; keycast
 (use-package keycast
   :defer t
-  :commands (keycast-tab-bar-mode)
   :custom-face
-  (keycast-key ((t (:height 100))))
+  (keycast-key     ((t (:height 100))))
   (keycast-command ((t (:height 100))))
   :hook
   (tab-bar-mode . keycast-tab-bar-mode))
@@ -133,14 +130,14 @@
 (use-package multiple-cursors
   :defer t
   :bind
-  ("C-S-c C-S-c" . #'mc/edit-lines)
-  ("C-S-c C-S-a" . #'mc/edit-beginnings-of-lines)
-  ("C-S-c C-S-e" . #'mc/edit-beginnings-of-lines)
-  ("C-S-c C-<" . #'mc/mark-all-like-this)
-  ("C-<" . #'mc/mark-previous-like-this)
-  ("C->" . #'mc/mark-next-like-this)
-  ("C-S-c C-S-<right>" . #'mc/mark-next-like-this-word)
-  ("C-S-c C-S-<left>" . #'mc/mark-previous-like-this-word))
+  ("C-S-c C-S-c" . mc/edit-lines)
+  ("C-S-c C-S-a" . mc/edit-beginnings-of-lines)
+  ("C-S-c C-S-e" . mc/edit-beginnings-of-lines)
+  ("C-S-c C-<"   . mc/mark-all-like-this)
+  ("C-<"         . mc/mark-previous-like-this)
+  ("C->"         . mc/mark-next-like-this)
+  ("C-S-c C-S-<right>" . mc/mark-next-like-this-word)
+  ("C-S-c C-S-<left>"  . mc/mark-previous-like-this-word))
 
 ;;; iedit
 (use-package iedit
@@ -150,8 +147,8 @@
 ;;; sexy mode line
 (use-package smart-mode-line
   :defer t
-  :init
-  (setq sml/no-confirm-load-theme t)
+  :custom
+  (sml/no-confirm-load-theme t)
   :hook
   (emacs-startup . sml/setup))
 
@@ -183,11 +180,6 @@
   :custom (eshell-toggle-find-project-root-package 'project)
   :commands (eshell-toggle))
 
-;;; diren
-(use-package envrc
-  :hook
-  (emacs-startup . envrc-global-mode))
-
 ;;; Rime
 (use-package rime
   :defer t
@@ -198,25 +190,22 @@
   (rime-emacs-module-header-root
    "/Applications/Emacs.app/Contents/Resources/include")
   (rime-show-candidate 'posframe)
-  :bind
-  (:map
-   rime-mode-map
-   ("C-`" . #'rime-send-keybinding)
-   ("<f4>" . #'rime-send-keybinding)))
+  :bind (:map rime-mode-map
+              ("C-`"  . rime-send-keybinding)
+              ("<f4>" . rime-send-keybinding)))
 
 ;;; hydra
 (use-package hydra
   :defer t)
 
 ;;; tree sitter
-(use-package treesit-auto
-  :defer t
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  :hook
-  (emacs-startup . global-treesit-auto-mode))
+;; (use-package treesit-auto
+;;   :defer t
+;;   :custom
+;;   (treesit-auto-install 'prompt)
+;;   :config
+;;   (treesit-auto-add-to-auto-mode-alist 'all)
+;;   :hook (emacs-startup . global-treesit-auto-mode))
 
 (provide 'init-packages)
 ;;; init-packages.el ends here
