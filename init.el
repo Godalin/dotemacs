@@ -32,10 +32,9 @@
 ;;; custom file
 (use-package emacs
   :ensure nil
-  :custom
-  (custom-file
-   (expand-file-name "custom.el" user-emacs-directory))
-  :config
+  :init
+  (setq custom-file
+        (expand-file-name "custom.el" user-emacs-directory))
   (load custom-file 'no-error 'no-message))
 
 (use-package emacs
