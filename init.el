@@ -198,7 +198,7 @@
 ;; which key
 (use-package which-key
   :ensure nil
-  :hook (after-init-hook which-key-mode))
+  :hook (after-init . which-key-mode))
 
 ;;; set eglot mode: lsp
 (use-package eglot
