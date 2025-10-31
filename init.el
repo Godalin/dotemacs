@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(setq debug-on-error t)
+
 ;;; use the use-package package
 (use-package use-package
   :ensure nil

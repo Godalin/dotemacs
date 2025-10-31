@@ -37,11 +37,11 @@
                            (4 . (background overline rainbow 1.2))
                            (t . (overline semibold))))
   :bind ("<f12>" . modus-themes-toggle)
-  :hook (emacs-startup . (lambda () (load-theme 'modus-operandi))))
+  :hook (emacs-startup . (lambda () (load-theme 'modus-vivendi))))
 
 ;;; rainbow delimiters
 (use-package rainbow-delimiters
-  :disabled
+  ;; :disabled
   :defer t
   :hook
   (prog-mode . rainbow-delimiters-mode))
