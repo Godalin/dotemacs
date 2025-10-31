@@ -51,6 +51,7 @@
    t "remember point positions"))
 
 (use-package files
+  :ensure nil
   :custom
   (confirm-kill-processes nil "auto kill processes when exit")
   (make-backup-files nil "do not create backup files")
@@ -301,14 +302,13 @@
 
 
 ;; email settings
-(setopt )
-(setopt send-mail-function 'smtpmail-send-it)
+;; (setopt send-mail-function 'smtpmail-send-it)
 
-(use-package rmail
-  :ensure nil
-  :defer t
-  :custom
-  (rmail-preserve-inbox t))
+;; (use-package rmail
+;;   :ensure nil
+;;   :defer t
+;;   :custom
+;;   (rmail-preserve-inbox t))
 
 ;; (use-package smtpmail
 ;;   :ensure nil
