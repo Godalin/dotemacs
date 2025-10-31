@@ -24,8 +24,7 @@
 ;;; agda
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
-(add-to-list 'auto-mode-alist '("\\.agda\\'" . agda2-mode))
-(add-to-list 'auto-mode-alist '("\\.lagda.md\\'" . agda2-mode))
+
 
 
 ;;; markdown
