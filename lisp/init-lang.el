@@ -66,22 +66,24 @@
 (use-package prolog-mode
   :ensure nil
   :defer t
+  :after ediprolog
   :custom
   (prolog-electric-if-then-else-flag t)
   :bind
-  (("<f10>" . 'ediprolog-dwim)
-   :map
+  (:map
    prolog-mode-map
    ("C-c l" . (lambda () (interactive)
-                (skeleton-insert '(nil ":- use_module(library(" _ "))."))))))
+                (skeleton-insert
+                 '(nil ":- use_module(library(" _ "))."))))
+   ("<f10>" . 'ediprolog-dwim)))
 
 (use-package ediprolog
-  :defer t
-  :after prolog-mode)
+  :defer t)
 
 
 (use-package typst-ts-mode
   :ensure t
+  :defer t
   :vc (typst-ts-mode
        :url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
