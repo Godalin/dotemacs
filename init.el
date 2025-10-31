@@ -61,8 +61,8 @@
 (when (fboundp 'set-fontset-font)
   (set-fontset-font "fontset-default" 'han "LXGW Wenkai"))
 
-;;; visual line mode
-(use-package simple
+;;; visual line mode and more
+(use-package emacs
   :ensure nil
   :custom
   (line-move-visual t)
