@@ -43,7 +43,7 @@
 (use-package rainbow-delimiters
   :defer t
   :hook
-  (after-init . rainbow-delimiters-mode))
+  (prog-mode . rainbow-delimiters-mode))
 
 ;;; dashboard
 (use-package dashboard
