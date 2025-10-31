@@ -41,6 +41,7 @@
 
 ;;; rainbow delimiters
 (use-package rainbow-delimiters
+  :disabled
   :defer t
   :hook
   (prog-mode . rainbow-delimiters-mode))

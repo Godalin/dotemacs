@@ -3,7 +3,9 @@
 ;;; Code:
 
 ;;; 3rd Packages
-(require 'eshell-toggle)
+(use-package eshell-toggle
+  :defer t
+  :commands eshell-toggle)
 
 
 ;;; crux
@@ -15,36 +17,28 @@
 (use-package hungry-delete
   :defer t
   :bind
-  ("C-<backspace>" . #'kill-word-or-whitespace-backward))
+  ("C-<backspace>" . kill-word-or-whitespace-backward))
 
 
 ;;; edit: drag lines up and down
 (use-package drag-stuff
   :defer t
-  :commands (drag-stuff-up
-             drag-stuff-down)
   :bind
-  ("M-<up>" . #'drag-stuff-up)
-  ("M-<down>" . #'drag-stuff-down))
+  ("M-<up>" . drag-stuff-up)
+  ("M-<down>" . drag-stuff-down))
 
 
 ;;; edit parentheses
 (use-package paredit
   :defer t
-  :commands (paredit-forward-slurp-sexp
-             paredit-backward-slurp-sexp
-             paredit-forward-barf-sexp
-             paredit-backward-barf-sexp)
-  :bind
-  (:map
-   paredit-mode-map
-   ("C-<left>" . nil)
-   ("C-<right>" . nil)
-   ;; slurping and barfing
-   ("M-0" . #'paredit-forward-slurp-sexp)
-   ("M-9" . #'paredit-backward-slurp-sexp)
-   ("M-]" . #'paredit-forward-barf-sexp)
-   ("M-[" . #'paredit-backward-barf-sexp))
+  :bind (:map paredit-mode-map
+              ("C-<left>" . nil)
+              ("C-<right>" . nil)
+              ;; slurping and barfing
+              ("M-0" . paredit-forward-slurp-sexp)
+              ("M-9" . paredit-backward-slurp-sexp)
+              ("M-]" . paredit-forward-barf-sexp)
+              ("M-[" . paredit-backward-barf-sexp))
   :hook
   (scheme-mode . paredit-mode)
   (emacs-lisp-mode . paredit-mode)
@@ -112,7 +106,7 @@
   "c" (lambda ()
         (interactive)
         (if (frame-parameter nil 'client)
-            (delete-frame)  ;; 仅关闭当前 frame
+            (delete-frame)
           (save-buffers-kill-emacs)))
   "C-r" 'restart-emacs
   "C-z" 'suspend-emacs
@@ -136,11 +130,11 @@
   "o a" 'org-agenda
   "o c" 'org-capture
   "o l" 'org-store-link
-  "p" 'list-packages                    ; show all packages
+  "p"   'list-packages                    ; show all packages
   "r f" 'recentf-open                   ; recentf
   "r r" 'recentf-open-files
   ;; search
-  "s" 'scratch-buffer                   ; scratch
+  "s"   'scratch-buffer                   ; scratch
   ;; tab line mode
   "t t" 'tab-line-mode                  ; toggle tab line
   ;; whitespace
