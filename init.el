@@ -47,8 +47,9 @@
 
 (setopt read-quoted-char-radix 16)      ; input method, use hex code
 
-;;; space/tab related
+;;; space/tab/indention related
 (setopt tab-width 2)                   ; 2 spaces = 1 tab
+(setopt tab-always-indent t)           ; only indent at left
 (setopt indent-tabs-mode nil)          ; do not use tabs for indention
 (setq indent-line-function #'tab-to-tab-stop) ; use a trivial indention function
 
@@ -56,98 +57,114 @@
 (add-hook 'after-init-hook #'tab-bar-mode)
 (add-hook 'after-init-hook #'pixel-scroll-precision-mode)
 
-(setq scroll-preserve-screen-position t) ; remember point positions
+(setopt scroll-preserve-screen-position t) ; remember point positions
 
 (add-hook 'after-init-hook #'size-indication-mode)
 (add-hook 'after-init-hook #'line-number-mode)
 (add-hook 'after-init-hook #'column-number-mode)
 
-(setq make-backup-files nil)            ; do not create backup files
+(setopt make-backup-files nil)          ; do not create backup files
 
 ;;; white-space and indention
 (add-hook 'prog-mode-hook
           (lambda () (setq show-trailing-whitespace t
-		                  indicate-empty-lines t)))
+                      indicate-empty-lines t)))
 (add-hook 'text-mode-hook
           (lambda () (setq show-trailing-whitespace t
 		                  indicate-empty-lines t)))
 
 ;;; visual line mode
-(setq line-move-visual t)
-(setq track-eol t)
-(setq visual-line-fringe-indicators t)
-(setq word-wrap-by-category t)
+(use-package simple
+  :ensure nil
+  :custom
+  (line-move-visual t)
+  (track-eol t)
+  (visual-line-fringe-indicators t)
+  (word-wrap-by-category t))
+
 (add-hook 'prog-mode-hook #'global-visual-line-mode)
 (add-hook 'text-mode-hook #'global-visual-line-mode)
 
 ;;; customization of display
-(setq display-line-numbers-type 'relative)
+(use-package display-line-numbers
+  :ensure nil
+  :custom
+  (display-line-numbers-type 'relative)
+  :hook ((prog-mode text-mode) . display-line-numbers-mode))
 
 (add-hook 'after-init-hook #'global-hl-line-mode)
 (add-hook 'after-init-hook #'auto-save-visited-mode)
 (add-hook 'after-init-hook #'auto-image-file-mode)
 (add-hook 'after-init-hook #'global-auto-revert-mode)
 (add-hook 'after-init-hook #'save-place-mode)
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(add-hook 'text-mode-hook #'display-line-numbers-mode)
 
+
+;;; fido-vertical
 ;; (add-hook 'after-init-hook #'fido-vertical-mode)
 
-;;; programming mode hooks
+;;; flymake
 (add-hook 'prog-mode-hook #'flymake-mode)
+
+;;; hide-show
 (add-hook 'prog-mode-hook #'hs-minor-mode)
 (add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
 
+;;; use-package select
 (setq select-enable-clipboard t)        ; enable clipboard
 
 ;;; editorconfig mode
 (add-hook 'emacs-startup-hook #'editorconfig-mode)
 
-;; term mode
-;; (use-package term
-;;   :ensure nil
-;;   :bind
-;;   (:map
-;;    term-mode-map
-;;    ("C-c C-d" . (lambda () (interactive)
-;; 		              (kill-buffer (current-buffer))))))
-
-(add-hook 'after-init-hook #'winner-mode) ; save and switch window layouts
+; save and switch window layouts
+(add-hook 'after-init-hook #'winner-mode)
 
 ;;; dired
 (use-package dired
   :ensure nil
   :defer t
+  :custom
+  (dired-listing-switches
+   "-aBhl --group-directories-first")
+  (dired-use-ls-dired nil)
+  (dired-kill-when-opening-new-dired-buffer t)
   :config
-  (setq dired-listing-switches "-aBhl --group-directories-first"
-        dired-use-ls-dired nil
-        dired-kill-when-opening-new-dired-buffer t)
   (when (eq system-type 'darwin)
-    (setq insert-directory-program "gls"
-          dired-use-ls-dired t))
-  :bind
-  (:map
-   dired-mode-map
-   ("TAB" . 'dired-next-line)
-   ("<backtab>" . 'dired-previous-line)))
+    (setopt insert-directory-program "gls")
+    (setopt dired-use-ls-dired t))
+  :bind (:map dired-mode-map
+              ("TAB"       . dired-next-line)
+              ("<backtab>" . dired-previous-line)))
 
 ;;; dictionary
 (use-package dictionary
   :ensure nil
   :defer t
   :commands (dictionary-lookup-definition)
-  :custom ((dictionary-use-single-buffer t)
-	         (dictionary-server "localhost"))
-  :bind
-  ("M-#" . #'dictionary-lookup-definition))
+  :custom
+  (dictionary-use-single-buffer t)
+	(dictionary-server "dict.org")
+  :bind ("M-#" . dictionary-lookup-definition))
+
+;;; flyspell
+(use-package flyspell
+  :ensure nil
+  :defer t
+  :bind ((:map text-mode-map
+               ("<f5>" . flyspell-mode))
+         (:map prog-mode-map
+               ("<f5>" . flyspell-prog-mode)))
+  :hook ((text-mode . flyspell-mode)
+         (prog-mode . flyspell-prog-mode)))
 
 ;;; repeat mode
 (use-package repeat
   :ensure nil
-  :hook
-  (after-init . repeat-mode))
+  :hook (after-init . repeat-mode))
 
-(add-hook 'after-init-hook #'global-so-long-mode) ; so long mode
+;;; so-long mode
+(use-package so-long
+  :ensure nil
+  :hook (after-init . global-so-long-mode))
 
 ;;; parentheses
 (use-package show-paren-mode
@@ -160,6 +177,7 @@
   :hook
   (after-init . show-paren-mode))
 
+;;; electric-pair-mode
 (use-package electric-pair-mode
   :ensure nil
   :init
@@ -171,11 +189,16 @@
   (emacs-startup . electric-pair-mode))
 
 ;;; abbrev-mode
-(setq-default abbrev-mode nil)          ; set abbrev mode
-(setq save-abbrevs 'silently)           ; silently save abbrevs
+(use-package abbrev
+  :ensure nil
+  :custom
+  ;; (setq-default abbrev-mode nil)
+  (save-abbrevs 'silently))
 
 ;; which key
-(add-hook 'after-init-hook #'which-key-mode)
+(use-package which-key
+  :ensure nil
+  :hook (after-init-hook which-key-mode))
 
 ;;; set eglot mode: lsp
 (use-package eglot
@@ -184,57 +207,42 @@
   ;; :custom
   ;; (eglot-autoshutdown t)
   ;; (eglot-confirm-server-initiated-edits nil)
-  :commands (eglot-ensure
-             eglot-reconnect
-             eglot-format
-             eglot-code-actions)
-  :config
-  (setq-default eglot-workspace-configuration
-                '((:haskell
-                   (:formattingProvider . "fourmolu"))))
   :bind
-  ("C-c e r" . #'eglot-reconnect)
-  ("C-c e s" . #'eglot-ensure)
-  ("C-c e f" . #'eglot-format)
-  ("C-c e e" . #'eglot-code-actions))
+  ("C-c e r" . eglot-reconnect)
+  ("C-c e s" . eglot-ensure)
+  ("C-c e f" . eglot-format)
+  ("C-c e e" . eglot-code-actions))
 
 ;;; file management
 (use-package recentf
   :ensure nil
-  :custom
-  (recentf-max-menu-items 30)
-  :hook
-  (after-init . recentf-mode))
+  :defer t
+  :custom (recentf-max-menu-items 30)
+  :hook (after-init . recentf-mode))
 
 ;;; docview
 (use-package doc-view
   :ensure nil
   :defer t
-  :commands (doc-view-previous-page
-	           doc-view-next-line-or-next-page)
   :custom
   (doc-view-ghost-program "mupdf")
   (doc-view-continuous t)
   (doc-view-resolution 300)
   (doc-view-scale-internally t)
-  :bind
-  (:map
-   doc-view-mode-map
-   ("<wheel-up>" . #'doc-view-previous-page)
-   ("<wheel-down>" . #'doc-view-next-line-or-next-page))
-  :hook
-  (doc-view-mode . doc-view-hide-modeline-mode))
+  :bind (:map doc-view-mode-map
+              ("<wheel-up>"   . doc-view-previous-page)
+              ("<wheel-down>" . doc-view-next-line-or-next-page))
+  :hook (doc-view-mode . doc-view-hide-modeline-mode))
 
 
 
 ;;; remap the buffer view
-(keymap-global-set "<remap> <list-buffers>" 'ibuffer-other-window)
+(use-package ibuffer
+  :ensure nil
+  :defer t
+  :bind
+  ([remap list-buffers] . ibuffer-other-window))
 
-
-
-;; (defun my/with-face (str &rest face-plist)
-;;   "Add face to string."
-;;   (propertize str 'face face-plist))
 
 
 ;; (defun my/eshell-prompt ()
@@ -264,10 +272,10 @@
 ;;    ;; character
 ;;    (if (= (user-uid) 0) "⟩ " "⟫ ")))
 
-
-;; eshell
+;;; eshell
 (use-package eshell
   :ensure nil
+  :defer t
   ;; :custom
   ;; (eshell-prompt-regexp "^[⟩⟫] ")
   ;; (eshell-prompt-function 'my/eshell-prompt)
@@ -278,7 +286,11 @@
 		    eshell-mode-map
 		    "C-d"
 		    (lambda () (interactive)
-		      (kill-buffer (current-buffer)))))))
+		      (kill-buffer (current-buffer))))))
+  ;; :bind (:map eshell-mode-map
+  ;;             ("C-h" . '(lambda () (message "C-d"))))
+  )
+
 
 
 ;; email settings

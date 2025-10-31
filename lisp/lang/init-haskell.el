@@ -3,10 +3,16 @@
 ;;; Code:
 
 
+
 ;;; haskell-mode
 (use-package haskell-mode
   :defer t
-  :after (company)
+  :after (eglot company)
+  :config
+  (setq eglot-workspace-configuration
+        (plist-put eglot-workspace-configuration
+                   :haskell
+                   (:formattingProvider . "fourmolu")))
   :bind
   (:map
    haskell-mode-map                     ;haskell files
@@ -40,20 +46,17 @@
                           (append '((company-capf company-dabbrev-code))
                                   company-backends))))))
 
-
 (use-package haskell-interactive-mode
 	:ensure nil
 	:after haskell-mode
 	:hook
 	(haskell-mode . interactive-haskell-mode))
 
-
 (use-package alex-mode
 	:ensure nil
 	:load-path "lisp/lang/modes"
 	:defer t
 	:mode ("\\.x\\'" . alex-mode))
-
 
 (provide 'init-haskell)
 ;;; init-haskell.el ends here
