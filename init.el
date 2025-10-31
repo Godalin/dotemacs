@@ -29,6 +29,7 @@
 
 ;;; load environment variables
 (use-package exec-path-from-shell
+  :custom (exec-path-from-shell-arguments nil)
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize))
