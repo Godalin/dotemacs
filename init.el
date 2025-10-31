@@ -152,7 +152,7 @@
 ;;; !`TODO' test editorconfig mode
 (use-package editorconfig
   :ensure nil
-  :hook (after-init . editorconfig-mode))
+  :hook (emacs-startup . editorconfig-mode))
 
 ;;; save and switch window layouts
 (use-package winner
