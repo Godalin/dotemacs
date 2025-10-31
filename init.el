@@ -2,13 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;;; custom file
-(use-package emacs
-  :init
-  (setq custom-file
-        (expand-file-name "custom.el" user-emacs-directory))
-  (load custom-file 'no-error 'no-message))
-
 ;;; use the use-package package
 (use-package use-package
   :ensure nil
@@ -36,17 +29,51 @@
   (when (daemonp)
     (exec-path-from-shell-initialize)))
 
-(setopt use-short-answers t)
-(setopt confirm-kill-processes nil)    ; auto kill processes when exit
-(setopt inhibit-startup-screen nil)    ; startup options
-(setopt initial-scratch-message
-        ";;; Welcome to Godalin's Emacs  -*- lexical-binding: t; -*-\n\n")
+;;; custom file
+(use-package emacs
+  :ensure nil
+  :custom
+  (custom-file
+   (expand-file-name "custom.el" user-emacs-directory))
+  :config
+  (load custom-file 'no-error 'no-message))
+
+(use-package emacs
+  :ensure nil
+  :custom
+  (user-full-name "Linyu Yang")
+  (user-mail-address "yly1228@foxmail.com")
+  (use-short-answers t)
+  (inhibit-startup-screen nil)
+  (initial-scratch-message
+   ";;; Welcome to Godalin's Emacs\n\n")
+  (scroll-preserve-screen-position
+   t "remember point positions"))
+
+(use-package files
+  :custom
+  (confirm-kill-processes nil "auto kill processes when exit")
+  (make-backup-files nil "do not create backup files")
+  :hook (after-init . auto-save-visited-mode))
 
 ;;; Xia Wu WenKai
 (when (fboundp 'set-fontset-font)
   (set-fontset-font "fontset-default" 'han "LXGW Wenkai"))
 
-(setopt read-quoted-char-radix 16)      ; input method, use hex code
+;;; visual line mode
+(use-package simple
+  :ensure nil
+  :custom
+  (line-move-visual t)
+  (track-eol t)
+  (visual-line-fringe-indicators t)
+  (word-wrap-by-category t)
+  (read-quoted-char-radix 16 "input method, use hex code")
+  :hook ((after-init . (size-indication-mode
+                        line-number-mode
+                        column-number-mode))
+         (prog-mode . global-visual-line-mode)
+         (text-mode . global-visual-line-mode)))
 
 ;;; space/tab/indention related
 (setopt tab-width 2)                   ; 2 spaces = 1 tab
@@ -56,35 +83,25 @@
 
 ;;; display
 (add-hook 'after-init-hook #'tab-bar-mode)
-(add-hook 'after-init-hook #'pixel-scroll-precision-mode)
 
-(setopt scroll-preserve-screen-position t) ; remember point positions
-
-(add-hook 'after-init-hook #'size-indication-mode)
-(add-hook 'after-init-hook #'line-number-mode)
-(add-hook 'after-init-hook #'column-number-mode)
-
-(setopt make-backup-files nil)          ; do not create backup files
-
-;;; white-space and indention
-(add-hook 'prog-mode-hook
-          (lambda () (setq show-trailing-whitespace t
-                      indicate-empty-lines t)))
-(add-hook 'text-mode-hook
-          (lambda () (setq show-trailing-whitespace t
-		                  indicate-empty-lines t)))
-
-;;; visual line mode
-(use-package simple
+(use-package pixel-scroll
   :ensure nil
-  :custom
-  (line-move-visual t)
-  (track-eol t)
-  (visual-line-fringe-indicators t)
-  (word-wrap-by-category t))
+  :hook
+  (after-init . pixel-scroll-precision-mode))
 
-(add-hook 'prog-mode-hook #'global-visual-line-mode)
-(add-hook 'text-mode-hook #'global-visual-line-mode)
+;;; prog-mode
+(use-package prog-mode
+  :ensure nil
+  :hook ((emacs-lisp-mode . prettify-symbols-mode)
+         (prog-mode
+          . (lambda () (setopt show-trailing-whitespace t
+                          indicate-empty-lines t)))))
+;;; text-mode
+(use-package text-mode
+  :ensure nil
+  :hook (text-mode
+         . (lambda () (setopt show-trailing-whitespace t
+		                     indicate-empty-lines t))))
 
 ;;; customization of display
 (use-package display-line-numbers
@@ -93,39 +110,59 @@
   (display-line-numbers-type 'relative)
   :hook ((prog-mode text-mode) . display-line-numbers-mode))
 
-(add-hook 'after-init-hook #'global-hl-line-mode)
-(add-hook 'after-init-hook #'auto-save-visited-mode)
-(add-hook 'after-init-hook #'auto-image-file-mode)
-(add-hook 'after-init-hook #'global-auto-revert-mode)
-(add-hook 'after-init-hook #'save-place-mode)
+;;; highlight the current line
+(use-package hl-line
+  :ensure nil
+  :hook (after-init . global-hl-line-mode))
 
+;;; auto show images
+(use-package image-file
+  :ensure nil
+  :hook (after-init . auto-image-file-mode))
 
-;;; fido-vertical
-;; (add-hook 'after-init-hook #'fido-vertical-mode)
+;;; auto revert outside changed file buffers
+(use-package autorevert
+  :ensure nil
+  :hook (after-init . global-auto-revert-mode))
+
+;;; save last visited point
+(use-package saveplace
+  :ensure nil
+  :hook (after-init . save-place-mode))
 
 ;;; flymake
-(add-hook 'prog-mode-hook #'flymake-mode)
+(use-package flymake
+  :ensure nil
+  :hook (prog-mode . flymake-mode))
 
 ;;; hide-show
-(add-hook 'prog-mode-hook #'hs-minor-mode)
-(add-hook 'emacs-lisp-mode-hook #'prettify-symbols-mode)
+(use-package hideshow
+  :ensure nil
+  :diminish hs-minor-mode
+  :hook (prog-mode . hs-minor-mode))
 
 ;;; use-package select
-(setq select-enable-clipboard t)        ; enable clipboard
+(use-package select
+  :ensure nil
+  :custom
+  (select-enable-clipboard t "enable clipboard"))
 
-;;; editorconfig mode
-(add-hook 'emacs-startup-hook #'editorconfig-mode)
+;;; !`TODO' test editorconfig mode
+(use-package editorconfig
+  :ensure nil
+  :hook (after-init . editorconfig-mode))
 
-; save and switch window layouts
-(add-hook 'after-init-hook #'winner-mode)
+;;; save and switch window layouts
+(use-package winner
+  :ensure nil
+  :hook (after-init . winner-mode))
 
 ;;; dired
 (use-package dired
   :ensure nil
   :defer t
   :custom
-  (dired-listing-switches
-   "-aBhl --group-directories-first")
+  (dired-listing-switches "-aBhl --group-directories-first")
   (dired-use-ls-dired nil)
   (dired-kill-when-opening-new-dired-buffer t)
   :config
@@ -170,24 +207,23 @@
 ;;; parentheses
 (use-package show-paren-mode
   :ensure nil
-  :custom ((show-paren-highlight-openparen t)
-	         (show-paren-style 'mixed)
-	         (show-paren-when-point-inside-paren t)
-	         (show-paren-when-point-in-periphery t)
-	         (show-paren-context-when-offscreen t))
-  :hook
-  (after-init . show-paren-mode))
+  :custom
+  (show-paren-highlight-openparen t)
+	(show-paren-style 'mixed)
+	(show-paren-when-point-inside-paren t)
+	(show-paren-when-point-in-periphery t)
+	(show-paren-context-when-offscreen t)
+  :hook (after-init . show-paren-mode))
 
 ;;; electric-pair-mode
-(use-package electric-pair-mode
+(use-package elec-pair
   :ensure nil
-  :init
-  (setq electric-pair-preserve-balance t)
-  (setq electric-pair-delete-adjacent-pairs t)
-  (setq electric-pair-open-newline-between-pairs t)
-  (setq electric-pair-skip-whitespace t)
-  :hook
-  (emacs-startup . electric-pair-mode))
+  :custom
+  (electric-pair-preserve-balance t)
+  (electric-pair-delete-adjacent-pairs t)
+  (electric-pair-open-newline-between-pairs t)
+  (electric-pair-skip-whitespace t)
+  :hook (after-init . electric-pair-mode))
 
 ;;; abbrev-mode
 (use-package abbrev
@@ -196,13 +232,13 @@
   ;; (setq-default abbrev-mode nil)
   (save-abbrevs 'silently))
 
-;; which key
+;;; which key
 (use-package which-key
   :ensure nil
   :diminish which-key-mode
   :hook (after-init . which-key-mode))
 
-;;; set eglot mode: lsp
+;;; eglot mode: lsp
 (use-package eglot
   :ensure nil
   :defer t
@@ -236,43 +272,12 @@
               ("<wheel-down>" . doc-view-next-line-or-next-page))
   :hook (doc-view-mode . doc-view-hide-modeline-mode))
 
-
-
 ;;; remap the buffer view
 (use-package ibuffer
   :ensure nil
   :defer t
   :bind
   ([remap list-buffers] . ibuffer-other-window))
-
-
-
-;; (defun my/eshell-prompt ()
-;;   "The prompt for eshell."
-;;   (concat
-;;    ;; begin
-;;    "⟫ "
-;;    ;; username
-;;    (my/with-face
-;;     (concat (user-login-name) " ⟩ ")
-;;     :foreground "orange")
-;;    ;; path
-;;    (my/with-face
-;;     (concat (let ((pwd (eshell/pwd))
-;;                   (home (getenv "HOME")))
-;;               (if (string-prefix-p home pwd)
-;;                   (concat "~" (substring pwd (length home)))
-;;                 pwd))
-;;             " ⟩ ")
-;;     :foreground "red")
-;;    ;; time
-;;    (my/with-face
-;;     (format-time-string "♥ %H:%M ⟩" (current-time))
-;;     :foreground "#66ccff")
-;;    ;; newline
-;;    "\n"
-;;    ;; character
-;;    (if (= (user-uid) 0) "⟩ " "⟫ ")))
 
 ;;; eshell
 (use-package eshell
@@ -296,8 +301,15 @@
 
 
 ;; email settings
-;; (setq user-mail-address "yly1228@foxmail.com")
-;; (setq send-mail-function 'smtpmail-send-it)
+(setopt )
+(setopt send-mail-function 'smtpmail-send-it)
+
+(use-package rmail
+  :ensure nil
+  :defer t
+  :custom
+  (rmail-preserve-inbox t))
+
 ;; (use-package smtpmail
 ;;   :ensure nil
 ;;   :defer t
@@ -309,9 +321,7 @@
 
 
 
-;;; Other files
-
-;; add additional config path
+;;; additional configuration files
 (add-to-list 'load-path
              (expand-file-name "lisp" user-emacs-directory))
 
@@ -322,9 +332,7 @@
 (use-package init-org :ensure nil)      ; org mode settings
 (use-package init-lang :ensure nil)     ; programming languages
 
-
-
-;; my custom lisp library(s)
+;;; my custom lisp library(s)
 (when (file-directory-p "~/Projects/ELisp")
   (message "We have user libs!")
   (add-to-list 'load-path "~/Projects/ELisp")
@@ -332,19 +340,13 @@
   (use-package escvil
     :disabled
     :ensure nil
-    :commands escvil-mode
     :defer t
-    :hook
-    (prog-mode . escvil-mode)
-    (text-mode . escvil-mode))
+    :hook ((prog-mode text-mode) . escvil-mode))
 
   (use-package handy-evil
     :ensure nil
-    :commands handy-evil-mode
     :defer t
-    :hook
-    (prog-mode . handy-evil-mode)
-    (text-mode . handy-evil-mode)))
+    :hook ((prog-mode text-mode) . handy-evil-mode)))
 
 ;;; Local Variables:
 ;;; byte-compile-warnings: (not free-vars)
