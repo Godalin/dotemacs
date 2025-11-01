@@ -38,6 +38,7 @@
 ;;; ivy-counsel-swiper completion
 (use-package counsel
   :defer t
+  :diminish ivy-mode
   :config
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "[ %d/%d ]")
@@ -146,6 +147,7 @@
 
 ;;; sexy mode line
 (use-package smart-mode-line
+  :disabled
   :defer t
   :custom
   (sml/no-confirm-load-theme t)
@@ -198,14 +200,8 @@
 (use-package hydra
   :defer t)
 
-;;; tree sitter
-;; (use-package treesit-auto
-;;   :defer t
-;;   :custom
-;;   (treesit-auto-install 'prompt)
-;;   :config
-;;   (treesit-auto-add-to-auto-mode-alist 'all)
-;;   :hook (emacs-startup . global-treesit-auto-mode))
+;;; dired-preview
+(use-package dired-preview)
 
 (provide 'init-packages)
 ;;; init-packages.el ends here

@@ -33,6 +33,8 @@
 
 ;;; direnv &/ envrc
 (use-package envrc
+  :defer t
+  :diminish envrc-mode
   :hook (after-init . envrc-global-mode))
 
 (provide 'init-nix)

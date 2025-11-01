@@ -63,19 +63,18 @@
   (set-fontset-font "fontset-default" 'han "LXGW Wenkai"))
 
 ;;; visual line mode and more
-(use-package emacs
+(use-package simple
   :ensure nil
   :custom
   (line-move-visual t)
   (track-eol t)
   (visual-line-fringe-indicators t)
   (word-wrap-by-category t)
-  (read-quoted-char-radix 16 "input method, use hex code")
-  :hook ((after-init . (size-indication-mode
-                        line-number-mode
-                        column-number-mode))
-         (prog-mode . global-visual-line-mode)
-         (text-mode . global-visual-line-mode)))
+  (read-quoted-char-radix 16 "input method, use hex code"))
+
+(add-hook 'after-init-hook #'size-indication-mode)
+(add-hook 'prog-mode-hook #'global-visual-line-mode)
+(add-hook 'text-mode-hook #'global-visual-line-mode)
 
 ;;; space/tab/indention related
 (setopt tab-width 2)                   ; 2 spaces = 1 tab
@@ -88,22 +87,21 @@
 
 (use-package pixel-scroll
   :ensure nil
-  :hook
-  (after-init . pixel-scroll-precision-mode))
+  :hook (after-init . pixel-scroll-precision-mode))
 
 ;;; prog-mode
 (use-package prog-mode
   :ensure nil
   :hook ((emacs-lisp-mode . prettify-symbols-mode)
          (prog-mode
-          . (lambda () (setopt show-trailing-whitespace t
-                          indicate-empty-lines t)))))
+          . (lambda () (setq-local show-trailing-whitespace t
+                              indicate-empty-lines t)))))
 ;;; text-mode
 (use-package text-mode
   :ensure nil
   :hook (text-mode
-         . (lambda () (setopt show-trailing-whitespace t
-		                     indicate-empty-lines t))))
+         . (lambda () (setq-local show-trailing-whitespace t
+		                         indicate-empty-lines t))))
 
 ;;; customization of display
 (use-package display-line-numbers
@@ -152,7 +150,7 @@
 ;;; !`TODO' test editorconfig mode
 (use-package editorconfig
   :ensure nil
-  :hook (emacs-startup . editorconfig-mode))
+  :hook (after-init . editorconfig-mode))
 
 ;;; save and switch window layouts
 (use-package winner

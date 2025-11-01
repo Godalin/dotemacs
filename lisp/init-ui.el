@@ -5,7 +5,7 @@
 
 
 ;; theme: modus
-(use-package emacs
+(use-package modus-themes
   :ensure nil
   :custom
   (modus-themes-italic-constructs t)
@@ -37,11 +37,10 @@
                            (4 . (background overline rainbow 1.2))
                            (t . (overline semibold))))
   :bind ("<f12>" . modus-themes-toggle)
-  :hook (emacs-startup . (lambda () (load-theme 'modus-vivendi))))
+  :hook (emacs-startup . (lambda () (load-theme 'modus-vivendi-tinted))))
 
 ;;; rainbow delimiters
 (use-package rainbow-delimiters
-  ;; :disabled
   :defer t
   :hook
   (prog-mode . rainbow-delimiters-mode))
