@@ -8,11 +8,11 @@
 (use-package haskell-mode
   :defer t
   :after (eglot company)
-  :config
+  :init
   (setq eglot-workspace-configuration
         (plist-put eglot-workspace-configuration
                    :haskell
-                   (:formattingProvider . "fourmolu")))
+                   (:formattingProvider "fourmolu")))
   :bind
   (:map
    haskell-mode-map                     ;haskell files
