@@ -33,9 +33,14 @@
 
 ;;; direnv &/ envrc
 (use-package envrc
+  :disabled
   :defer t
   :diminish envrc-mode
   :hook (after-init . envrc-global-mode))
+
+(use-package direnv
+  :defer t
+  :hook (after-init . direnv-mode))
 
 (provide 'init-nix)
 ;;; init-nix.el ends here
