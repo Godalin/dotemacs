@@ -2,12 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
-
 (use-package org
   :ensure nil
   :defer t
   ;; :init
   ;; (setq org-hide-emphasis-markers t)
+  :custom
+  (org-default-notes-file (expand-file-name "notes.org" org-directory))
   :config
   (setq org-format-latex-options
         (plist-put org-format-latex-options :scale 2.0))
