@@ -7,11 +7,9 @@
   :defer t
   :commands eshell-toggle)
 
-
 ;;; crux
 (use-package crux
   :defer t)
-
 
 ;;; hungry delete
 (use-package hungry-delete
@@ -19,13 +17,15 @@
   :bind
   ("C-<backspace>" . kill-word-or-whitespace-backward))
 
-
 ;;; edit: drag lines up and down
 (use-package drag-stuff
   :defer t
-  :bind
-  ("M-<up>" . drag-stuff-up)
-  ("M-<down>" . drag-stuff-down))
+  :bind ((:map prog-mode-map
+               ("M-<up>"   . drag-stuff-up)
+               ("M-<down>" . drag-stuff-down))
+         (:map text-mode-map
+               ("M-<up>"   . drag-stuff-up)
+               ("M-<down>" . drag-stuff-down))))
 
 
 ;;; edit parentheses
@@ -48,25 +48,13 @@
 
 ;;; Global Keybind Modify
 
-;;; unset annoying keys
+;;; Unset annoying keys
+;;; The major difference from vanilla Emacs is that we do not
+;;; use the following two keys to control when to exit Emacs.
 (keymap-global-unset "C-x C-c")
 (keymap-global-unset "C-x C-z")
 
-(keymap-global-set
- "C-x C-2"
- (lambda ()
-	 (interactive)
-	 (split-window-below)
-	 (other-window 1)))
-
-(keymap-global-set
- "C-x C-3"
- (lambda ()
-	 (interactive)
-	 (split-window-right)
-	 (other-window 1)))
-
-
+;;; And do not passing prefix arguments with `C-<num>' or `M-<num>'
 ;;; unbind all global C-num/M-num/C-M-num keys
 (dotimes (num 10)
   (let ((C-num (format "C-%d" num))
@@ -76,17 +64,38 @@
     (keymap-global-unset M-num)
     (keymap-global-unset C-M-num)))
 
+(keymap-global-set
+ "C-x C-2" (lambda () (interactive)
+	           (split-window-below)
+	           (other-window 1)))
+
+(keymap-global-set
+ "C-x C-3" (lambda () (interactive)
+	           (split-window-right)
+	           (other-window 1)))
+
+
 
 ;;; for Linux
 (when (eq system-type 'gnu/linux)
 
-  ;; fcitx and keyboard-quit
-  (keymap-global-set
-   "C-g"
-   (defun keyboard-and-fcitx5-quit ()
-     (interactive)
-     (shell-command "fcitx5-remote -c")
-     (keyboard-quit))))
+  ;; quit fcitx with advice systems
+  (defun keyboard-quit-then ()
+    (shell-command "fcitx5-remote -c")
+    (message "hello quit"))
+
+  (advice-add 'keyboard-quit :before
+              #'keyboard-quit-then))
+
+
+
+;;; TODO restart emacs with server
+(defun restart-emacs-w/server ()
+  (interactive))
+
+;;; TODO kill emacs with server
+(defun kill-emacs-w/server ()
+  (interactive))
 
 ;;; Custom System Map (which are dangerous)
 (defvar-keymap custom-system-map
@@ -111,6 +120,7 @@
   )
 
 
+
 ;;; Custom Function Map
 
 (defvar-keymap custom-function-map
@@ -120,11 +130,11 @@
   "o a" 'org-agenda
   "o c" 'org-capture
   "o l" 'org-store-link
-  "p"   'list-packages                    ; show all packages
+  "p"   'list-packages                  ; show all packages
   "r f" 'recentf-open                   ; recentf
   "r r" 'recentf-open-files
   ;; search
-  "s"   'scratch-buffer                   ; scratch
+  "s"   'scratch-buffer                 ; scratch
   ;; tab line mode
   "t t" 'tab-line-mode                  ; toggle tab line
   ;; whitespace
