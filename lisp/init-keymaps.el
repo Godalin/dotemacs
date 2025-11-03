@@ -88,16 +88,6 @@
      (shell-command "fcitx5-remote -c")
      (keyboard-quit))))
 
-
-;; flymake
-(keymap-global-set "M-p" 'flymake-goto-prev-error)
-(keymap-global-set "M-n" 'flymake-goto-next-error)
-
-
-;; flyspell
-(keymap-global-set "<f5>" 'flyspell-mode)
-
-
 ;;; Custom System Map (which are dangerous)
 (defvar-keymap custom-system-map
   :prefix 'Custom-System-prefix
