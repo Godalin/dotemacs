@@ -2,11 +2,6 @@
 ;;; Commentary:
 ;;; Code:
 
-;;; 3rd Packages
-(use-package eshell-toggle
-  :defer t
-  :commands eshell-toggle)
-
 ;;; crux
 (use-package crux
   :defer t)
@@ -26,7 +21,6 @@
          (:map text-mode-map
                ("M-<up>"   . drag-stuff-up)
                ("M-<down>" . drag-stuff-down))))
-
 
 ;;; edit parentheses
 (use-package paredit
