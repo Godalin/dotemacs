@@ -289,14 +289,17 @@
   ;; :custom
   ;; (eshell-prompt-regexp "^[⟩⟫] ")
   ;; (eshell-prompt-function 'my/eshell-prompt)
+  :config
+  (add-to-list 'eshell-modules-list
+               'eshell-rebind)
   :hook
-  (eshell-mode
-   . (lambda ()
-		   (keymap-set
-		    eshell-mode-map
-		    "C-d"
-		    (lambda () (interactive)
-		      (kill-buffer (current-buffer))))))
+  ;; (eshell-mode
+  ;;  . (lambda ()
+	;; 	   (keymap-set
+	;; 	    eshell-mode-map
+	;; 	    "C-d"
+	;; 	    (lambda () (interactive)
+	;; 	      (kill-buffer (current-buffer))))))
   ;; :bind (:map eshell-mode-map
   ;;             ("C-h" . '(lambda () (message "C-d"))))
   )
