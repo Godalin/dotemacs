@@ -174,13 +174,16 @@
 
 ;;; sr-speedbar
 (use-package sr-speedbar
-  :defer t)
+  :defer t
+  :commands sr-speedbar-toggle)
 
 ;;; eshell
 (use-package eshell-toggle
   :defer t
   :custom (eshell-toggle-find-project-root-package 'project)
-  :commands (eshell-toggle))
+  :commands eshell-toggle
+  :bind (:map eshell-mode-map
+              ("C-d" . eshell-toggle)))
 
 ;;; Rime
 (use-package rime

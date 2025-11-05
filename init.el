@@ -330,9 +330,19 @@
 (add-to-list 'load-path
              (expand-file-name "lisp" user-emacs-directory))
 
-(use-package init-ui :ensure nil)       ; ui settings
-(use-package init-packages :ensure nil) ; load packages
-(use-package init-keymaps :ensure nil)  ; keymaps
+;;; ui settings
+(use-package init-ui
+  :ensure nil)
+
+;;; load packages
+(use-package init-packages
+  :ensure nil)
+
+;;; keymaps
+(use-package init-keymaps
+  :ensure nil
+  :after init-packages)
+
 (use-package init-evil :ensure nil)     ; evil bindings
 (use-package init-org :ensure nil)      ; org mode settings
 (use-package init-lang :ensure nil)     ; programming languages

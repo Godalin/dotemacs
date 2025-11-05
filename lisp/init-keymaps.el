@@ -120,6 +120,7 @@
 (defvar-keymap custom-function-map
   :prefix 'Custom-Function-prefix
   :doc "This map is for customization."
+
   ;; org bindings
   "o a" 'org-agenda
   "o c" 'org-capture
@@ -127,10 +128,13 @@
   "p"   'list-packages                  ; show all packages
   "r f" 'recentf-open                   ; recentf
   "r r" 'recentf-open-files
+
   ;; search
   "s"   'scratch-buffer                 ; scratch
+
   ;; tab line mode
   "t t" 'tab-line-mode                  ; toggle tab line
+
   ;; whitespace
   "w c" 'whitespace-mode								; whitespace mode
   "w t" (lambda ()                           ; untabify the whole buffer
@@ -138,9 +142,9 @@
 	        (mark-whole-buffer)
 	        (untabify))
   "w w" 'delete-trailing-whitespace     ; whitespace
-  ;; terminals
-  "x" 'term                             ; term
-  "z" #'eshell-toggle                   ; eshell
+
+  "x"   'sr-speedbar-toggle             ; sr-speedbar
+  "z"   'eshell-toggle                  ; eshell
 
   ;; crux
   "SPC o" 'crux-open-with
