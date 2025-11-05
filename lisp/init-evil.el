@@ -1,4 +1,4 @@
-;;; package -- quick edit in emacs with vim bindings  -*- lexical-binding: t; -*-
+;;; package -- Emacs Modal Editing: with Vim  -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -15,42 +15,36 @@
 
 ;;; Code:
 
-
 (use-package evil
   :defer t
-  :bind
-  ("C-<escape>" . 'evil-mode)
-
-  :hook
-  (evil-emacs-state-entry . evil-exit)
-  (evil-normal-state-entry
-   . (lambda ()
-       (setq display-line-numbers-type 'relative)
-       ;; (display-line-numbers-mode)
-       ))
-  (evil-normal-state-exit
-   . (lambda ()
-       (setq display-line-numbers-type t)
-       ;; (display-line-numbers-mode)
-       ))
-
+  :custom
+  (evil-toggle-key nil)
+  (evil-want-C-i-jump t)
+  (evil-want-C-u-delete t)
+  (evil-default-state 'normal)
+  (evil-auto-indent t)
+  (evil-shift-width 2)
+  (evil-shift-round t)
+  (evil-indent-convert-tabs t)
+  (evil-move-beyond-eol nil)
+  :bind ("<escape>" . evil-mode)
+  :hook ((evil-emacs-state-entry . evil-exit)
+         (evil-normal-state-entry
+          . (lambda ()
+              (setq display-line-numbers-type 'relative)
+              ;; (display-line-numbers-mode)
+              ))
+         (evil-normal-state-exit
+          . (lambda ()
+              (setq display-line-numbers-type t)
+              ;; (display-line-numbers-mode)
+              )))
   :init
-  (setq evil-toggle-key "C-<escape>"
-        evil-want-C-i-jump t
-        evil-want-C-u-delete t
-        evil-default-state 'normal
-        evil-auto-indent t
-        evil-shift-width 2
-        evil-shift-round t
-        evil-indent-convert-tabs t
-        evil-move-beyond-eol nil)
-
   (defun evil-exit (&rest _)
     "command to exit evil mode"
     (interactive)
     (message "Exit Vim Simulation (Evil)")
     (evil-mode -1))
-
   :config
   ;; exit evil
   (evil-define-key
@@ -61,8 +55,7 @@
 (use-package evil-surround
   :defer t
   :after evil
-  :hook
-  (evil-mode . global-evil-surround-mode))
+  :hook (evil-mode . global-evil-surround-mode))
 
 ;; evil with tex objects
 (use-package evil-textobj-syntax
