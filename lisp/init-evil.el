@@ -18,7 +18,7 @@
 (use-package evil
   :defer t
   :custom
-  (evil-toggle-key nil)
+  (evil-toggle-key "C-<escape>")
   (evil-want-C-i-jump t)
   (evil-want-C-u-delete t)
   (evil-default-state 'normal)
@@ -28,28 +28,11 @@
   (evil-indent-convert-tabs t)
   (evil-move-beyond-eol nil)
   :bind ("<escape>" . evil-mode)
-  :hook ((evil-emacs-state-entry . evil-exit)
+  :hook ((evil-insert-state-entry . evil-emacs-state)
          (evil-normal-state-entry
-          . (lambda ()
-              (setq display-line-numbers-type 'relative)
-              ;; (display-line-numbers-mode)
-              ))
+          . (lambda () (setq display-line-numbers-type 'relative)))
          (evil-normal-state-exit
-          . (lambda ()
-              (setq display-line-numbers-type t)
-              ;; (display-line-numbers-mode)
-              )))
-  :init
-  (defun evil-exit (&rest _)
-    "command to exit evil mode"
-    (interactive)
-    (message "Exit Vim Simulation (Evil)")
-    (evil-mode -1))
-  :config
-  ;; exit evil
-  (evil-define-key
-    '(normal insert visual replace operator motion emacs)
-    'global (kbd "C-<escape>") 'evil-emacs-state))
+          . (lambda () (setq display-line-numbers-type t)))))
 
 ;; evil-surround
 (use-package evil-surround
