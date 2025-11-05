@@ -25,6 +25,7 @@
 ;;; edit parentheses
 (use-package paredit
   :defer t
+  :diminish paredit-mode
   :bind (:map paredit-mode-map
               ("C-<left>" . nil)
               ("C-<right>" . nil)
@@ -38,6 +39,7 @@
   (emacs-lisp-mode . paredit-mode)
   (racket-mode . paredit-mode)
   (dune-mode . paredit-mode))
+
 
 
 ;;; Global Keybind Modify
@@ -60,28 +62,23 @@
 
 (keymap-global-set
  "C-x C-2" (lambda () (interactive)
-	           (split-window-below)
-	           (other-window 1)))
+             (split-window-below)
+             (other-window 1)))
 
 (keymap-global-set
  "C-x C-3" (lambda () (interactive)
-	           (split-window-right)
-	           (other-window 1)))
-
-
+             (split-window-right)
+             (other-window 1)))
 
 ;;; for Linux
 (when (eq system-type 'gnu/linux)
 
   ;; quit fcitx with advice systems
   (defun keyboard-quit-then ()
-    (shell-command "fcitx5-remote -c")
-    (message "hello quit"))
+    (shell-command "fcitx5-remote -c"))
 
   (advice-add 'keyboard-quit :before
               #'keyboard-quit-then))
-
-
 
 ;;; TODO restart emacs with server
 (defun restart-emacs-w/server ()
@@ -91,10 +88,11 @@
 (defun kill-emacs-w/server ()
   (interactive))
 
-;;; Custom System Map (which are dangerous)
+;;; Custom System Map (Dangerous)
 (defvar-keymap custom-system-map
   :prefix 'Custom-System-prefix
   :doc "This map is for custom system functions such as reboot."
+
   ;; control emacs
   "c" (lambda ()
         (interactive)
@@ -103,7 +101,8 @@
           (save-buffers-kill-emacs)))
   "C-r" 'restart-emacs
   "C-z" 'suspend-emacs
-  ;; initiation files
+
+  ;; initialization files
   "C-c d" (lambda () (interactive) (dired "~/.config/emacs"))
   "C-c e" (lambda () (interactive) (find-file "~/.config/emacs/lisp/init-evil.el"))
   "C-c i" (lambda () (interactive) (find-file "~/.config/emacs/init.el"))
@@ -112,8 +111,6 @@
   "C-c o" (lambda () (interactive) (find-file "~/.config/emacs/lisp/init-org.el"))
   "C-c p" (lambda () (interactive) (find-file "~/.config/emacs/lisp/init-packages.el"))
   )
-
-
 
 ;;; Custom Function Map
 
@@ -136,11 +133,11 @@
   "t t" 'tab-line-mode                  ; toggle tab line
 
   ;; whitespace
-  "w c" 'whitespace-mode								; whitespace mode
+  "w c" 'whitespace-mode                ; whitespace mode
   "w t" (lambda ()                           ; untabify the whole buffer
-	        (interactive)
-	        (mark-whole-buffer)
-	        (untabify))
+          (interactive)
+          (mark-whole-buffer)
+          (untabify))
   "w w" 'delete-trailing-whitespace     ; whitespace
 
   "x"   'sr-speedbar-toggle             ; sr-speedbar
@@ -151,17 +148,17 @@
   "SPC e" 'crux-eval-and-replace
   "SPC d" 'crux-duplicate-current-line-or-region
   "SPC c d" 'crux-duplicate-and-comment-current-line-or-region
-  "SPC SPC" (lambda () (interactive) (message "hello")) ; test
+  "SPC SPC" (lambda () (interactive) (message "hello"))
   )
 
 (keymap-global-set "C-z" 'Custom-Function-prefix)
 (keymap-global-set "C-z C-x" 'Custom-System-prefix)
 
 
+
 ;;; Custom Commands
 
-
-;; quickly open language configuration
+;;; quickly open language configuration
 (defun open-init-language (lang)
   "Open a configuration file with the given language.
 LANG: the programming language"
@@ -170,8 +167,7 @@ LANG: the programming language"
     (cond ((file-exists-p init-file) (find-file init-file))
           (t (message "language init file not found.")))))
 
-
-;; best backward kill command
+;;; best backward kill command
 (defun kill-word-or-whitespace-backward (n &optional killflag)
   "Kill word if non-whitespace, or all whitespace if any.
 N: the prefix argument
