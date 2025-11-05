@@ -42,8 +42,7 @@
 ;;; rainbow delimiters
 (use-package rainbow-delimiters
   :defer t
-  :hook
-  (prog-mode . rainbow-delimiters-mode))
+  :hook (emacs-startup . rainbow-delimiters-mode))
 
 ;;; dashboard
 (use-package dashboard
