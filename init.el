@@ -361,6 +361,7 @@
     :hook ((prog-mode text-mode) . escvil-mode))
 
   (use-package handy-evil
+    :disabled
     :ensure nil
     :defer t
     :hook ((prog-mode text-mode) . handy-evil-mode)))
