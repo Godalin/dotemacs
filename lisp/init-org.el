@@ -9,6 +9,7 @@
   ;; (setq org-hide-emphasis-markers t)
   :custom
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
+  (org-return-follows-link nil)
   :config
   (setq org-format-latex-options
         (plist-put org-format-latex-options :scale 2.0))
@@ -16,12 +17,13 @@
    'org-babel-load-languages
    '((python . t)
      (haskell . t)))
-  :bind
-  (:map org-mode-map
-        ("C-c C-4" . (lambda () (interactive)
-                       (skeleton-insert '(nil "\\( " _ " \\)"))))
-        ("C-c C-5" . (lambda () (interactive)
-                       (skeleton-insert '(nil "\\[" \n _ \n "\\]"))))))
+  :bind (:map org-mode-map
+              ("C-c C-4" . (lambda () (interactive)
+                             (skeleton-insert
+                              '(nil "\\( " _ " \\)"))))
+              ("C-c C-5" . (lambda () (interactive)
+                             (skeleton-insert
+                              '(nil "\\[" \n _ \n "\\]"))))))
 
 (use-package ox-latex
   :ensure nil
@@ -37,12 +39,10 @@
 
 (use-package zotxt
   :defer t
-  :hook
-  (org-mode . org-zotxt-mode)
-  :bind
-  (:map org-mode-map
-        ("C-c \" \"" . (lambda () (interactive)
-                         (org-zotxt-insert-reference-link '(4))))))
+  :bind (:map org-mode-map
+              ("C-c \" \"" . (lambda () (interactive)
+                         (org-zotxt-insert-reference-link '(4)))))
+  :hook (org-mode . org-zotxt-mode))
 
 (use-package org-ref
   :defer t)
@@ -58,12 +58,17 @@
 ;; org-mode for notes: roam
 (use-package org-roam
   :defer t
-  :hook
-  (after-init . org-roam-db-autosync-mode)
+  :custom
+  (org-roam-directory (file-truename "~/org-roam"))
   :init
   (unless (file-exists-p "~/org-roam")
     (make-directory "~/org-roam"))
-  (setq org-roam-directory (file-truename "~/org-roam")))
+  :bind
+  (:map org-mode-map
+        ("C-c r i" . org-roam-node-insert)
+        ("C-c r f" . org-roam-node-find)
+        ("C-c r c" . org-roam-capture))
+  :hook (after-init . org-roam-db-autosync-mode))
 
 (use-package org-roam-ui
   :defer t
