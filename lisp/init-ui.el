@@ -44,17 +44,17 @@
  (list "%e"
        'header-line-indent
        'mode-line-front-space
-       '(:propertize
-         (""
-          mode-line-mule-info
-          mode-line-client
-          mode-line-modified
-          mode-line-remote
-          mode-line-window-dedicated)
-         display
-         (min-width (6.0)))
+       ;; '(:propertize
+       ;;   (""
+       ;;    mode-line-mule-info
+       ;;    mode-line-client
+       ;;    mode-line-modified
+       ;;    mode-line-remote
+       ;;    mode-line-window-dedicated)
+       ;;   display
+       ;;   (min-width (6.0)))
        '(:eval (abbreviate-file-name default-directory))
-       "   "
+       " : "
        "%b"
        mode-line-end-spaces))
 
