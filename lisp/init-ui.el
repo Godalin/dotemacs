@@ -2,9 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-
-
-;; theme: modus
+;; Color Theme: Modus-Themes
 (use-package modus-themes
   :ensure nil
   :custom
@@ -39,10 +37,31 @@
   :bind ("<f12>" . modus-themes-toggle)
   :hook (emacs-startup . (lambda () (load-theme 'modus-vivendi-tinted))))
 
+
+;;; make use of the header line
+(setq-default
+ header-line-format
+ (list "%e"
+       'header-line-indent
+       'mode-line-front-space
+       '(:propertize
+         (""
+          mode-line-mule-info
+          mode-line-client
+          mode-line-modified
+          mode-line-remote
+          mode-line-window-dedicated)
+         display
+         (min-width (6.0)))
+       '(:eval (abbreviate-file-name default-directory))
+       "   "
+       "%b"
+       mode-line-end-spaces))
+
 ;;; rainbow delimiters
 (use-package rainbow-delimiters
   :defer t
-  :hook (emacs-startup . rainbow-delimiters-mode))
+  :hook ((prog-mode text-mode) . rainbow-delimiters-mode))
 
 ;;; dashboard
 (use-package dashboard

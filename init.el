@@ -330,6 +330,8 @@
 (add-to-list 'load-path
              (expand-file-name "lisp" user-emacs-directory))
 
+;;; User Configuration Files
+
 ;;; ui settings
 (use-package init-ui
   :ensure nil)
