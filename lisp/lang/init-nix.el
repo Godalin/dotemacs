@@ -2,12 +2,16 @@
 ;;; Commentary:
 ;;; Code:
 
-(use-package nix-mode
-  :mode ("\\.nix\\'" "\\.nix.in\\'"))
+;; (use-package nix-mode
+;;   :mode ("\\.nix\\'" "\\.nix.in\\'"))
 
 (use-package nix-drv-mode
   :ensure nix-mode
   :mode "\\.drv\\'")
+
+(use-package nix-ts-mode
+  :mode "\\.nix\\'"
+  :hook (nix-ts-mode . eglot-ensure))
 
 (use-package nix-shell
   :ensure nix-mode
