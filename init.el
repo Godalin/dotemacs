@@ -292,7 +292,7 @@
   :config
   (add-to-list 'eshell-modules-list
                'eshell-rebind)
-  :hook
+  ;; :hook
   ;; (eshell-mode
   ;;  . (lambda ()
 	;; 	   (keymap-set
