@@ -12,9 +12,12 @@
 ;;;   vim
 ;;; C-g exit evil mode
 
-
 ;;; Code:
 
+;;; use `general' to configure `evil' with `use-package'
+(use-package general)
+
+;;; `evil' is nice but only in normal mode
 (use-package evil
   :defer t
   :custom
@@ -27,12 +30,22 @@
   (evil-shift-round t)
   (evil-indent-convert-tabs t)
   (evil-move-beyond-eol nil)
-  :bind ("<escape>" . evil-mode)
+  (evil-emacs-state-cursor '(bar "#66CCFF"))
+  (evil-normal-state-cursor '(box "brown"))
+  :bind ((:map text-mode-map
+               ("<escape>" . evil-force-normal-state))
+         (:map prog-mode-map
+               ("<escape>" . evil-force-normal-state)))
+  :general
+  (:states '(normal visual)
+           "C-e" 'end-of-visual-line
+           "TAB" 'indent-for-tab-command)
   :hook ((evil-insert-state-entry . evil-emacs-state)
          (evil-normal-state-entry
           . (lambda () (setq display-line-numbers-type 'relative)))
          (evil-normal-state-exit
-          . (lambda () (setq display-line-numbers-type t)))))
+          . (lambda () (setq display-line-numbers-type t)))
+         ))
 
 ;; evil-surround
 (use-package evil-surround
