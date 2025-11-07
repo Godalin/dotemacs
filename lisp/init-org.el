@@ -10,10 +10,10 @@
   :custom
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
   (org-return-follows-link nil)
-  (org-format-latex-options
-   (plist-put org-format-latex-options :scale 2.0))
 
   :config
+  (setq org-format-latex-options
+        (plist-put org-format-latex-options :scale 2.0))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
