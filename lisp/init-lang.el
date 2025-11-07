@@ -2,12 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
-
 (add-to-list 'load-path
              (expand-file-name "lisp/lang" user-emacs-directory))
 (add-to-list 'load-path
              (expand-file-name "lisp/lang/modes" user-emacs-directory))
-
 
 (use-package init-haskell :ensure nil)
 (use-package init-racket :ensure nil)
@@ -25,42 +23,15 @@
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
 
-
-
 ;;; markdown
 (use-package markdown-mode
   :defer t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
-
-;;; common lisp mode
-(add-hook 'lisp-mode-hook
-          (lambda ()
-            (load (expand-file-name "~/.quicklisp/slime-helper.el"))
-            (setq inferior-lisp-program "sbcl")))
-
-
-;;; scheme
-(use-package scheme-mode
-  :ensure nil
-  :defer t
-  :custom
-  (scheme-program-name "chez"))
-
-(use-package geiser-chez
-  :defer t
-  :custom
-  (geiser-chez-binary "chez"))
-
-(use-package geiser-guile
-  :defer t)
-
-
 ;;; elixir mode
 (use-package elixir-mode
   :defer t)
-
 
 ;;; prolog mode
 (use-package prolog-mode
@@ -80,15 +51,12 @@
 (use-package ediprolog
   :defer t)
 
-
 (use-package typst-ts-mode
   :ensure t
   :defer t
   :vc (typst-ts-mode
        :url "https://codeberg.org/meow_king/typst-ts-mode.git"))
 
-
 (provide 'init-lang)
-
 
 ;;; init-lang.el ends here

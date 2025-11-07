@@ -10,20 +10,28 @@
   :custom
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
   (org-return-follows-link nil)
+  (org-format-latex-options
+   (plist-put org-format-latex-options :scale 2.0))
+
   :config
-  (setq org-format-latex-options
-        (plist-put org-format-latex-options :scale 2.0))
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((python . t)
-     (haskell . t)))
+     (haskell . t)
+     (scheme . t)
+     ;; rackets
+     (racket . t)
+     ;; (scribble . t)
+     ))
+
   :bind (:map org-mode-map
               ("C-c C-4" . (lambda () (interactive)
                              (skeleton-insert
                               '(nil "\\( " _ " \\)"))))
               ("C-c C-5" . (lambda () (interactive)
                              (skeleton-insert
-                              '(nil "\\[" \n _ \n "\\]"))))))
+                              '(nil "\\[" \n _ \n "\\]"))))
+              ("C-c b" . org-switchb)))
 
 (use-package ox-latex
   :ensure nil
@@ -44,18 +52,22 @@
                          (org-zotxt-insert-reference-link '(4)))))
   :hook (org-mode . org-zotxt-mode))
 
+;;; org-ref
 (use-package org-ref
   :defer t)
 
-;; org-mode for blog: hugo
+;;; org-mode for blog: hugo
 (use-package ox-hugo
   :defer t
   :after ox
   :init
-  ;; change this to your Hugo root
-  (setq-default org-hugo-base-dir "~/Projects/HugoBlog/"))
+  (let ((hugo-blog "~/Projects/HugoBlog"))
+    (when (and (file-exists-p hugo-blog)
+               (file-directory-p hugo-blog))
+      (setq-default org-hugo-base-dir
+                    (file-truename hugo-blog)))))
 
-;; org-mode for notes: roam
+;;; org-mode for notes: roam
 (use-package org-roam
   :defer t
   :custom

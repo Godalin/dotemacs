@@ -19,6 +19,12 @@
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/")))
 
+;;; package-install-vc
+(use-package package-vc
+  :ensure nil
+  :custom
+  (package-vc-allow-build-commands t))
+
 ;;; `dimish' for the minor modes in mod line
 (use-package diminish)
 
