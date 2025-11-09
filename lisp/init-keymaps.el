@@ -70,6 +70,17 @@
              (split-window-right)
              (other-window 1)))
 
+;;; do not use the wheel with modifier keys
+;;; (which scales the fonts by default)
+(keymap-global-unset "C-<wheel-up>")
+(keymap-global-unset "C-<wheel-down>")
+(keymap-global-unset "S-<wheel-up>")
+(keymap-global-unset "S-<wheel-down>")
+(keymap-global-unset "M-<wheel-up>")
+(keymap-global-unset "M-<wheel-down>")
+(keymap-global-unset "C-M-<wheel-up>")
+(keymap-global-unset "C-M-<wheel-down>")
+
 ;;; for Linux
 (when (eq system-type 'gnu/linux)
 
