@@ -16,7 +16,8 @@
         (plist-put org-format-latex-options :scale 2.0))
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((python . t)
+   '((shell . t)
+     (python . t)
      (haskell . t)
      (scheme . t)
      ;; rackets
