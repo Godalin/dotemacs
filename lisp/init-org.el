@@ -62,7 +62,10 @@
   :bind (:map org-mode-map
               ("C-c \" \"" . (lambda () (interactive)
                                (org-zotxt-insert-reference-link '(4)))))
-  :hook (org-mode . org-zotxt-mode))
+  :hook ((org-mode . org-zotxt-mode)
+         (org-mode . (lambda ()
+                       (modify-syntax-entry ?< "." (syntax-table))
+                       (modify-syntax-entry ?> "." (syntax-table))))))
 
 ;;; org-ref
 (use-package org-ref
