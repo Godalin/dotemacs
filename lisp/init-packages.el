@@ -64,9 +64,10 @@
 (use-package marginalia
   :defer t
   :after ivy
+  :init
+  (marginalia-mode)
   :bind (:map ivy-minibuffer-map
-              ([ivy-toggle-marks] . marginalia-cycle))
-  :hook (emacs-startup . marginalia-mode))
+              ([ivy-toggle-marks] . marginalia-cycle)))
 
 ;;; avy is awesome
 (use-package avy
@@ -97,7 +98,7 @@
 (use-package diff-hl
   :defer t
   :after magit
-  :hook ((emacs-startup . global-diff-hl-mode)
+  :hook ((after-init . global-diff-hl-mode)
          (magit-post-refresh
           . diff-hl-magit-post-refresh)))
 
