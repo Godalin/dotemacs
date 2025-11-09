@@ -8,14 +8,9 @@
 (use-package haskell-mode
   :defer t
   :after (eglot company)
-  ;; :init
-  ;; (setq eglot-workspace-configuration
-  ;;       (plist-put eglot-workspace-configuration
-  ;;                  :haskell
-  ;;                  (:formattingProvider "fourmolu")))
   :bind
   (:map
-   haskell-mode-map                     ;haskell files
+   haskell-mode-map
    ;; editing
    ("C-c C-d" . 'haskell-mode-jump-to-def)
    ("C-c C-m" . 'haskell-navigate-imports)
@@ -28,15 +23,15 @@
    ("C-c C-`" . 'haskell-interactive-bring)
    ("C-c C-k" . 'haskell-interactive-mode-clear)
    ;; for cabal commands
-   ("C-c c" . 'haskell-process-cabal)
+   ("C-c c"   . 'haskell-process-cabal)
    ("C-c C-v" . 'haskell-cabal-visit-file)
    :map
-   haskell-cabal-mode-map               ;cabal files
+   haskell-cabal-mode-map
    ("C-c C-c" . 'haskell-compile)
    ("C-c C-`" . 'haskell-interactive-bring)
    ("C-c C-k" . 'haskell-interactive-mode-clear)
    ;; for cabal commands
-   ("C-c c" . 'haskell-process-cabal))
+   ("C-c c"   . 'haskell-process-cabal))
   :hook
   ((haskell-mode . eglot-ensure)
    (haskell-mode . haskell-auto-insert-module-template)
@@ -49,8 +44,7 @@
 (use-package haskell-interactive-mode
 	:ensure nil
 	:after haskell-mode
-	:hook
-	(haskell-mode . interactive-haskell-mode))
+	:hook (haskell-mode . interactive-haskell-mode))
 
 (use-package alex-mode
 	:ensure nil
