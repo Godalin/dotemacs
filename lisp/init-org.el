@@ -10,10 +10,14 @@
   :custom
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
   (org-return-follows-link nil)
-
   :config
+  (use-package org-tempo
+    :ensure nil
+    :after org)
+
   (setq org-format-latex-options
         (plist-put org-format-latex-options :scale 2.0))
+  ;; enabled source languages
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((shell . t)
@@ -24,7 +28,11 @@
      (racket . t)
      ;; (scribble . t)
      ))
-
+  ;; add structure templates
+  (dolist (temp '(("rs" . "src racket :noweb-ref ? :eval no")
+                  ("rt" . "src racket")
+                  ("rq" . "src shell :results output html :exports results")))
+    (add-to-list 'org-structure-template-alist temp))
   :bind (:map org-mode-map
               ("C-c C-4" . (lambda () (interactive)
                              (skeleton-insert
@@ -37,6 +45,7 @@
 (use-package ox-latex
   :ensure nil
   :defer t
+  :after org
   :config
   (add-to-list 'org-latex-classes
                '("ctexart" "\\documentclass[11pt]{ctexart}"
@@ -46,31 +55,35 @@
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
+;;; use org with Zotero
 (use-package zotxt
   :defer t
+  :after org
   :bind (:map org-mode-map
               ("C-c \" \"" . (lambda () (interactive)
-                         (org-zotxt-insert-reference-link '(4)))))
+                               (org-zotxt-insert-reference-link '(4)))))
   :hook (org-mode . org-zotxt-mode))
 
 ;;; org-ref
 (use-package org-ref
-  :defer t)
+  :defer t
+  :after org)
 
-;;; org-mode for blog: hugo
+;;; org for blog: hugo
 (use-package ox-hugo
   :defer t
-  :after ox
+  :after org ox
   :init
-  (let ((hugo-blog "~/Projects/HugoBlog"))
+  (let ((hugo-blog (file-truename "~/Projects/HugoBlog")))
     (when (and (file-exists-p hugo-blog)
                (file-directory-p hugo-blog))
       (setq-default org-hugo-base-dir
                     (file-truename hugo-blog)))))
 
-;;; org-mode for notes: roam
+;;; org as roam
 (use-package org-roam
   :defer t
+  :after org
   :custom
   (org-roam-directory (file-truename "~/org-roam"))
   :init
