@@ -67,7 +67,7 @@
   :init
   (marginalia-mode)
   :bind (:map ivy-minibuffer-map
-              ([ivy-toggle-marks] . marginalia-cycle)))
+              ([remap ivy-toggle-marks] . marginalia-cycle)))
 
 ;;; avy is awesome
 (use-package avy
@@ -97,8 +97,13 @@
 ;;; highlight the line diff
 (use-package diff-hl
   :defer t
-  :after magit
-  :hook ((after-init . global-diff-hl-mode)
+  :custom
+  (diff-hl-fallback-to-margin t)
+  :hook ((emacs-startup . global-diff-hl-mode)
+         (dired-mode . diff-hl-dired-mode)
+         ((text-mode prog-mode)
+          . (diff-hl-margin-mode
+             diff-hl-show-hunk-mouse-mode))
          (magit-post-refresh
           . diff-hl-magit-post-refresh)))
 
