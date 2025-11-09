@@ -254,11 +254,11 @@
   ;; :custom
   ;; (eglot-autoshutdown t)
   ;; (eglot-confirm-server-initiated-edits nil)
-  :bind
-  ("C-c e r" . eglot-reconnect)
-  ("C-c e s" . eglot-ensure)
-  ("C-c e f" . eglot-format)
-  ("C-c e e" . eglot-code-actions))
+  :bind (:map prog-mode-map
+              ("C-c e r" . eglot-reconnect)
+              ("C-c e s" . eglot-ensure)
+              ("C-c e f" . eglot-format)
+              ("C-c e e" . eglot-code-actions)))
 
 ;;; file management
 (use-package recentf
