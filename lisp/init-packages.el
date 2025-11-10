@@ -85,22 +85,43 @@
 
 ;;; vertico for new versions
 (use-package vertico
-  ;; :custom
-  ;; (vertico-scroll-margin 0) ;; Different scroll margin
+  :custom
+  ;; (vertico-scroll-margin 10)
   ;; (vertico-count 20) ;; Show more candidates
-  ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
-  ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  (vertico-resize t)
+  (vertico-cycle t)
   :init
   (vertico-mode))
 
+(use-package orderless
+  :custom
+  ;; eamcs completion settings
+  ;; this part can be sent to `init.el'
+  (read-file-name-completion-ignore-case t)
+  (read-buffer-completion-ignore-case t)
+  (completion-ignore-case t)
+  (completion-styles
+   '(orderless basic substring partial-completion flex))
+  (completion-category-overrides '((file (styles partial-completion))))
+
+  ;; Emacs 31: partial-completion behaves like substring
+  ;; (completion-pcm-leading-wildcard t)
+  )
+
 ;;; add annotations in minibuffer
 (use-package marginalia
-  :defer t
-  :after ivy
   :init
   (marginalia-mode)
-  :bind (:map ivy-minibuffer-map
-              ([remap ivy-toggle-marks] . marginalia-cycle)))
+  :bind (:map minibuffer-local-map
+              ("M-a" . marginalia-cycle)))
+
+;;; add some icons
+(use-package nerd-icons-completion
+  :defer t
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode)
+  :hook (marginalia-mode . nerd-icons-completion-marginalia-setup))
 
 ;;; avy is awesome
 (use-package avy
