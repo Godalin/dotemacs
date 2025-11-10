@@ -117,7 +117,6 @@
 
 ;;; add some icons
 (use-package nerd-icons-completion
-  :defer t
   :after marginalia
   :config
   (nerd-icons-completion-mode)
