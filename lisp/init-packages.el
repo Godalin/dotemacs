@@ -2,37 +2,37 @@
 ;;; Commentary:
 ;;; Code:
 
-;;; `DEPRECATED:::' company
-;;; use corfu now in new versions
-(use-package company
-  :disabled
-  :defer t
-  :diminish company-mode
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
-  (company-tooltip-align-annotations t)
-  (company-tooltip-margin 2)
-  :bind (:map company-active-map
-              ("RET"    . company-abort)
-              ([return] . company-abort)
-              ("TAB"    . company-complete-selection)
-              ([tab]    . company-complete-selection))
-  :hook (emacs-startup . global-company-mode))
+;; ;;; `DEPRECATED:::' company
+;; ;;; use corfu now in new versions
+;; (use-package company
+;;   :disabled
+;;   :defer t
+;;   :diminish company-mode
+;;   :custom
+;;   (company-minimum-prefix-length 1)
+;;   (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
+;;   (company-tooltip-align-annotations t)
+;;   (company-tooltip-margin 2)
+;;   :bind (:map company-active-map
+;;               ("RET"    . company-abort)
+;;               ([return] . company-abort)
+;;               ("TAB"    . company-complete-selection)
+;;               ([tab]    . company-complete-selection))
+;;   :hook (emacs-startup . global-company-mode))
 
-(use-package company-box
-  :disabled
-  :defer t
-  :after company
-  :diminish company-box-mode
-  :hook (company-mode . company-box-mode))
+;; (use-package company-box
+;;   :disabled
+;;   :defer t
+;;   :after company
+;;   :diminish company-box-mode
+;;   :hook (company-mode . company-box-mode))
 
-(use-package company-posframe
-  :disabled
-  :defer t
-  :after company
-  :diminish company-posframe-mode
-  :hook (company-mode . company-posframe-mode))
+;; (use-package company-posframe
+;;   :disabled
+;;   :defer t
+;;   :after company
+;;   :diminish company-posframe-mode
+;;   :hook (company-mode . company-posframe-mode))
 
 ;;; modern completion package
 (use-package corfu
@@ -52,36 +52,36 @@
   :bind (:map corfu-map
               ("RET" . nil)))
 
-;;; `DEPRECATED:::' ivy-counsel-swiper
-;;; use vertico now in new versions
-(use-package counsel
-  :disabled
-  :defer t
-  :diminish ivy-mode
-  :config
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "[ %d/%d ]")
-  :bind (([remap isearch-forward]    . swiper-isearch)
-         ([remap isearch-backward]   . swiper-isearch)
-         ([remap execute-extended-command] . counsel-M-x)
-         ([remap find-file]          . counsel-find-file)
-         ([remap yank-pop]           . counsel-yank-pop)
-         ([remap describe-function]  . counsel-describe-function)
-         ([remap describe-variable]  . counsel-describe-variable)
-         ([remap find-library]       . counsel-find-library)
-         ([remap info-lookup-symbol] . counsel-info-lookup-symbol)
-         ([remap switch-to-buffer]   . ivy-switch-buffer)
-         ([remap recentf-open]       . counsel-recentf)
-         ([remap bookmark-jump]      . counsel-bookmark)
-         ("<f2> i" . info-lookup-symbol)
-         ("<f2> u" . counsel-unicode-char)
-         ("<f2> j" . counsel-set-variable)
-         ("<f2> v" . ivy-push-view)
-         ("<f2> s" . ivy-save-view)
-         ("<f2> V" . ivy-pop-view)
-         (:map ivy-minibuffer-map
-               ("M-RET" . #'ivy-immediate-done)))
-  :hook (emacs-startup . ivy-mode))
+;; ;;; `DEPRECATED:::' ivy-counsel-swiper
+;; ;;; use vertico now in new versions
+;; (use-package counsel
+;;   :disabled
+;;   :defer t
+;;   :diminish ivy-mode
+;;   :config
+;;   (setq ivy-use-virtual-buffers t)
+;;   (setq ivy-count-format "[ %d/%d ]")
+;;   :bind (([remap isearch-forward]    . swiper-isearch)
+;;          ([remap isearch-backward]   . swiper-isearch)
+;;          ([remap execute-extended-command] . counsel-M-x)
+;;          ([remap find-file]          . counsel-find-file)
+;;          ([remap yank-pop]           . counsel-yank-pop)
+;;          ([remap describe-function]  . counsel-describe-function)
+;;          ([remap describe-variable]  . counsel-describe-variable)
+;;          ([remap find-library]       . counsel-find-library)
+;;          ([remap info-lookup-symbol] . counsel-info-lookup-symbol)
+;;          ([remap switch-to-buffer]   . ivy-switch-buffer)
+;;          ([remap recentf-open]       . counsel-recentf)
+;;          ([remap bookmark-jump]      . counsel-bookmark)
+;;          ("<f2> i" . info-lookup-symbol)
+;;          ("<f2> u" . counsel-unicode-char)
+;;          ("<f2> j" . counsel-set-variable)
+;;          ("<f2> v" . ivy-push-view)
+;;          ("<f2> s" . ivy-save-view)
+;;          ("<f2> V" . ivy-pop-view)
+;;          (:map ivy-minibuffer-map
+;;                ("M-RET" . #'ivy-immediate-done)))
+;;   :hook (emacs-startup . ivy-mode))
 
 ;;; vertico for new versions
 (use-package vertico
@@ -186,31 +186,31 @@
          ("C-S-c C-S-<right>" . mc/mark-next-like-this-word)
          ("C-S-c C-S-<left>"  . mc/mark-previous-like-this-word)))
 
-;;; sexy mode line
-(use-package smart-mode-line
-  :disabled
-  :defer t
-  :custom
-  (sml/no-confirm-load-theme t)
-  :hook
-  (emacs-startup . sml/setup))
+;; ;;; sexy mode line
+;; (use-package smart-mode-line
+;;   :disabled
+;;   :defer t
+;;   :custom
+;;   (sml/no-confirm-load-theme t)
+;;   :hook
+;;   (emacs-startup . sml/setup))
 
-;;; mini mode line
-(use-package mini-modeline
-  :disabled
-  :after smart-mode-line
-  :config
-  (mini-modeline-mode))
+;; ;;; mini mode line
+;; (use-package mini-modeline
+;;   :disabled
+;;   :after smart-mode-line
+;;   :config
+;;   (mini-modeline-mode))
 
-;;; mini frame
-(use-package mini-frame
-  :disabled
-  :defer t
-  :custom (mini-frame-show-parameters
-           '((top . 0.3)
-             (width . 0.7)
-             (left . 0.5)))
-  :hook (after-init . mini-frame-mode))
+;; ;;; mini frame
+;; (use-package mini-frame
+;;   :disabled
+;;   :defer t
+;;   :custom (mini-frame-show-parameters
+;;            '((top . 0.3)
+;;              (width . 0.7)
+;;              (left . 0.5)))
+;;   :hook (after-init . mini-frame-mode))
 
 ;;; sr-speedbar
 (use-package sr-speedbar
@@ -238,13 +238,14 @@
               ("C-`"  . rime-send-keybinding)
               ("<f4>" . rime-send-keybinding)))
 
-;;; hydra
-(use-package hydra
-  :defer t)
+;; ;;; hydra
+;; (use-package hydra
+;;   :disabled
+;;   :defer t)
 
-;;; dired-preview
-(use-package dired-preview
-  :disabled)
+;; ;;; dired-preview
+;; (use-package dired-preview
+;;   :disabled)
 
 (provide 'init-packages)
 ;;; init-packages.el ends here
