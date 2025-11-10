@@ -38,6 +38,8 @@
 (use-package corfu
   :custom
   (corfu-auto t)
+  (corfu-auto-delay 0.2)
+  (corfu-auto-prefix 2)
   (corfu-cycle t)
   (corfu-quit-at-boundary t)
   (corfu-quit-no-match t)
@@ -51,6 +53,26 @@
   (corfu-popupinfo-mode)
   :bind (:map corfu-map
               ("RET" . nil)))
+
+;;; flexible combinable completion backends
+(use-package cape
+  :bind ("C-c p" . cape-prefix-map)
+  :init
+  ;; Add cape function to capf. The order matters, so no :hook.
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-elisp-block)
+  (add-hook 'completion-at-point-functions #'cape-history))
+
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :custom
+  (kind-icon-blend-background t)
+  (kind-icon-default-face 'corfu-default)
+  :config
+  (add-to-list 'corfu-margin-formatters
+               #'kind-icon-margin-formatter))
 
 ;; ;;; `DEPRECATED:::' ivy-counsel-swiper
 ;; ;;; use vertico now in new versions
@@ -93,6 +115,7 @@
   :init
   (vertico-mode))
 
+;;; ivy-style completion
 (use-package orderless
   :custom
   ;; eamcs completion settings
@@ -121,6 +144,17 @@
   :config
   (nerd-icons-completion-mode)
   :hook (marginalia-mode . nerd-icons-completion-marginalia-setup))
+
+;;; consult
+(use-package consult)
+
+;;; embark is a fantastic minibuffer menu
+(use-package embark
+  :bind (("C-c k" . embark-act)
+         ("C-c K" . embark-dwim)))
+
+(use-package embark-consult
+  :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 ;;; avy is awesome
 (use-package avy
