@@ -34,9 +34,12 @@
                            (3 . (background overline rainbow 1.4))
                            (4 . (background overline rainbow 1.2))
                            (t . (overline semibold))))
-  :bind ("<f12>" . modus-themes-toggle)
-  :hook (emacs-startup . (lambda () (load-theme 'modus-vivendi-tinted))))
+  :config
+  (load-theme 'modus-vivendi-tinted)
+  :bind ("<f12>" . modus-themes-toggle))
 
+(use-package timu-macos-theme
+  :defer t)
 
 ;;; make use of the header line
 (setq-default
