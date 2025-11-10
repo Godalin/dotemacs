@@ -2,8 +2,10 @@
 ;;; Commentary:
 ;;; Code:
 
-;;; company
+;;; `DEPRECATED:::' company
+;;; use corfu now in new versions
 (use-package company
+  :disabled
   :defer t
   :diminish company-mode
   :custom
@@ -19,6 +21,7 @@
   :hook (emacs-startup . global-company-mode))
 
 (use-package company-box
+  :disabled
   :defer t
   :after company
   :diminish company-box-mode
@@ -31,8 +34,28 @@
   :diminish company-posframe-mode
   :hook (company-mode . company-posframe-mode))
 
-;;; ivy-counsel-swiper completion
+;;; modern completion package
+(use-package corfu
+  :custom
+  (corfu-auto t)
+  (corfu-cycle t)
+  (corfu-quit-at-boundary nil)
+  (corfu-quit-no-match nil)
+  (corfu-preview-current nil)
+  (corfu-preselect 'prompt)
+  (corfu-on-exact-match 'insert)
+  (corfu-popupinfo-delay 0.1)
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (corfu-popupinfo-mode)
+  :bind (:map corfu-map
+              ("RET" . nil)))
+
+;;; `DEPRECATED:::' ivy-counsel-swiper
+;;; use vertico now in new versions
 (use-package counsel
+  :disabled
   :defer t
   :diminish ivy-mode
   :config
@@ -59,6 +82,16 @@
          (:map ivy-minibuffer-map
                ("M-RET" . #'ivy-immediate-done)))
   :hook (emacs-startup . ivy-mode))
+
+;;; vertico for new versions
+(use-package vertico
+  ;; :custom
+  ;; (vertico-scroll-margin 0) ;; Different scroll margin
+  ;; (vertico-count 20) ;; Show more candidates
+  ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
+  ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  :init
+  (vertico-mode))
 
 ;;; add annotations in minibuffer
 (use-package marginalia
