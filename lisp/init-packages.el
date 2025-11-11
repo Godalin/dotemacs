@@ -186,7 +186,7 @@
   :defer t
   :custom
   (diff-hl-fallback-to-margin t)
-  :hook ((emacs-startup . global-diff-hl-mode)
+  :hook ((after-init . global-diff-hl-mode)
          (dired-mode . diff-hl-dired-mode)
          ((text-mode prog-mode) . diff-hl-margin-mode)
          ((text-mode prog-mode) . diff-hl-show-hunk-mouse-mode)
