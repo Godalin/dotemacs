@@ -7,14 +7,16 @@
   :defer t
   ;; :init
   ;; (setq org-hide-emphasis-markers t)
+
   :custom
+  ;; `org-directory' is "~/org"
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
   (org-return-follows-link nil)
+
   :config
   (use-package org-tempo
     :ensure nil
     :after org)
-
   (setq org-format-latex-options
         (plist-put org-format-latex-options :scale 2.0))
   ;; enabled source languages
@@ -33,6 +35,7 @@
                   ("rt" . "src racket")
                   ("rq" . "src shell :results output html :exports results")))
     (add-to-list 'org-structure-template-alist temp))
+
   :bind (:map org-mode-map
               ("C-c C-4" . (lambda () (interactive)
                              (skeleton-insert
@@ -40,8 +43,13 @@
               ("C-c C-5" . (lambda () (interactive)
                              (skeleton-insert
                               '(nil "\\[" \n _ \n "\\]"))))
-              ("C-c b" . org-switchb)))
+              ("C-c b" . org-switchb))
 
+  :hook (org-mode . (lambda ()
+                      (modify-syntax-entry ?< "." (syntax-table))
+                      (modify-syntax-entry ?> "." (syntax-table)))))
+
+;;; add cn support for latex
 (use-package ox-latex
   :ensure nil
   :defer t
@@ -62,17 +70,14 @@
   :bind (:map org-mode-map
               ("C-c \" \"" . (lambda () (interactive)
                                (org-zotxt-insert-reference-link '(4)))))
-  :hook ((org-mode . org-zotxt-mode)
-         (org-mode . (lambda ()
-                       (modify-syntax-entry ?< "." (syntax-table))
-                       (modify-syntax-entry ?> "." (syntax-table))))))
+  :hook (org-mode . org-zotxt-mode))
 
 ;;; org-ref
 (use-package org-ref
   :defer t
   :after org)
 
-;;; org for blog: hugo
+;;; org for blog: ox-hugo
 (use-package ox-hugo
   :defer t
   :after org ox
@@ -83,7 +88,7 @@
       (setq-default org-hugo-base-dir
                     (file-truename hugo-blog)))))
 
-;;; org as roam
+;;; org-roam is fantastic
 (use-package org-roam
   :defer t
   :after org
