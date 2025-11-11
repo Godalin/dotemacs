@@ -69,8 +69,31 @@
 ;;; dashboard
 (use-package dashboard
   :pin melpa
+  :after nerd-icons
   :custom
+  ;; initial buffer
+  (initial-buffer-choice
+   (lambda () (get-buffer-create dashboard-buffer-name)))
+  ;; centering
   (dashboard-center-content t)
+  (dashboard-startup-banner 'logo)
+  ;; contents
+  (dashboard-items '((recents   . 5)
+                     (bookmarks . 5)
+                     (projects  . 5)
+                     (agenda    . 5)
+                     (registers . 5)))
+  (dashboard-navigation-cycle t)
+  ;; icons
+  (dashboard-display-icons-p t)
+  (dashboard-icon-type 'nerd-icons)
+  (dashboard-set-heading-icons t)
+  (dashboard-set-file-icons t)
+  ;; icon height
+  ;; (dashboard-icon-file-height 1.75)
+  ;; (dashboard-icon-file-v-adjust -0.125)
+  ;; (dashboard-heading-icon-height 1.75)
+  ;; (dashboard-heading-icon-v-adjust -0.125)
   :config
   (dashboard-setup-startup-hook))
 
