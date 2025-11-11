@@ -184,14 +184,14 @@
 ;;; highlight the line diff
 (use-package diff-hl
   :defer t
+  :config
+  (global-diff-hl-mode)
   :custom
   (diff-hl-fallback-to-margin t)
-  :hook ((after-init . global-diff-hl-mode)
-         (dired-mode . diff-hl-dired-mode)
+  :hook ((dired-mode . diff-hl-dired-mode)
          ((text-mode prog-mode) . diff-hl-margin-mode)
          ((text-mode prog-mode) . diff-hl-show-hunk-mouse-mode)
-         (magit-post-refresh
-          . diff-hl-magit-post-refresh)))
+         (magit-post-refresh . diff-hl-magit-post-refresh)))
 
 ;;; yet an other snippet
 (use-package yasnippet
