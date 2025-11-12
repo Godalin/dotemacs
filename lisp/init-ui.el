@@ -34,8 +34,7 @@
                            (3 . (background overline rainbow 1.4))
                            (4 . (background overline rainbow 1.2))
                            (t . (overline semibold))))
-  ;; :bind ("<f12>" . modus-themes-toggle)
-  )
+  :bind ("<f12>" . modus-themes-toggle))
 
 (use-package timu-macos-theme
   :defer t)
