@@ -15,9 +15,9 @@
   (modus-themes-prompts '(bold intense))
   ;; (modus-themes-mode-line '(accented 3d borderless (padding 2) (height 1.0)))
   (modus-themes-tab-accented t)
-  (modus-themes-completions '((matches . (extrabold background intense))
+  (modus-themes-completions '((matches   . (extrabold background intense))
                               (selection . (italic semibold accented intense))
-                              (popup . (accented))))
+                              (popup     . (accented))))
   (modus-themes-fringe 'intense)
   (modus-themes-lang-checkers '(straight-underline text-also background faint))
   (modus-themes-hl-line '(accented intense))
@@ -34,9 +34,8 @@
                            (3 . (background overline rainbow 1.4))
                            (4 . (background overline rainbow 1.2))
                            (t . (overline semibold))))
-  :config
-  (load-theme 'modus-vivendi-tinted)
-  :bind ("<f12>" . modus-themes-toggle))
+  ;; :bind ("<f12>" . modus-themes-toggle)
+  )
 
 (use-package timu-macos-theme
   :defer t)
