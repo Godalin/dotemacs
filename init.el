@@ -2,15 +2,13 @@
 ;;; Commentary:
 ;;; Code:
 
-;; (setq debug-on-error t)
-
 ;;; use the use-package package
 (use-package use-package
   :ensure nil
   :custom
   (use-package-always-ensure t)
   (use-package-always-defer nil)
-	(use-package-enable-imenu-support t))
+  (use-package-enable-imenu-support t))
 
 ;;; use `use-package' to deal with `package'
 (use-package package
@@ -68,29 +66,36 @@
 (when (fboundp 'set-fontset-font)
   (set-fontset-font "fontset-default" 'han "LXGW Wenkai"))
 
+;;; space/tab/indention related
+(use-package emacs
+  :ensure nil
+  :custom
+  (tab-width         2   "2 spaces = 1 tab")
+  (tab-always-indent nil "only indent at left")
+  (indent-tabs-mode  nil "no tabs for indentation")
+  :init
+  (setq-default indent-line-function #'tab-to-tab-stop))
+
 ;;; visual line mode and more
 (use-package simple
   :ensure nil
   :custom
-  (line-move-visual t)
+  (read-quoted-char-radix 16)
   (track-eol t)
+  ;; visual line settings
+  (line-move-visual t)
   (visual-line-fringe-indicators t)
   (word-wrap-by-category t)
-  (read-quoted-char-radix 16 "input method, use hex code"))
+  :hook ((after-init . size-indication-mode)
+         ;; visual line in text edit modes
+         ((prog-mode text-mode) . visual-line-mode)))
 
-(add-hook 'after-init-hook #'size-indication-mode)
-(add-hook 'prog-mode-hook #'global-visual-line-mode)
-(add-hook 'text-mode-hook #'global-visual-line-mode)
+;;; use tab-bar to show something
+(use-package tab-bar
+  :ensure nil
+  :hook (after-init . tab-bar-mode))
 
-;;; space/tab/indention related
-(setopt tab-width 2)                   ; 2 spaces = 1 tab
-(setopt tab-always-indent t)           ; only indent at left
-(setopt indent-tabs-mode nil)          ; do not use tabs for indention
-(setq indent-line-function #'tab-to-tab-stop) ; use a trivial indention function
-
-;;; display
-(add-hook 'after-init-hook #'tab-bar-mode)
-
+;;; better scroll
 (use-package pixel-scroll
   :ensure nil
   :hook (after-init . pixel-scroll-precision-mode))
@@ -100,14 +105,14 @@
   :ensure nil
   :hook ((emacs-lisp-mode . prettify-symbols-mode)
          (prog-mode
-          . (lambda () (setq-local show-trailing-whitespace t
+          . (lambda () (setq-local show-trailing-space t
                               indicate-empty-lines t)))))
 ;;; text-mode
 (use-package text-mode
   :ensure nil
   :hook (text-mode
          . (lambda () (setq-local show-trailing-whitespace t
-		                         indicate-empty-lines t))))
+                             indicate-empty-lines t))))
 
 ;;; customization of display
 (use-package display-line-numbers
@@ -156,7 +161,7 @@
   :custom
   (select-enable-clipboard t "enable clipboard"))
 
-;;; !`TODO' test editorconfig mode
+;;; editorconfig mode
 (use-package editorconfig
   :ensure nil
   :hook (after-init . editorconfig-mode))
@@ -165,6 +170,10 @@
 (use-package winner
   :ensure nil
   :hook (after-init . winner-mode))
+
+;;; eldoc mode
+(use-package eldoc
+  :hook (after-init . global-eldoc-mode))
 
 ;;; dired
 (use-package dired
@@ -182,6 +191,13 @@
               ("TAB"       . dired-next-line)
               ("<backtab>" . dired-previous-line)))
 
+;;; which function
+(use-package which-func
+  :ensure nil
+  :custom
+  (which-func-display 'header)
+  :hook (after-init . which-function-mode))
+
 ;;; dictionary
 (use-package dictionary
   :ensure nil
@@ -189,7 +205,7 @@
   :commands (dictionary-lookup-definition)
   :custom
   (dictionary-use-single-buffer t)
-	(dictionary-server "dict.org")
+  (dictionary-server "dict.org")
   :bind ("M-#" . dictionary-lookup-definition))
 
 ;;; flyspell
@@ -218,10 +234,10 @@
   :ensure nil
   :custom
   (show-paren-highlight-openparen t)
-	(show-paren-style 'mixed)
-	(show-paren-when-point-inside-paren t)
-	(show-paren-when-point-in-periphery t)
-	(show-paren-context-when-offscreen t)
+  (show-paren-style 'mixed)
+  (show-paren-when-point-inside-paren t)
+  (show-paren-when-point-in-periphery t)
+  (show-paren-context-when-offscreen t)
   :hook (after-init . show-paren-mode))
 
 ;;; electric-pair-mode
@@ -238,6 +254,7 @@
 (use-package abbrev
   :ensure nil
   :custom
+  (abbrev-suggest t)
   ;; (setq-default abbrev-mode nil)
   (save-abbrevs 'silently))
 
@@ -251,14 +268,10 @@
 (use-package eglot
   :ensure nil
   :defer t
-  ;; :custom
-  ;; (eglot-autoshutdown t)
-  ;; (eglot-confirm-server-initiated-edits nil)
-  :bind (:map prog-mode-map
-              ("C-c e r" . eglot-reconnect)
-              ("C-c e s" . eglot-ensure)
-              ("C-c e f" . eglot-format)
-              ("C-c e e" . eglot-code-actions)))
+  :bind (("C-c e r" . eglot-reconnect)
+         ("C-c e s" . eglot-ensure)
+         ("C-c e f" . eglot-format)
+         ("C-c e e" . eglot-code-actions)))
 
 ;;; file management
 (use-package recentf
@@ -267,7 +280,7 @@
   :custom (recentf-max-menu-items 30)
   :hook (after-init . recentf-mode))
 
-;;; docview
+;;; doc-view
 (use-package doc-view
   :ensure nil
   :defer t
@@ -285,34 +298,24 @@
 (use-package ibuffer
   :ensure nil
   :defer t
-  :bind
-  ([remap list-buffers] . ibuffer-other-window))
+  :bind ([remap list-buffers] . ibuffer-other-window))
 
 ;;; eshell
 (use-package eshell
   :ensure nil
   :defer t
-  ;; :custom
-  ;; (eshell-prompt-regexp "^[⟩⟫] ")
-  ;; (eshell-prompt-function 'my/eshell-prompt)
   :config
   (add-to-list 'eshell-modules-list
-               'eshell-rebind)
-  ;; :hook
-  ;; (eshell-mode
-  ;;  . (lambda ()
-	;; 	   (keymap-set
-	;; 	    eshell-mode-map
-	;; 	    "C-d"
-	;; 	    (lambda () (interactive)
-	;; 	      (kill-buffer (current-buffer))))))
-  ;; :bind (:map eshell-mode-map
-  ;;             ("C-h" . '(lambda () (message "C-d"))))
-  )
+               'eshell-rebind))
+
+;;; outlines
+(use-package outline
+  :ensure nil
+  :hook (emacs-lisp-mode . outline-minor-mode))
 
 
 
-;; email settings
+;;; TODO email settings
 ;; (setopt send-mail-function 'smtpmail-send-it)
 
 ;; (use-package rmail
@@ -331,7 +334,7 @@
 ;;         smtpmail-stream-type 'ssl))
 
 
-
+;;; Custom:
 ;;; additional configuration files
 (add-to-list 'load-path
              (expand-file-name "lisp" user-emacs-directory))
