@@ -64,6 +64,7 @@
   ;; (add-hook 'completion-at-point-functions #'cape-history)
   )
 
+;;; icons for `corfu'
 (use-package kind-icon
   :ensure t
   :after corfu
@@ -220,31 +221,14 @@
          ("C-S-c C-S-<right>" . mc/mark-next-like-this-word)
          ("C-S-c C-S-<left>"  . mc/mark-previous-like-this-word)))
 
-;; ;;; sexy mode line
-;; (use-package smart-mode-line
-;;   :disabled
-;;   :defer t
-;;   :custom
-;;   (sml/no-confirm-load-theme t)
-;;   :hook
-;;   (emacs-startup . sml/setup))
-
-;; ;;; mini mode line
-;; (use-package mini-modeline
-;;   :disabled
-;;   :after smart-mode-line
-;;   :config
-;;   (mini-modeline-mode))
-
-;; ;;; mini frame
-;; (use-package mini-frame
-;;   :disabled
-;;   :defer t
-;;   :custom (mini-frame-show-parameters
-;;            '((top . 0.3)
-;;              (width . 0.7)
-;;              (left . 0.5)))
-;;   :hook (after-init . mini-frame-mode))
+;;; helpful
+(use-package helpful
+  :defer t
+  :bind (([remap describe-function] . helpful-callable)
+         ([remap describe-variable] . helpful-variable)
+         ([remap describe-command]  . helpful-command)
+         ([remap describe-key]      . helpful-key)
+         ("C-c d" . helpful-at-point)))
 
 ;;; sr-speedbar
 (use-package sr-speedbar
