@@ -2,6 +2,21 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; use `general' to configure `evil' with `use-package'
+(use-package general)
+
+;;; define `chords' to extend keymaps
+(use-package key-chord
+  :custom
+  (key-chord-typing-detection t)
+  :config
+  (key-chord-mode))
+
+;;; `chords' in `use-package'
+(use-package use-package-chords)
+
+
+
 ;;; crux
 (use-package crux
   :defer t)

@@ -14,9 +14,6 @@
 
 ;;; Code:
 
-;;; use `general' to configure `evil' with `use-package'
-(use-package general)
-
 ;;; `evil' is nice but only in normal mode
 (use-package evil
   :defer t
