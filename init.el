@@ -73,12 +73,14 @@
   (tab-width         2   "2 spaces = 1 tab")
   (tab-always-indent nil "only indent at left")
   (indent-tabs-mode  nil "no tabs for indentation")
-  :init
-  (setq-default indent-line-function #'tab-to-tab-stop))
+  ;; :init
+  ;; (setq-default indent-line-function #'tab-to-tab-stop)
+  )
 
 ;;; visual line mode and more
 (use-package simple
   :ensure nil
+  :diminish visual-line-mode
   :custom
   (read-quoted-char-radix 16)
   (track-eol t)
@@ -173,6 +175,8 @@
 
 ;;; eldoc mode
 (use-package eldoc
+  :ensure nil
+  :diminish eldoc-mode
   :hook (after-init . global-eldoc-mode))
 
 ;;; dired
@@ -211,6 +215,7 @@
 ;;; flyspell
 (use-package flyspell
   :ensure nil
+  :diminish flyspell-mode
   :defer t
   :bind ((:map text-mode-map
                ("<f5>" . flyspell-mode))
@@ -311,6 +316,7 @@
 ;;; outlines
 (use-package outline
   :ensure nil
+  :diminish outline-minor-mode
   :hook (emacs-lisp-mode . outline-minor-mode))
 
 
@@ -345,14 +351,15 @@
 (use-package init-ui
   :ensure nil)
 
-;;; load packages
-(use-package init-packages
-  :ensure nil)
-
-;;; keymaps
+;;; my fancy keymaps
 (use-package init-keymaps
   :ensure nil
-  :after init-packages)
+  :hook (after-init . fancy-keys-mode))
+
+;;; load packages
+(use-package init-packages
+  :ensure nil
+  :after init-keymaps)
 
 (use-package init-evil :ensure nil)     ; evil bindings
 (use-package init-org :ensure nil)      ; org mode settings

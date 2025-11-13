@@ -1,4 +1,4 @@
-;;; init-keymaps.el --- Initiation of the keymap of emacs  -*- lexical-binding: t; -*-
+;;; init-keymaps.el --- Fancy Keymaps 4 Emacs  -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;; Code:
 
@@ -124,7 +124,6 @@
   )
 
 ;;; Custom Function Map
-
 (defvar-keymap custom-function-map
   :prefix 'Custom-Function-prefix
   :doc "This map is for customization."
@@ -136,9 +135,6 @@
   "p"   'list-packages                  ; show all packages
   "r f" 'recentf-open                   ; recentf
   "r r" 'recentf-open-files
-
-  ;; search
-  "s"   'scratch-buffer                 ; scratch
 
   ;; tab line mode
   "t t" 'tab-line-mode                  ; toggle tab line
@@ -159,11 +155,29 @@
   "SPC e" 'crux-eval-and-replace
   "SPC d" 'crux-duplicate-current-line-or-region
   "SPC c d" 'crux-duplicate-and-comment-current-line-or-region
-  "SPC SPC" (lambda () (interactive) (message "hello"))
   )
 
-(keymap-global-set "C-z" 'Custom-Function-prefix)
-(keymap-global-set "C-z C-x" 'Custom-System-prefix)
+;;; replace global keymaps
+(keymap-global-set "C-z"     #'Custom-Function-prefix)
+(keymap-global-set "C-z C-x" #'Custom-System-prefix)
+
+
+
+;;; Start a mode map over global map
+
+(defvar-keymap fancy-keys-mode-map
+  :doc "My custom keymap mode base map")
+
+(key-chord-define fancy-keys-mode-map
+                  "  " #'Custom-System-prefix)
+(key-chord-define fancy-keys-mode-map
+                  "xx" #'execute-extended-command)
+
+(define-minor-mode fancy-keys-mode
+  "My custom keymap mode for this configuration."
+  :global t
+  :lighter " ⟨FcyK⟩"
+  :keymap fancy-keys-mode-map)
 
 
 
