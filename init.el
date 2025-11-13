@@ -88,6 +88,10 @@
   (line-move-visual t)
   (visual-line-fringe-indicators t)
   (word-wrap-by-category t)
+  :init
+  (line-number-mode -1)
+  (column-number-mode -1)
+  (size-indication-mode -1)
   :hook ((after-init . size-indication-mode)
          ;; visual line in text edit modes
          ((prog-mode text-mode) . visual-line-mode)))
