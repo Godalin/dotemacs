@@ -75,6 +75,18 @@
   (add-to-list 'corfu-margin-formatters
                #'kind-icon-margin-formatter))
 
+;;; yet another snippet template system
+(use-package yasnippet
+  :defer t
+  :config
+  (yas-global-mode)
+  :bind (:map yas-minor-mode-map
+              ("TAB"   . nil)
+              ("<tab>" . nil)))
+
+(use-package yasnippet-snippets
+  :after yasnippet)
+
 ;; ;;; `DEPRECATED:::' ivy-counsel-swiper
 ;; ;;; use vertico now in new versions
 ;; (use-package counsel
@@ -212,13 +224,6 @@
          ((text-mode prog-mode) . diff-hl-margin-mode)
          ((text-mode prog-mode) . diff-hl-show-hunk-mouse-mode)
          (magit-post-refresh . diff-hl-magit-post-refresh)))
-
-;;; yet an other snippet
-(use-package yasnippet
-  :defer t
-  :config
-  (use-package yasnippet-snippets)
-  :hook (after-init . yas-global-mode))
 
 ;;; keycast
 (use-package keycast
