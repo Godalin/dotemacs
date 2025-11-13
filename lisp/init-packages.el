@@ -39,10 +39,10 @@
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.2)
-  (corfu-auto-prefix 2)
+  (corfu-auto-prefix 1)
   (corfu-cycle t)
-  (corfu-quit-at-boundary t)
-  (corfu-quit-no-match t)
+  (corfu-quit-at-boundary nil)
+  (corfu-quit-no-match nil)
   (corfu-preview-current nil)
   (corfu-preselect 'first)
   (corfu-on-exact-match 'insert)
