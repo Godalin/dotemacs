@@ -54,15 +54,15 @@
   :bind (:map corfu-map
               ("RET" . nil)))
 
-;;; flexible combinable completion backends
-(use-package cape
-  :bind ("C-c p" . cape-prefix-map)
-  ;; :init
-  ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
-  ;; (add-hook 'completion-at-point-functions #'cape-file)
-  ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
-  ;; (add-hook 'completion-at-point-functions #'cape-history)
-  )
+;; ;;; flexible combinable completion backends
+;; (use-package cape
+;;   :bind ("C-c p" . cape-prefix-map)
+;;   ;; :init
+;;   ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
+;;   ;; (add-hook 'completion-at-point-functions #'cape-file)
+;;   ;; (add-hook 'completion-at-point-functions #'cape-elisp-block)
+;;   ;; (add-hook 'completion-at-point-functions #'cape-history)
+;;   )
 
 ;;; icons for `corfu'
 (use-package kind-icon
