@@ -178,17 +178,16 @@
 ;;; better dired-mode
 (use-package dirvish
   :init
-  (setq dirvish-attributes
-        (append
-         ;; The order of these attributes is insignificant, they are always
-         ;; displayed in the same position.
-         '(vc-state subtree-state nerd-icons collapse)
-         ;; Other attributes are displayed in the order they appear in this list.
-         '(git-msg file-modes file-time file-size)))
-  (setq dirvish-header-line-format
-        '(:left (path) :right (free-space))
-        dirvish-mode-line-format
-        '(:left (sort file-time " " file-size symlink) :right (omit yank index)))
+  (dirvish-attributes
+   (append '(vc-state subtree-state nerd-icons collapse)
+           '(git-msg file-modes file-time file-size)))
+  (dirvish-header-line-format
+   '(:left (path) :right (free-space)))
+  (dirvish-mode-line-format
+   '(:left
+     (sort file-time " " file-size symlink)
+     :right
+     (omit yank index)))
   :config
   (dirvish-override-dired-mode))
 
