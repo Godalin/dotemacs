@@ -365,7 +365,11 @@
   :ensure nil
   :after init-keymaps)
 
-(use-package init-evil :ensure nil)     ; evil bindings
+;;; evil bindings
+(use-package init-evil
+  :ensure nil
+  :after init-keymaps)
+
 (use-package init-org :ensure nil)      ; org mode settings
 (use-package init-lang :ensure nil)     ; programming languages
 
