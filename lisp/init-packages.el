@@ -177,7 +177,7 @@
 
 ;;; better dired-mode
 (use-package dirvish
-  :init
+  :custom
   (dirvish-attributes
    (append '(vc-state subtree-state nerd-icons collapse)
            '(git-msg file-modes file-time file-size)))
