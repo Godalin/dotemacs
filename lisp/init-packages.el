@@ -45,7 +45,7 @@
   (corfu-quit-no-match 'separator)
   (corfu-preview-current nil)
   (corfu-preselect 'first)
-  (corfu-on-exact-match 'insert)
+  (corfu-on-exact-match 'show)
   (corfu-popupinfo-delay 0.1)
   :init
   (global-corfu-mode)
