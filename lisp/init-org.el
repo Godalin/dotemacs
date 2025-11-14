@@ -46,8 +46,8 @@
     (add-to-list 'org-structure-template-alist temp))
 
   ;; remove <> as parentheses in org mode
-  (modify-syntax-entry ?< "." org-mode-syntax-table)
-  (modify-syntax-entry ?> "." org-mode-syntax-table)
+  ;; (modify-syntax-entry ?< "." org-mode-syntax-table)
+  ;; (modify-syntax-entry ?> "." org-mode-syntax-table)
 
   :bind (:map org-mode-map
               ("C-c C-4" . my/latex-bs-parens)
