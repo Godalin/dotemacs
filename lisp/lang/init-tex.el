@@ -15,13 +15,11 @@
 	(push (list 'output-pdf "Zathura") TeX-view-program-selection)
 	:bind ((:map TeX-mode-map
 	             ("C-c 4" . my/latex-dollars)
-               ("C-c 5" . my/latex-ddollars))
-         (:map LaTeX-mode-map
-	             ("C-c 4" . my/latex-dollars)))
-  :hook (((TeX-mode LaTeX-mode)
+               ("C-c 5" . my/latex-ddollars)))
+  :hook ((LaTeX-mode . turn-on-cdlatex)
+         (LaTeX-mode
           . (lambda () (add-to-list 'completion-at-point-functions
-                               #'cdlatex-capf)))
-         (LaTeX-mode . turn-on-cdlatex)))
+                               #'cdlatex-capf)))))
 
 ;;; fast latex insertion
 (use-package cdlatex

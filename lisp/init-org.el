@@ -53,7 +53,8 @@
               ("C-c C-5" . 'my/latex-bs-brackets)
               ("C-c b"   . org-switchb))
 
-  :hook ((org-mode
+  :hook ((org-mode . turn-on-org-cdlatex)
+         (org-mode
           . (lambda ()
               (modify-syntax-entry ?< "." (syntax-table))
               (modify-syntax-entry ?> "." (syntax-table))
