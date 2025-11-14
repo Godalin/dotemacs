@@ -5,7 +5,6 @@
 (use-package org
   :ensure nil
   :defer t
-  :after cdlatex
   :custom
   ;; `org-directory' is "~/org"
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
@@ -55,7 +54,6 @@
 
   :hook (org-mode
          . (lambda ()
-             (org-cdlatex-mode)
              (modify-syntax-entry ?< "." (syntax-table))
              (modify-syntax-entry ?> "." (syntax-table))
              (add-to-list 'completion-at-point-functions
