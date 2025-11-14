@@ -5,12 +5,12 @@
 (use-package org
   :ensure nil
   :defer t
+  :after cdlatex
   :custom
   ;; `org-directory' is "~/org"
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
   (org-return-follows-link nil)
   (org-preview-latex-default-process 'dvisvgm)
-  (org-format-latex-options)
 
   ;; markers
   (org-hide-emphasis-markers t)
@@ -20,10 +20,8 @@
 
   :config
 
-  ;; tempo templates
-  (use-package org-tempo
-    :ensure nil
-    :after tempo)
+  ;; load tempo templates
+  (use-package org-tempo :ensure nil)
 
   ;; scale latex preview images
   (setq org-format-latex-options
@@ -47,18 +45,19 @@
                   ("rt" . "src racket")))
     (add-to-list 'org-structure-template-alist temp))
 
+  ;; remove <> as parentheses in org mode
+  (modify-syntax-entry ?< "." org-mode-syntax-table)
+  (modify-syntax-entry ?> "." org-mode-syntax-table)
+
   :bind (:map org-mode-map
               ("C-c C-4" . my/latex-bs-parens)
               ("C-c C-5" . my/latex-bs-brackets)
               ("C-c b"   . org-switchb))
 
   :hook ((org-mode . turn-on-org-cdlatex)
-         (org-mode
-          . (lambda ()
-              (modify-syntax-entry ?< "." (syntax-table))
-              (modify-syntax-entry ?> "." (syntax-table))
-              (add-to-list 'completion-at-point-functions
-                           #'cdlatex-capf)))))
+         (org-mode . (lambda ()
+                       (add-to-list 'completion-at-point-functions
+                                    #'cdlatex-capf)))))
 
 ;;; automatic org-markup expansion in org
 (use-package org-appear
