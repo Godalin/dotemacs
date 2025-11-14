@@ -4,6 +4,7 @@
 
 (use-package org
   :ensure nil
+  :after cdlatex
   :defer t
   :custom
   ;; `org-directory' is "~/org"
@@ -52,12 +53,13 @@
               ("C-c C-5" . my/latex-bs-brackets)
               ("C-c b"   . org-switchb))
 
-  :hook (org-mode
-         . (lambda ()
-             (modify-syntax-entry ?< "." (syntax-table))
-             (modify-syntax-entry ?> "." (syntax-table))
-             (add-to-list 'completion-at-point-functions
-                          #'cdlatex-capf))))
+  :hook ((org-mode . turn-on-org-cdlatex)
+         (org-mode
+          . (lambda ()
+              (modify-syntax-entry ?< "." (syntax-table))
+              (modify-syntax-entry ?> "." (syntax-table))
+              (add-to-list 'completion-at-point-functions
+                           #'cdlatex-capf)))))
 
 ;;; automatic org-markup expansion in org
 (use-package org-appear

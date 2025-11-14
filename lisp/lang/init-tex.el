@@ -21,8 +21,7 @@
 
 ;;; fast latex insertion
 (use-package cdlatex
-  :defer t
-  :after (cl-lib tex org)
+  :after (cl-lib tex)
   :config
   ;; implement a `cdlatex' capf
   (defvar cdlatex-command-alist-comb-keys
@@ -42,8 +41,7 @@
                 :exit-function
                 (lambda (string status)
                   (cdlatex-tab)))))))
-  :hook ((LaTeX-mode . turn-on-cdlatex)
-         (org-mode . turn-on-org-cdlatex)))
+  :hook (LaTeX-mode . turn-on-cdlatex))
 
 ;;; custom features
 
