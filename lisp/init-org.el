@@ -16,7 +16,6 @@
   (org-hide-emphasis-markers t)
   (org-link-descriptive t)
   (org-pretty-entities t)
-  (org-hidden-keywords t)
 
   :config
 
@@ -24,8 +23,8 @@
   (use-package org-tempo :ensure nil)
 
   ;; scale latex preview images
-  ;; (setq org-format-latex-options
-  ;;       (plist-put org-format-latex-options :scale 2.0))
+  (setq org-format-latex-options
+        (plist-put org-format-latex-options :scale 2.0))
 
   ;; enabled source languages
   (org-babel-do-load-languages
@@ -37,8 +36,8 @@
      (racket . t)))
 
   ;; add auto adjust after preview
-  ;; (advice-add #'org-latex-preview :after
-  ;;             #'my/text-scale-adjust-latex-previews)
+  (advice-add #'org-latex-preview :after
+              #'my/text-scale-adjust-latex-previews)
 
   ;; add structure templates
   (dolist (temp '(("rs" . "src racket :noweb-ref ? :eval no")
@@ -46,8 +45,8 @@
     (add-to-list 'org-structure-template-alist temp))
 
   ;; remove <> as parentheses in org mode
-  ;; (modify-syntax-entry ?< "." org-mode-syntax-table)
-  ;; (modify-syntax-entry ?> "." org-mode-syntax-table)
+  (modify-syntax-entry ?< "." org-mode-syntax-table)
+  (modify-syntax-entry ?> "." org-mode-syntax-table)
 
   :bind (:map org-mode-map
               ("C-c C-4" . my/latex-bs-parens)
