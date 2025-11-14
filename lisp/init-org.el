@@ -5,20 +5,31 @@
 (use-package org
   :ensure nil
   :defer t
-  ;; :init
-  ;; (setq org-hide-emphasis-markers t)
-
+  :after cdlatex
   :custom
   ;; `org-directory' is "~/org"
   (org-default-notes-file (expand-file-name "notes.org" org-directory))
   (org-return-follows-link nil)
+  (org-preview-latex-default-process 'dvisvgm)
+  (org-format-latex-options)
+
+  ;; markers
+  (org-hide-emphasis-markers t)
+  (org-link-descriptive t)
+  (org-pretty-entities t)
+  (org-hidden-keywords t)
 
   :config
+
+  ;; tempo templates
   (use-package org-tempo
     :ensure nil
-    :after org)
+    :after tempo)
+
+  ;; scale latex preview images
   (setq org-format-latex-options
         (plist-put org-format-latex-options :scale 2.0))
+
   ;; enabled source languages
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -26,28 +37,40 @@
      (python . t)
      (haskell . t)
      (scheme . t)
-     ;; rackets
-     (racket . t)
-     ;; (scribble . t)
-     ))
+     (racket . t)))
+
+  ;; add auto adjust after preview
+  (advice-add #'org-latex-preview :after
+              #'my/text-scale-adjust-latex-previews)
+
   ;; add structure templates
   (dolist (temp '(("rs" . "src racket :noweb-ref ? :eval no")
-                  ("rt" . "src racket")
-                  ("rq" . "src shell :results output html :exports results")))
+                  ("rt" . "src racket")))
     (add-to-list 'org-structure-template-alist temp))
 
   :bind (:map org-mode-map
-              ("C-c C-4" . (lambda () (interactive)
-                             (skeleton-insert
-                              '(nil "\\( " _ " \\)"))))
-              ("C-c C-5" . (lambda () (interactive)
-                             (skeleton-insert
-                              '(nil "\\[" \n _ \n "\\]"))))
-              ("C-c b" . org-switchb))
+              ("C-c C-4" . 'my/latex-bs-parens)
+              ("C-c C-5" . 'my/latex-bs-brackets)
+              ("C-c b"   . org-switchb))
 
-  :hook (org-mode . (lambda ()
-                      (modify-syntax-entry ?< "." (syntax-table))
-                      (modify-syntax-entry ?> "." (syntax-table)))))
+  :hook ((org-mode
+          . (lambda ()
+              (modify-syntax-entry ?< "." (syntax-table))
+              (modify-syntax-entry ?> "." (syntax-table))
+              (add-to-list 'completion-at-point-functions
+                           #'cdlatex-capf)))))
+
+;;; automatic org-markup expansion in org
+(use-package org-appear
+  :defer t
+  :custom
+  (org-appear-autoemphasis t)
+  (org-appear-autolinks t)
+  (org-appear-autosubmarkers t)
+  (org-appear-autoentities t)
+  (org-appear-autokeywords t)
+  (org-appear-inside-latex t)
+  :hook (org-mode . org-appear-mode))
 
 ;;; add cn support for latex
 (use-package ox-latex
@@ -68,8 +91,9 @@
   :defer t
   :after org
   :bind (:map org-mode-map
-              ("C-c \" \"" . (lambda () (interactive)
-                               (org-zotxt-insert-reference-link '(4)))))
+              ("C-c \" \""
+               . (lambda () (interactive)
+                   (org-zotxt-insert-reference-link '(4)))))
   :hook (org-mode . org-zotxt-mode))
 
 ;;; org-ref
@@ -82,11 +106,11 @@
   :defer t
   :after org ox
   :init
-  (let ((hugo-blog (file-truename "~/Projects/HugoBlog")))
-    (when (and (file-exists-p hugo-blog)
-               (file-directory-p hugo-blog))
+  (let ((hugo-blog-dir (file-truename "~/Projects/HugoBlog")))
+    (when (and (file-exists-p hugo-blog-dir)
+               (file-directory-p hugo-blog-dir))
       (setq-default org-hugo-base-dir
-                    (file-truename hugo-blog)))))
+                    hugo-blog-dir))))
 
 ;;; org-roam is fantastic
 (use-package org-roam
@@ -95,13 +119,13 @@
   :custom
   (org-roam-directory (file-truename "~/org-roam"))
   :init
-  (unless (file-exists-p "~/org-roam")
-    (make-directory "~/org-roam"))
-  :bind
-  (:map org-mode-map
-        ("C-c r i" . org-roam-node-insert)
-        ("C-c r f" . org-roam-node-find)
-        ("C-c r c" . org-roam-capture))
+  (let ((org-roam-dir (file-truename "~/org-roam")))
+    (unless (file-exists-p org-roam-dir)
+      (make-directory org-roam-dir)))
+  :bind (("C-z o r" . org-roam-capture)
+         :map org-mode-map
+         ("C-c r i" . org-roam-node-insert)
+         ("C-c r f" . org-roam-node-find))
   :hook (after-init . org-roam-db-autosync-mode))
 
 (use-package org-roam-ui
