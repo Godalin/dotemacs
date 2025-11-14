@@ -54,12 +54,12 @@
               ("C-c b"   . org-switchb))
 
   :hook (org-mode
-         . (org-cdlatex-mode
-            (lambda ()
-              (modify-syntax-entry ?< "." (syntax-table))
-              (modify-syntax-entry ?> "." (syntax-table))
-              (add-to-list 'completion-at-point-functions
-                           #'cdlatex-capf)))))
+         . (lambda ()
+             (org-cdlatex-mode)
+             (modify-syntax-entry ?< "." (syntax-table))
+             (modify-syntax-entry ?> "." (syntax-table))
+             (add-to-list 'completion-at-point-functions
+                          #'cdlatex-capf))))
 
 ;;; automatic org-markup expansion in org
 (use-package org-appear
