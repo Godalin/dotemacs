@@ -27,7 +27,7 @@
 (use-package cdlatex
   :defer t
   :after cl-lib
-  :init
+  :config
   ;; implement a `cdlatex' capf
   (defvar cdlatex-command-alist-comb-keys
     (cl-map 'list #'car cdlatex-command-alist-comb)
