@@ -49,13 +49,13 @@
     (add-to-list 'org-structure-template-alist temp))
 
   :bind (:map org-mode-map
-              ("C-c C-4" . 'my/latex-bs-parens)
-              ("C-c C-5" . 'my/latex-bs-brackets)
+              ("C-c C-4" . my/latex-bs-parens)
+              ("C-c C-5" . my/latex-bs-brackets)
               ("C-c b"   . org-switchb))
 
-  :hook ((org-mode . org-cdlatex-mode)
-         (org-mode
-          . (lambda ()
+  :hook (org-mode
+         . (org-cdlatex-mode
+            (lambda ()
               (modify-syntax-entry ?< "." (syntax-table))
               (modify-syntax-entry ?> "." (syntax-table))
               (add-to-list 'completion-at-point-functions
