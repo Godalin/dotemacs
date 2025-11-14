@@ -24,8 +24,8 @@
   (use-package org-tempo :ensure nil)
 
   ;; scale latex preview images
-  (setq org-format-latex-options
-        (plist-put org-format-latex-options :scale 2.0))
+  ;; (setq org-format-latex-options
+  ;;       (plist-put org-format-latex-options :scale 2.0))
 
   ;; enabled source languages
   (org-babel-do-load-languages
