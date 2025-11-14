@@ -5,6 +5,7 @@
 (use-package tex
   :ensure auctex
 	:defer t
+  :after cdlatex
   :custom
   (preview-image-type 'dvipng)
   (TeX-auto-save t)
@@ -15,13 +16,14 @@
 	:bind ((:map TeX-mode-map
 	             ("C-c 4" . my/latex-dollars)
                ("C-c 5" . my/latex-ddollars)))
-  :hook (LaTeX-mode
-         . (lambda () (add-to-list 'completion-at-point-functions
-                              #'cdlatex-capf))))
+  :hook ((LaTeX-mode
+           . (lambda () (add-to-list 'completion-at-point-functions
+                                #'cdlatex-capf)))
+         (LaTeX-mode . turn-on-cdlatex)))
 
 ;;; fast latex insertion
 (use-package cdlatex
-  :after (cl-lib tex)
+  :after cl-lib
   :config
   ;; implement a `cdlatex' capf
   (defvar cdlatex-command-alist-comb-keys
@@ -40,8 +42,7 @@
                 :annotation-function (lambda (_) " cd LaTeX →")
                 :exit-function
                 (lambda (string status)
-                  (cdlatex-tab)))))))
-  :hook (LaTeX-mode . turn-on-cdlatex))
+                  (cdlatex-tab))))))))
 
 ;;; custom features
 

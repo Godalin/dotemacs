@@ -4,7 +4,6 @@
 
 (use-package org
   :ensure nil
-  :after cdlatex
   :defer t
   :custom
   ;; `org-directory' is "~/org"
