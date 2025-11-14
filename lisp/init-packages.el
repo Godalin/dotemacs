@@ -126,7 +126,8 @@
   (vertico-resize t)
   (vertico-cycle t)
   :init
-  (vertico-mode))
+  (vertico-mode)
+  (vertico-multiform-mode))
 
 ;;; ivy-style completion
 (use-package orderless
@@ -161,10 +162,18 @@
 ;;; consult
 (use-package consult)
 
-;;; embark is a fantastic minibuffer menu
+;;; embark is a fantastic menu package
 (use-package embark
-  :bind (("C-c k" . embark-act)
-         ("C-c K" . embark-dwim)))
+  :after vertico
+  :init
+  (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
+  (setq embark-prompter 'embark-completing-read-prompter)
+  (setq embark-indicators
+        '(embark-minimal-indicator ; default is embark-mixed-indicator
+          embark-highlight-indicator
+          embark-isearch-highlight-indicator))
+  :bind (("C-z k" . embark-act)
+         ("C-z K" . embark-dwim)))
 
 (use-package embark-consult
   :hook (embark-collect-mode . consult-preview-at-point-mode))
