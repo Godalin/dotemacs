@@ -151,21 +151,26 @@
   (marginalia-mode)
 
   :config
-  (defun my/marginalia-annotate-command (cand)
-    "Annotate command CAND with its documentation string.
-Similar to `marginalia-annotate-symbol', but does not show symbol class."
-    (when-let* ((sym (intern-soft cand))
-                (mode (if (boundp sym)
-                          sym
-                        (lookup-minor-mode-from-indicator cand))))
-      (concat
-       (if (and (boundp mode) (symbol-value mode))
-           (propertize " On" 'face 'marginalia-on)
-         (propertize " Off" 'face 'marginalia-off))
-       (marginalia-annotate-binding cand)
-       (marginalia--documentation (marginalia--function-doc sym)))))
+  (defun my/marginalia-annotate-command (func cand)
+    "Annotate command CAND with additional information.
+Add new information to `marginalia-annotate-symbol' in the advice style."
+    (when-let ((sym (intern-soft cand)))
+      (let* ((mode (if (boundp sym)
+                       sym
+                     (lookup-minor-mode-from-indicator cand)))
+             (status (if mode
+                         (if (and (boundp mode) (symbol-value mode))
+                             (propertize " On" 'face 'marginalia-on)
+                           (propertize " Off" 'face 'marginalia-off))
+                       ""))
+             (globalp (if mode
+                          (if (local-variable-p mode)
+                              (propertize " Lcl" 'face '(:foreground "cyan"))
+                            (propertize " Glb" 'face '(:foreground "cyan")))
+                        "")))
+        (concat globalp status (funcall func cand)))))
 
-  (advice-add 'marginalia-annotate-command :override
+  (advice-add #'marginalia-annotate-command :around
               #'my/marginalia-annotate-command)
 
   :bind (:map minibuffer-local-map
