@@ -165,8 +165,8 @@ Similar to `marginalia-annotate-symbol', but does not show symbol class."
        (marginalia--documentation (marginalia--function-doc sym)))))
 
   (add-to-list 'marginalia-annotators
-               '(command my/marginalia-annotate-command
-                         (cdr (assq 'command marginalia-annotators))))
+               `(command my/marginalia-annotate-command
+                         ,(cdr (assq 'command marginalia-annotators))))
 
   :bind (:map minibuffer-local-map
               ("M-a" . marginalia-cycle)))
