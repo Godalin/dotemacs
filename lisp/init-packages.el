@@ -149,6 +149,25 @@
 (use-package marginalia
   :init
   (marginalia-mode)
+  :config
+  (defun my/marginalia-annotate-command (cand)
+    "Annotate command CAND with its documentation string.
+Similar to `marginalia-annotate-symbol', but does not show symbol class."
+    (when-let* ((sym (intern-soft cand))
+                (mode (if (boundp sym)
+                          sym
+                        (lookup-minor-mode-from-indicator cand))))
+      (concat
+       (if (and (boundp mode) (symbol-value mode))
+           (propertize " On" 'face 'marginalia-on)
+         (propertize " Off" 'face 'marginalia-off))
+       (marginalia-annotate-binding cand)
+       (marginalia--documentation (marginalia--function-doc sym)))))
+
+  (add-to-list 'marginalia-annotators
+               '(command my/marginalia-annotate-command
+                         (cdr (assq 'command marginalia-annotators))))
+
   :bind (:map minibuffer-local-map
               ("M-a" . marginalia-cycle)))
 
