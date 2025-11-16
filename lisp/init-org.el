@@ -36,7 +36,7 @@
      (racket . t)))
 
   ;; add auto adjust after preview
-  (advice-add #'org-latex-preview :after
+  (advice-add 'org-latex-preview :after
               #'my/text-scale-adjust-latex-previews)
 
   ;; add structure templates
