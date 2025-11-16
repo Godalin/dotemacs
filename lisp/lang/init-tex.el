@@ -13,15 +13,20 @@
   (preview-image-type 'dvisvgm)
   (preview-auto-cache-preamble t)
   (preview-scale-function 2.0)
+  (preview-default-preamble
+   '("\\usepackage[displaymath,sections,graphics,floats,textmath]{preview}"
+     "\\PreviewEnvironment[{[]}]{tikzpicture}"
+     "\\usepackage{nccmath}"
+     "\\everydisplay{\\fleqn}"))
 
   :config
   (use-package preview-dvisvgm
     :config
     (advice-add 'preview-dvisvgm-start :override
                 #'my/preview-dvisvgm-start))
-
+  
   (add-to-list 'TeX-view-program-list
-               '("Sioyek" "sioyek %o" "sioyek"))  
+               '("Sioyek" "sioyek %o" "sioyek"))
 	(add-to-list 'TeX-view-program-selection
                '(output-pdf "Zathura"))
   (add-to-list 'TeX-view-program-selection
