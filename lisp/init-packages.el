@@ -307,7 +307,7 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
   (default-input-method "rime")
   (rime-librime-root "/opt/homebrew/")
   (rime-emacs-module-header-root
-   "/Applications/Emacs.app/Contents/Resources/include")
+   (expand-file-name "include" user-emacs-directory))
   (rime-show-candidate 'posframe)
   :bind (:map rime-mode-map
               ("C-`"  . rime-send-keybinding)
