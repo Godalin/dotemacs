@@ -184,7 +184,7 @@
   :doc "My custom keymap mode base map")
 
 (key-chord-define fancy-keys-mode-map
-                  "  " #'Custom-Functon-prefix)
+                  "  " #'Custom-Function-prefix)
 (key-chord-define fancy-keys-mode-map
                   "xx" #'execute-extended-command)
 
