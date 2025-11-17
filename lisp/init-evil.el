@@ -6,6 +6,7 @@
 (use-package evil
   :defer t
   :after general
+  :commands evil-mode
   :custom
   (evil-toggle-key "C-<escape>")
   (evil-want-C-i-jump t)
