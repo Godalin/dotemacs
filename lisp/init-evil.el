@@ -1,17 +1,5 @@
 ;;; package -- Emacs Modal Editing: with Vim  -*- lexical-binding: t; -*-
-
 ;;; Commentary:
-
-;;; The most convenient way to edit code is to take advantage of both
-;;; Emacs and Vim bindings:
-;;;
-;;; normal movement:
-;;;   emacs
-;;;
-;;; text objects:
-;;;   vim
-;;; C-g exit evil mode
-
 ;;; Code:
 
 ;;; `evil' is nice but only in normal mode
@@ -29,9 +17,10 @@
   (evil-indent-convert-tabs t)
   (evil-move-beyond-eol nil)
 
-  ;; set cursor
-  (evil-emacs-state-cursor '(bar "#66CCFF"))
-  (evil-normal-state-cursor '(box "brown"))
+  ;; fix set cursor
+  (evil-emacs-state-cursor '(box "#66CCFF"))
+  (evil-insert-state-cursor '(box "#66CCFF"))
+  (evil-normal-state-cursor '(box "orange"))
 
   ;; set modeline notation colors
   :custom-face
@@ -44,63 +33,86 @@
   (my/evil-replace-face
    ((t (:foreground "white" :background "red" :weight bold))))
   (my/evil-motion-face
-   ((t (:foreground "white" :background "cyan" :weight bold))))
-  (my/evil-emacs-face
    ((t (:foreground "white" :background "blue" :weight bold))))
+  (my/evil-emacs-face
+   ((t (:foreground "white" :background "#66CCFF" :weight bold))))
+
+  :init
+  (setq evil-want-keybindings nil)
 
   :config
-  ;; override mode line tag behavior
-  (defun my/evil-generate-mode-line-tag (&optional state)
-    "Generate the evil mode-line tag for STATE."
-    (let ((tag (evil-state-property state :tag t)))
-      (when (functionp tag)
-        (setq tag (funcall tag)))
-      ;; prepare mode-line: add tooltip
-      (if (stringp tag)
-          (propertize
-           tag
-           'face (cond
-		              ((string= "normal" state)
-		               'my/evil-normal-face)
-		              ((string= "insert" state)
-		               'my/evil-insert-face)
-		              ((string= "visual" state)
-		               'my/evil-visual-face)
-		              ((string= "emacs" state)
-		               'my/evil-emacs-face))
-           'help-echo (evil-state-property state :name)
-           'mouse-face 'mode-line-highlight)
-        tag)))
-
   (advice-add 'evil-generate-mode-line-tag :override
               #'my/evil-generate-mode-line-tag)
 
   :bind ((:map text-mode-map
-               ("<escape>" . evil-force-normal-state))
+               ("<escape>" . my/evil-enter))
          (:map prog-mode-map
-               ("<escape>" . evil-force-normal-state)))
+               ("<escape>" . my/evil-enter)))
+
   :general
   (:states '(normal visual)
-           "C-e" 'end-of-visual-line
-           "TAB" 'indent-for-tab-command)
-  :hook ((evil-insert-state-entry . evil-emacs-state)
-         ;; (activate-mark . evil-emacs-state)
-         (evil-normal-state-entry
-          . (lambda () (setq display-line-numbers-type 'relative)))
-         (evil-normal-state-exit
-          . (lambda () (setq display-line-numbers-type t)))
+           "C-e" 'end-of-visual-line)
+
+  :hook ((evil-insert-state-entry
+          . (lambda () (evil-emacs-state t)))
+         ;; emacs state life cycle
+         (evil-emacs-state-entry
+          . (lambda () (advice-add 'keyboard-quit :before #'my/evil-exit)))
+         (evil-emacs-state-exit
+          . (lambda () (advice-remove 'keyboard-quit #'my/evil-exit)))
+         ;; normal state life cycle
          ))
 
 ;; evil-surround
 (use-package evil-surround
   :defer t
   :after evil
+  :config
+  ;; evil with tex objects
+  (use-package evil-textobj-syntax)
   :hook (evil-mode . global-evil-surround-mode))
 
-;; evil with tex objects
-(use-package evil-textobj-syntax
-  :defer t
-  :after evil evil-surround)
+;; evil-collection
+(use-package evil-collection
+  :disabled
+  :after evil)
+
+
+
+;;; custom evil functions
+
+(defun my/evil-generate-mode-line-tag (&optional state)
+  "Generate the evil mode-line tag for `STATE'.
+This function is to replace `evil-generate-mode-line-tag'."
+  (let ((tag (evil-state-property state :tag t)))
+    (when (functionp tag)
+      (setq tag (funcall tag)))
+    ;; prepare mode-line: add tooltip
+    (concat " "
+            (if (stringp tag)
+                (propertize
+                 tag 'face
+                 (cond ((string= "normal" state) 'my/evil-normal-face)
+		                   ((string= "insert" state) 'my/evil-insert-face)
+		                   ((string= "visual" state) 'my/evil-visual-face)
+		                   ((string= "emacs" state) 'my/evil-emacs-face))
+                 'help-echo (evil-state-property state :name)
+                 'mouse-face 'mode-line-highlight)
+              tag))))
+
+(defun my/evil-enter ()
+  "Enter evil mode."
+  (interactive)
+  (if evil-mode
+      (evil-force-normal-state)
+    (evil-mode 1)))
+
+(defun my/evil-exit ()
+  "Exit evil mode."
+  (interactive)
+  (when evil-mode
+    (evil-emacs-state)
+    (evil-mode -1)))
 
 (provide 'init-evil)
 ;;; init-evil.el ends here.
