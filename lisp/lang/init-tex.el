@@ -99,12 +99,13 @@ The `ARG' parameter is for hooks."
 (defun my/text-scale--resize-fragment (ov)
   "Helper function for text-scale latex previews.
 The `OV' parameter is the overlay."
-  (overlay-put
-   ov 'display
-   (cons 'image
-         (plist-put
-          (cdr (overlay-get ov 'display))
-          :scale (+ 1.0 (* 0.25 text-scale-mode-amount))))))
+  (if text-scale-mode-amount
+      (overlay-put
+       ov 'display
+       (cons 'image
+             (plist-put
+              (cdr (overlay-get ov 'display))
+              :scale (+ 1.0 (* 0.25 text-scale-mode-amount)))))))
 
 (add-hook 'text-scale-mode-hook
           #'my/text-scale-adjust-latex-previews)
