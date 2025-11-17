@@ -38,8 +38,8 @@
   (my/evil-emacs-face
    ((t (:foreground "white" :background "#66CCFF" :weight bold))))
 
-  :init
-  (setq evil-want-keybindings nil)
+  ;; :init
+  ;; (setq evil-want-keybindings nil)
 
   :config
   (advice-add 'evil-generate-mode-line-tag :override
@@ -81,6 +81,8 @@
 
 
 ;;; custom evil functions
+
+(require 'evil)
 
 (defun my/evil-generate-mode-line-tag (&optional state)
   "Generate the evil mode-line tag for `STATE'.
