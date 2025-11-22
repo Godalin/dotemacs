@@ -97,9 +97,9 @@
          ((prog-mode text-mode) . visual-line-mode)))
 
 ;;; use tab-bar to show something
-(use-package tab-bar
-  :ensure nil
-  :hook (after-init . tab-bar-mode))
+;; (use-package tab-bar
+;;   :ensure nil
+;;   :hook (after-init . tab-bar-mode))
 
 ;;; better scroll
 (use-package pixel-scroll
