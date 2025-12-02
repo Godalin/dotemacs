@@ -35,24 +35,20 @@
   :init
   (setq company-coq-live-on-the-edge t)
   (setq company-coq-disabled-features '(prettify-symbols))
-  :bind
-  (:map
-   company-coq-map
-   ("RET" . nil))
+  :bind (:map company-coq-map
+              ("RET" . nil))
   :hook
   (coq-mode
-   . (lambda ()                              ;prepare for the coq mode
+   . (lambda ()
        (interactive)
-		   ;; (opam-switch-set-switch "coq-env") ;switch to a good coq environment
-       ;; (let ((local-env (project-root (project-current))))
-       ;;   (if local-env
-       ;;       (opam-switch-set-switch (expand-file-name local-env))))
-
-       (setq indent-line-function #'tab-to-tab-stop) ;adjust the indent function
-       (company-coq-mode t)             ;enable company mode
+       (setq indent-line-function #'tab-to-tab-stop)
+       (company-coq-mode t)
+       (corfu-mode -1)
        (setq-local company-box-doc-enable nil)
        ))
   (coq-mode . window-tool-bar-mode))
+
+
 
 (provide 'init-coq)
 ;;; init-coq.el ends here

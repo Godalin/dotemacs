@@ -2,30 +2,33 @@
 ;;; Commentary:
 ;;; Code:
 
-;; ;;; `DEPRECATED:::' company
-;; ;;; use corfu now in new versions
-;; (use-package company
-;;   :disabled
-;;   :defer t
-;;   :diminish company-mode
-;;   :custom
-;;   (company-minimum-prefix-length 1)
-;;   (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
-;;   (company-tooltip-align-annotations t)
-;;   (company-tooltip-margin 2)
-;;   :bind (:map company-active-map
-;;               ("RET"    . company-abort)
-;;               ([return] . company-abort)
-;;               ("TAB"    . company-complete-selection)
-;;               ([tab]    . company-complete-selection))
-;;   :hook (emacs-startup . global-company-mode))
+(require 'init-keymaps)
 
-;; (use-package company-box
-;;   :disabled
-;;   :defer t
-;;   :after company
-;;   :diminish company-box-mode
-;;   :hook (company-mode . company-box-mode))
+;;; `DEPRECATED:::' company
+;;; use corfu now in new versions
+(use-package company
+  :disabled
+  :defer t
+  :diminish company-mode
+  :commands company-mode
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
+  (company-tooltip-align-annotations t)
+  (company-tooltip-margin 2)
+  :bind (:map company-active-map
+              ("RET"    . company-abort)
+              ([return] . company-abort)
+              ("TAB"    . company-complete-selection)
+              ([tab]    . company-complete-selection))
+  ;; :hook (emacs-startup . global-company-mode)
+  )
+
+(use-package company-box
+  :defer t
+  :after company
+  :diminish company-box-mode
+  :hook (company-mode . company-box-mode))
 
 ;; (use-package company-posframe
 ;;   :disabled
