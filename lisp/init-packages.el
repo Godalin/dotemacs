@@ -7,7 +7,6 @@
 ;;; `DEPRECATED:::' company
 ;;; use corfu now in new versions
 (use-package company
-  :disabled
   :defer t
   :diminish company-mode
   :commands company-mode
