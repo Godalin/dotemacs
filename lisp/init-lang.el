@@ -19,19 +19,25 @@
 
 
 
-;;; agda
+;;; Agda
 (load-file (let ((coding-system-for-read 'utf-8))
              (shell-command-to-string "agda-mode locate")))
 
-;;; markdown
+
+
+;;; Markdown ↓
 (use-package markdown-mode
   :defer t
   :mode ("README\\.md\\'" . gfm-mode)
   :init (setq markdown-command "multimarkdown"))
 
+
+
 ;;; elixir mode
 (use-package elixir-mode
   :defer t)
+
+
 
 ;;; prolog mode
 (use-package prolog-mode
@@ -51,11 +57,34 @@
 (use-package ediprolog
   :defer t)
 
+
+
+;;; Typst
 (use-package typst-ts-mode
   :ensure t
   :defer t
-  :vc (typst-ts-mode
-       :url "https://codeberg.org/meow_king/typst-ts-mode.git"))
+  :vc ( :url "https://codeberg.org/meow_king/typst-ts-mode.git"
+        :rev :newest))
+
+
+
+;;; Lean
+(use-package nael
+  :defer t
+  :vc ( :url "https://codeberg.org/mekeor/nael.git"
+        :rev :newest
+        :doc "nael/README.org"
+        :lisp-dir "nael")
+  :hook (nael-mode . eglot-ensure))
+
+(use-package nael-markdown
+  :after markdown-mode
+  :defer t
+  :vc ( :url "https://codeberg.org/mekeor/nael.git"
+        :rev :newest
+        :lisp-dir "nael-markdown"))
+
+
 
 (provide 'init-lang)
 

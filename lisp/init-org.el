@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+;;; Basic
+
 (use-package org
   :ensure nil
   :defer t
@@ -12,10 +14,12 @@
   (org-return-follows-link nil)
   (org-preview-latex-default-process 'dvisvgm)
 
-  ;; markers
+  ;; appearance
   (org-hide-emphasis-markers t)
   (org-link-descriptive t)
   (org-pretty-entities t)
+  (org-startup-indented t)
+  (org-ellipsis " 略。")
 
   :config
 
@@ -54,13 +58,25 @@
               ("C-c b"   . org-switchb))
 
   :hook ((org-mode . turn-on-org-cdlatex)
-         (org-mode . (lambda ()
-                       (add-to-list 'completion-at-point-functions
-                                    #'cdlatex-capf)))))
+         (org-mode . org-num-mode)
+         (org-mode
+          . (lambda ()
 
-;;; automatic org-markup expansion in org
+              ;; set for latex preview scale
+              (setq-default text-scale-mode-amount 0)
+
+              ;; add other `capf'
+              (add-to-list 'completion-at-point-functions
+                           #'cdlatex-capf)))))
+
+
+
+;;; Appearance
+
+;; automatic org-markup expansion in org
 (use-package org-appear
   :defer t
+  :after org
   :custom
   (org-appear-autoemphasis t)
   (org-appear-autolinks t)
@@ -70,9 +86,61 @@
   (org-appear-inside-latex t)
   :hook (org-mode . org-appear-mode))
 
-;;; add cn support for latex
+;; automatic latex expansion in org
+(use-package org-fragtog
+  :defer t
+  :after org
+  :hook (org-mode . org-fragtog-mode))
+
+(use-package org-modern
+  :defer t
+  :after org
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda)))
+
+(use-package org-modern-indent
+  :defer t
+  :after org
+  :vc ( :url "https://github.com/jdtsmith/org-modern-indent.git"
+        :rev :newest)
+  :hook (org-mode . org-modern-indent-mode))
+
+
+
+;;; References Tools
+
+;; org with Zotero
+(use-package zotxt
+  :defer t
+  :after org
+  :bind (:map org-mode-map
+              ("C-c \" \""
+               . (lambda () (interactive)
+                   (org-zotxt-insert-reference-link '(4)))))
+  :hook (org-mode . org-zotxt-mode))
+
+;; references
+(use-package org-ref
+  :defer t
+  :after org)
+
+
+
+;;; Output Tools
+
+;; org for blog: ox-hugo
+(use-package ox-hugo
+  :defer t
+  :after org ox
+  :init
+  (let ((hugo-blog-dir (file-truename "~/Projects/HugoBlog")))
+    (when (and (file-exists-p hugo-blog-dir)
+               (file-directory-p hugo-blog-dir))
+      (setq-default org-hugo-base-dir
+                    hugo-blog-dir))))
+
+;; cn support for latex
 (use-package ox-latex
-  :ensure nil
   :defer t
   :after org
   :config
@@ -84,33 +152,22 @@
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
 
-;;; use org with Zotero
-(use-package zotxt
+;; org slide shows
+(use-package org-tree-slide
   :defer t
   :after org
-  :bind (:map org-mode-map
-              ("C-c \" \""
-               . (lambda () (interactive)
-                   (org-zotxt-insert-reference-link '(4)))))
-  :hook (org-mode . org-zotxt-mode))
+  :bind ( :map org-mode-map
+          ("<f8>"   . org-tree-slide-mode)
+          ("S-<f8>" . org-tree-slide-skip-done-toggle)
+          :map org-tree-slide-mode-map
+          ("<f9>"  . org-tree-slide-move-previous-tree)
+          ("<f10>" . org-tree-slide-move-next-tree)))
 
-;;; org-ref
-(use-package org-ref
-  :defer t
-  :after org)
 
-;;; org for blog: ox-hugo
-(use-package ox-hugo
-  :defer t
-  :after org ox
-  :init
-  (let ((hugo-blog-dir (file-truename "~/Projects/HugoBlog")))
-    (when (and (file-exists-p hugo-blog-dir)
-               (file-directory-p hugo-blog-dir))
-      (setq-default org-hugo-base-dir
-                    hugo-blog-dir))))
 
-;;; org-roam is fantastic
+;;; Other Systems
+
+;; org-roam is fantastic linked note system
 (use-package org-roam
   :defer t
   :after org
