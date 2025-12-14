@@ -151,9 +151,9 @@
 (use-package flymake
   :ensure nil
   :hook (prog-mode . flymake-mode)
-  :bind (:map flymake-mode-map
-              ("M-p" . flymake-goto-prev-error)
-              ("M-n" . flymake-goto-next-error)))
+  :bind ( :map flymake-mode-map
+          ("M-p" . flymake-goto-prev-error)
+          ("M-n" . flymake-goto-next-error)))
 
 ;;; hide-show
 (use-package hideshow
