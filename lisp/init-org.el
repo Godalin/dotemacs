@@ -141,6 +141,7 @@
 
 ;; cn support for latex
 (use-package ox-latex
+  :ensure nil
   :defer t
   :after org
   :config
