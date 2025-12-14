@@ -76,11 +76,12 @@
         :rev :newest
         :doc "nael/README.org"
         :lisp-dir "nael")
-  :hook (nael-mode . eglot-ensure))
+  ;; :hook (nael-mode . eglot-ensure)
+  )
 
 (use-package nael-markdown
-  :after markdown-mode
   :defer t
+  :after markdown-mode
   :vc ( :url "https://codeberg.org/mekeor/nael.git"
         :rev :newest
         :lisp-dir "nael-markdown"))
