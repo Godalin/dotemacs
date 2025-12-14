@@ -71,6 +71,7 @@
 ;;; Lean
 (use-package nael
   :defer t
+  :after eglot
   :vc ( :url "https://codeberg.org/mekeor/nael.git"
         :rev :newest
         :doc "nael/README.org"
