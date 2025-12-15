@@ -79,13 +79,6 @@
         :doc "nael/README.org"
         :lisp-dir "nael"))
 
-(use-package nael-markdown
-  :defer t
-  :after markdown-mode
-  :vc ( :url "https://codeberg.org/mekeor/nael.git"
-        :rev :newest
-        :lisp-dir "nael-markdown"))
-
 
 
 (provide 'init-lang)
