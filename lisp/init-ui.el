@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-;; Color Theme: Modus-Themes
+;;; Color Theme: Modus-Themes
 (use-package modus-themes
   :ensure nil
   :custom
@@ -94,6 +94,11 @@
   ;; (dashboard-heading-icon-v-adjust -0.125)
   :config
   (dashboard-setup-startup-hook))
+
+;;; nerd-icons for ibuffer
+(use-package nerd-icons-ibuffer
+  :defer t
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
 (provide 'init-ui)
 ;;; init-ui.el ends here
