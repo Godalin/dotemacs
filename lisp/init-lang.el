@@ -29,7 +29,9 @@
 (use-package markdown-mode
   :defer t
   :mode ("README\\.md\\'" . gfm-mode)
-  :init (setq markdown-command "multimarkdown"))
+  :custom
+  (markdown-command "multimarkdown")
+  (markdown-fontify-code-block-natively t))
 
 
 
@@ -75,9 +77,7 @@
   :vc ( :url "https://codeberg.org/mekeor/nael.git"
         :rev :newest
         :doc "nael/README.org"
-        :lisp-dir "nael")
-  ;; :hook (nael-mode . eglot-ensure)
-  )
+        :lisp-dir "nael"))
 
 (use-package nael-markdown
   :defer t
