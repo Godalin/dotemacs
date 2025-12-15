@@ -200,11 +200,11 @@
               ("<backtab>" . dired-previous-line)))
 
 ;;; which function
-(use-package which-func
-  :ensure nil
-  :custom
-  (which-func-display 'header)
-  :hook (after-init . which-function-mode))
+;; (use-package which-func
+;;   :ensure nil
+;;   :custom
+;;   (which-func-display 'header)
+;;   :hook (after-init . which-function-mode))
 
 ;;; dictionary
 (use-package dictionary
