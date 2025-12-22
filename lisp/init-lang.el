@@ -4,18 +4,14 @@
 
 (add-to-list 'load-path
              (expand-file-name "lisp/lang" user-emacs-directory))
-(add-to-list 'load-path
-             (expand-file-name "lisp/lang/modes" user-emacs-directory))
 
-(use-package init-haskell :ensure nil)
-(use-package init-racket :ensure nil)
-(use-package init-tex :ensure nil)
-(use-package init-sml :ensure nil)
-
-(use-package init-ocaml :ensure nil)
-(use-package init-coq :ensure nil)
-
-(use-package init-nix :ensure nil)
+(require 'init-haskell)
+(require 'init-racket)
+(require 'init-tex)
+(require 'init-sml)
+(require 'init-ocaml)
+(require 'init-coq)
+(require 'init-nix)
 
 
 
@@ -48,36 +44,34 @@
   :after ediprolog
   :custom
   (prolog-electric-if-then-else-flag t)
-  :bind
-  (:map
-   prolog-mode-map
-   ("C-c l" . (lambda () (interactive)
-                (skeleton-insert
-                 '(nil ":- use_module(library(" _ "))."))))
-   ("<f10>" . 'ediprolog-dwim)))
+
+  :config
+  (define-skeleton my/prolog-load
+    "Insert a load statement of prolog."
+    "" ":- use_module(library(" _ ")).")
+
+  :bind ( :map prolog-mode-map
+          ("C-c l" . my/prolog-load)
+          ("<f10>" . ediprolog-dwim)))
 
 (use-package ediprolog
   :defer t)
 
 
 
-;;; Typst
+;;; typst
 (use-package typst-ts-mode
-  :ensure t
   :defer t
   :vc ( :url "https://codeberg.org/meow_king/typst-ts-mode.git"
         :rev :newest))
 
 
 
-;;; Lean
+;;; lean
 (use-package nael
   :defer t
   :after eglot
-  :vc ( :url "https://codeberg.org/mekeor/nael.git"
-        :rev :newest
-        :doc "nael/README.org"
-        :lisp-dir "nael"))
+  :hook (nael-mode . eglot-ensure))
 
 
 
