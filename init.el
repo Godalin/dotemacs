@@ -357,26 +357,19 @@
 ;;; User Configuration Files
 
 ;;; ui settings
-(use-package init-ui
-  :ensure nil)
+(require 'init-ui)
 
 ;;; my fancy keymaps
-(use-package init-keymaps
-  :ensure nil
-  :hook (after-init . fancy-keys-mode))
+(require 'init-keymaps)
 
 ;;; load packages
-(use-package init-packages
-  :ensure nil
-  :after init-keymaps)
+(require 'init-packages)
 
 ;;; evil bindings
-(use-package init-evil
-  :ensure nil
-  :after init-keymaps)
+(require 'init-evil)
 
-(use-package init-org :ensure nil)      ; org mode settings
-(use-package init-lang :ensure nil)     ; programming languages
+(require 'init-org)                     ; org mode settings
+(require 'init-lang)                    ; programming languages
 
 ;;; my custom lisp library(s)
 (when (file-directory-p "~/Projects/ELisp")

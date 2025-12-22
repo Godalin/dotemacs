@@ -2,6 +2,8 @@
 ;;; Commentary:
 ;;; Code:
 
+(require 'init-keymaps)
+
 ;;; `evil' is nice but only in normal mode
 (use-package evil
   :defer t
