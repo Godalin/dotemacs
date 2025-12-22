@@ -23,6 +23,11 @@
   :custom
   (package-vc-allow-build-commands t))
 
+;;; Setup the tests
+(use-package benchmark-init
+  :config
+  :hook (after-init benchmark-init/deactivate))
+
 ;;; `dimish' for the minor modes in mod line
 (use-package diminish)
 
