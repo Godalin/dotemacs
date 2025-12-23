@@ -177,7 +177,9 @@
 ;;; editorconfig mode
 (use-package editorconfig
   :ensure nil
-  :hook (after-init . editorconfig-mode))
+  :defer 10
+  :config
+  (editorconfig-mode))
 
 ;;; save and switch window layouts
 (use-package winner
@@ -228,8 +230,6 @@
 ;;; dictionary
 (use-package dictionary
   :ensure nil
-  :defer t
-  :commands (dictionary-lookup-definition)
   :custom
   (dictionary-use-single-buffer t)
   (dictionary-server "dict.org")
@@ -238,12 +238,11 @@
 ;;; flyspell
 (use-package flyspell
   :ensure nil
-  :defer t
   :diminish flyspell-mode
-  :bind (( :map text-mode-map
-           ("<f5>" . flyspell-mode))
-         ( :map prog-mode-map
-           ("<f5>" . flyspell-prog-mode)))
+  :bind ( :map text-mode-map
+          ("<f5>" . flyspell-mode)
+          :map prog-mode-map
+          ("<f5>" . flyspell-prog-mode))
   :hook ((text-mode . flyspell-mode)
          (prog-mode . flyspell-prog-mode)))
 
@@ -277,19 +276,20 @@
 ;;; electric-pair-mode
 (use-package elec-pair
   :ensure nil
+  :defer 2
   :custom
   (electric-pair-preserve-balance t)
   (electric-pair-delete-adjacent-pairs t)
   (electric-pair-open-newline-between-pairs t)
   (electric-pair-skip-whitespace t)
-  :hook (after-init . electric-pair-mode))
+  :config
+  (electric-pair-mode))
 
 ;;; abbrev-mode
 (use-package abbrev
   :ensure nil
   :custom
   (abbrev-suggest t)
-  ;; (setq-default abbrev-mode nil)
   (save-abbrevs 'silently))
 
 ;;; which key
@@ -303,7 +303,6 @@
 ;;; eglot mode: lsp
 (use-package eglot
   :ensure nil
-  :defer t
   :bind (("C-c e r" . eglot-reconnect)
          ("C-c e s" . eglot-ensure)
          ("C-c e f" . eglot-format)
@@ -312,14 +311,14 @@
 ;;; file management
 (use-package recentf
   :ensure nil
-  :defer t
+  :defer 2
   :custom (recentf-max-menu-items 30)
-  :hook (after-init . recentf-mode))
+  :config
+  (recentf-mode))
 
 ;;; doc-view
 (use-package doc-view
   :ensure nil
-  :defer t
   :custom
   (doc-view-ghost-program "mupdf")
   (doc-view-continuous t)
@@ -333,7 +332,6 @@
 ;;; remap the buffer view
 (use-package ibuffer
   :ensure nil
-  :defer t
   :bind ([remap list-buffers] . ibuffer-other-window))
 
 ;;; eshell
