@@ -4,7 +4,7 @@
 
 (require 'init-keymaps)
 
-;;; `DEPRECATED:::' company
+;;; company is only used by coq
 ;;; use corfu now in new versions
 (use-package company
   :defer t
@@ -15,13 +15,11 @@
   (company-idle-delay (lambda () (if (company-in-string-or-comment) nil 0.3)))
   (company-tooltip-align-annotations t)
   (company-tooltip-margin 2)
-  :bind (:map company-active-map
-              ("RET"    . company-abort)
-              ([return] . company-abort)
-              ("TAB"    . company-complete-selection)
-              ([tab]    . company-complete-selection))
-  ;; :hook (emacs-startup . global-company-mode)
-  )
+  :bind ( :map company-active-map
+          ("RET"    . company-abort)
+          ([return] . company-abort)
+          ("TAB"    . company-complete-selection)
+          ([tab]    . company-complete-selection)))
 
 (use-package company-box
   :defer t
@@ -29,15 +27,11 @@
   :diminish company-box-mode
   :hook (company-mode . company-box-mode))
 
-;; (use-package company-posframe
-;;   :disabled
-;;   :defer t
-;;   :after company
-;;   :diminish company-posframe-mode
-;;   :hook (company-mode . company-posframe-mode))
+
 
 ;;; modern completion package
 (use-package corfu
+  :defer 2
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.2)
@@ -53,8 +47,8 @@
   (global-corfu-mode)
   (corfu-history-mode)
   (corfu-popupinfo-mode)
-  :bind (:map corfu-map
-              ("RET" . nil)))
+  :bind ( :map corfu-map
+          ("RET" . nil)))
 
 ;; ;;; flexible combinable completion backends
 ;; (use-package cape
@@ -68,7 +62,7 @@
 
 ;;; icons for `corfu'
 (use-package kind-icon
-  :ensure t
+  :defer 2
   :after corfu
   :custom
   (kind-icon-blend-background t)
@@ -79,12 +73,12 @@
 
 ;;; yet another snippet template system
 (use-package yasnippet
-  :defer t
+  :defer 10
   :config
   (yas-global-mode)
-  :bind (:map yas-minor-mode-map
-              ("TAB"   . nil)
-              ("<tab>" . nil)))
+  :bind ( :map yas-minor-mode-map
+          ("TAB"   . nil)
+          ("<tab>" . nil)))
 
 (use-package yasnippet-snippets
   :after yasnippet)
@@ -122,6 +116,7 @@
 
 ;;; vertico for new versions
 (use-package vertico
+  :defer 1
   :custom
   ;; (vertico-scroll-margin 10)
   ;; (vertico-count 20) ;; Show more candidates
@@ -133,6 +128,7 @@
 
 ;;; ivy-style completion
 (use-package orderless
+  :defer 1
   :custom
   ;; eamcs completion settings
   ;; this part can be sent to `init.el'
@@ -142,13 +138,14 @@
   (completion-styles
    '(orderless basic substring partial-completion flex))
   (completion-category-overrides '((file (styles partial-completion))))
-
+  
   ;; Emacs 31: partial-completion behaves like substring
   ;; (completion-pcm-leading-wildcard t)
   )
 
 ;;; add annotations in minibuffer
 (use-package marginalia
+  :defer 2
   :init
   (marginalia-mode)
 
@@ -175,11 +172,12 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
   (advice-add #'marginalia-annotate-command :around
               #'my/marginalia-annotate-command)
 
-  :bind (:map minibuffer-local-map
-              ("M-a" . marginalia-cycle)))
+  :bind ( :map minibuffer-local-map
+          ("M-a" . marginalia-cycle)))
 
 ;;; add some icons
 (use-package nerd-icons-completion
+  :defer 10
   :after marginalia
   :config
   (nerd-icons-completion-mode)
@@ -190,6 +188,7 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; embark is a fantastic menu package
 (use-package embark
+  :defer 10
   :after vertico
   :init
   (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
@@ -202,6 +201,7 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
          ("C-z K" . embark-dwim)))
 
 (use-package embark-consult
+  :defer t
   :hook (embark-collect-mode . consult-preview-at-point-mode))
 
 ;;; avy is awesome
@@ -218,12 +218,14 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; ace-window
 (use-package ace-window
-  :defer t
-  :bind ("M-o" . ace-window)
-  :hook (emacs-startup . ace-window-posframe-mode))
+  :defer 10
+  :config
+  (ace-window-posframe-mode)
+  :bind ("M-o" . ace-window))
 
 ;;; better dired-mode
 (use-package dirvish
+  :defer 10
   :custom
   (dirvish-attributes
    (append '(vc-state subtree-state nerd-icons collapse)
@@ -250,11 +252,12 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; highlight the line diff
 (use-package diff-hl
-  :defer t
-  :config
-  (global-diff-hl-mode)
+  :defer 5
+  :after magit
   :custom
   (diff-hl-fallback-to-margin t)
+  :config
+  (global-diff-hl-mode)
   :hook ((dired-mode . diff-hl-dired-mode)
          ((text-mode prog-mode) . diff-hl-margin-mode)
          ((text-mode prog-mode) . diff-hl-show-hunk-mouse-mode)
@@ -283,6 +286,27 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 ;;; helpful
 (use-package helpful
   :defer t
+  :custom
+  (helpful-switch-buffer-function #'my/helpful-switch-to-buffer)
+  (helpful-max-buffers 5)
+
+  :config
+  (defun my/helpful-switch-to-buffer (buffer-or-name)
+    "Show `BUFFER-OR-NAME' in an existing helpful window if possible.
+Otherwise, pop to the buffer as usual."
+    (let* ((buf (get-buffer buffer-or-name))
+           (win (get-window-with-predicate
+                 (lambda (w)
+                   (with-current-buffer (window-buffer w)
+                     (eq major-mode 'helpful-mode))))))
+      (if (and win buf)
+          ;; Reuse the existing helpful window
+          (progn
+            (set-window-buffer win buf)
+            (select-window win))
+        ;; Fall back to creating new
+        (pop-to-buffer buf))))
+
   :bind (([remap describe-function] . helpful-callable)
          ([remap describe-variable] . helpful-variable)
          ([remap describe-command]  . helpful-command)
@@ -295,11 +319,11 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
   :commands sr-speedbar-toggle)
 
 ;;; eshell
-(use-package eshell-toggle
-  :defer t
-  :custom
-  (eshell-toggle-find-project-root-package 'project)
-  :commands eshell-toggle)
+;; (use-package eshell-toggle
+;;   :defer t
+;;   :custom
+;;   (eshell-toggle-find-project-root-package 'project)
+;;   :commands eshell-toggle)
 
 ;;; Rime
 (use-package rime
@@ -311,18 +335,11 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
   (rime-emacs-module-header-root
    (expand-file-name "include" user-emacs-directory))
   (rime-show-candidate 'posframe)
-  :bind (:map rime-mode-map
-              ("C-`"  . rime-send-keybinding)
-              ("<f4>" . rime-send-keybinding)))
+  :bind ( :map rime-mode-map
+          ("C-`"  . rime-send-keybinding)
+          ("<f4>" . rime-send-keybinding)))
 
-;; ;;; hydra
-;; (use-package hydra
-;;   :disabled
-;;   :defer t)
 
-;; ;;; dired-preview
-;; (use-package dired-preview
-;;   :disabled)
 
 (provide 'init-packages)
 ;;; init-packages.el ends here
