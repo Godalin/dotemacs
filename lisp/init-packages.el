@@ -22,7 +22,6 @@
           ([tab]    . company-complete-selection)))
 
 (use-package company-box
-  :defer t
   :after company
   :diminish company-box-mode
   :hook (company-mode . company-box-mode))
@@ -43,7 +42,7 @@
   (corfu-preselect 'first)
   (corfu-on-exact-match 'show)
   (corfu-popupinfo-delay 0.1)
-  :init
+  :config
   (global-corfu-mode)
   (corfu-history-mode)
   (corfu-popupinfo-mode)
@@ -62,7 +61,7 @@
 
 ;;; icons for `corfu'
 (use-package kind-icon
-  :defer 2
+  :defer 1
   :after corfu
   :custom
   (kind-icon-blend-background t)
@@ -76,12 +75,10 @@
   :defer 10
   :config
   (yas-global-mode)
+  (use-package yasnippet-snippets)
   :bind ( :map yas-minor-mode-map
           ("TAB"   . nil)
           ("<tab>" . nil)))
-
-(use-package yasnippet-snippets
-  :after yasnippet)
 
 ;; ;;; `DEPRECATED:::' ivy-counsel-swiper
 ;; ;;; use vertico now in new versions
@@ -122,7 +119,7 @@
   ;; (vertico-count 20) ;; Show more candidates
   (vertico-resize t)
   (vertico-cycle t)
-  :init
+  :config
   (vertico-mode)
   (vertico-multiform-mode))
 
@@ -188,7 +185,6 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; embark is a fantastic menu package
 (use-package embark
-  :defer 10
   :after vertico
   :init
   (add-to-list 'vertico-multiform-categories '(embark-keybinding grid))
@@ -206,7 +202,6 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; avy is awesome
 (use-package avy
-  :defer t
   :custom
   (avy-timeout-seconds 0.8)
   :bind (("C-:"   . avy-goto-char)
@@ -245,18 +240,17 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; magit
 (use-package magit
-  :defer t
-  :commands (magit)
+  :commands magit
   :custom
   (magit-view-git-manual-method 'woman))
 
 ;;; highlight the line diff
 (use-package diff-hl
-  :defer t
+  ;; :defer 10
   :custom
   (diff-hl-fallback-to-margin t)
-  :config
-  (global-diff-hl-mode)
+  ;; :config
+  ;; (global-diff-hl-mode)
   :hook ((dired-mode . diff-hl-dired-mode)
          ((text-mode prog-mode) . diff-hl-margin-mode)
          ((text-mode prog-mode) . diff-hl-show-hunk-mouse-mode)
@@ -264,7 +258,6 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; keycast
 (use-package keycast
-  :defer t
   :custom-face
   (keycast-key     ((t (:height 100))))
   (keycast-command ((t (:height 100))))
@@ -272,7 +265,6 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; multiple cursors
 (use-package multiple-cursors
-  :defer t
   :bind (("C-S-c C-S-c" . mc/edit-lines)
          ("C-S-c C-S-a" . mc/edit-beginnings-of-lines)
          ("C-S-c C-S-e" . mc/edit-beginnings-of-lines)
@@ -284,7 +276,6 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; helpful
 (use-package helpful
-  :defer t
   :custom
   (helpful-switch-buffer-function #'my/helpful-switch-to-buffer)
   (helpful-max-buffers 5)
@@ -314,20 +305,10 @@ Otherwise, pop to the buffer as usual."
 
 ;;; sr-speedbar
 (use-package sr-speedbar
-  :defer t
   :commands sr-speedbar-toggle)
-
-;;; eshell
-;; (use-package eshell-toggle
-;;   :defer t
-;;   :custom
-;;   (eshell-toggle-find-project-root-package 'project)
-;;   :commands eshell-toggle)
 
 ;;; Rime
 (use-package rime
-  :defer t
-  :commands (rime-send-keybinding)
   :custom
   (default-input-method "rime")
   (rime-librime-root "/opt/homebrew/")
