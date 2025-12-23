@@ -182,7 +182,7 @@
          :map org-mode-map
          ("C-c r i" . org-roam-node-insert)
          ("C-c r f" . org-roam-node-find))
-  :hook (after-init . org-roam-db-autosync-mode))
+  :hook (org-mode . org-roam-db-autosync-mode))
 
 (use-package org-roam-ui
   :defer t

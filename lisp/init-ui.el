@@ -36,9 +36,6 @@
                            (t . (overline semibold))))
   :bind ("<f12>" . modus-themes-toggle))
 
-(use-package timu-macos-theme
-  :defer t)
-
 ;;; make use of the header line
 (setq-default
  header-line-format
@@ -61,7 +58,6 @@
 
 ;;; rainbow delimiters
 (use-package rainbow-delimiters
-  :defer t
   :hook ((prog-mode text-mode) . rainbow-delimiters-mode))
 
 ;;; dashboard
@@ -97,7 +93,6 @@
 
 ;;; nerd-icons for ibuffer
 (use-package nerd-icons-ibuffer
-  :defer t
   :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
 
 (provide 'init-ui)
