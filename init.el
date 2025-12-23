@@ -26,6 +26,7 @@
 ;;; setup `benchmark-init'
 (use-package benchmark-init
   :config
+  (benchmark-init/activate)
   (add-hook 'after-init-hook 'benchmark-init/deactivate))
 
 ;;; `dimish' for the minor modes in mod line
