@@ -2,7 +2,7 @@
 ;;; Commentary:
 ;;; Code:
 
-;;; use the use-package package
+;;; use `use-package' to use `use-package' package
 (use-package use-package
   :ensure nil
   :custom
@@ -10,7 +10,7 @@
   (use-package-always-defer nil)
   (use-package-enable-imenu-support t))
 
-;;; use `use-package' to deal with `package'
+;;; use `use-package' to use `package'
 (use-package package
   :ensure nil
   :init
@@ -33,7 +33,8 @@
 
 ;;; load environment variables
 (use-package exec-path-from-shell
-  :custom (exec-path-from-shell-arguments nil)
+  :custom
+  (exec-path-from-shell-arguments nil)
   :config
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize))
@@ -62,10 +63,12 @@
 
 (use-package files
   :ensure nil
+  :defer 10
   :custom
   (confirm-kill-processes nil "auto kill processes when exit")
   (make-backup-files nil "do not create backup files")
-  :hook (after-init . auto-save-visited-mode))
+  :config
+  (auto-save-visited-mode))
 
 ;;; Xia Wu WenKai
 (when (fboundp 'set-fontset-font)
@@ -77,10 +80,7 @@
   :custom
   (tab-width         2   "2 spaces = 1 tab")
   (tab-always-indent nil "only indent at left")
-  (indent-tabs-mode  nil "no tabs for indentation")
-  ;; :init
-  ;; (setq-default indent-line-function #'tab-to-tab-stop)
-  )
+  (indent-tabs-mode  nil "no tabs for indentation"))
 
 ;;; visual line mode and more
 (use-package simple
@@ -109,7 +109,9 @@
 ;;; better scroll
 (use-package pixel-scroll
   :ensure nil
-  :hook (after-init . pixel-scroll-precision-mode))
+  :defer 10
+  :config
+  (pixel-scroll-precision-mode))
 
 ;;; prog-mode
 (use-package prog-mode
@@ -130,7 +132,8 @@
   :ensure nil
   :custom
   (display-line-numbers-type 'relative)
-  :hook ((prog-mode text-mode) . display-line-numbers-mode))
+  :hook ((prog-mode text-mode)
+         . display-line-numbers-mode))
 
 ;;; highlight the current line
 (use-package hl-line
@@ -140,25 +143,23 @@
 ;;; auto show images
 (use-package image-file
   :ensure nil
-  :hook (after-init . auto-image-file-mode))
+  :defer 10
+  :config
+  (auto-image-file-mode))
 
 ;;; auto revert outside changed file buffers
 (use-package autorevert
   :ensure nil
-  :hook (after-init . global-auto-revert-mode))
+  :defer 10
+  :config
+  (global-auto-revert-mode))
 
 ;;; save last visited point
 (use-package saveplace
   :ensure nil
-  :hook (after-init . save-place-mode))
-
-;;; flymake
-(use-package flymake
-  :ensure nil
-  :hook (prog-mode . flymake-mode)
-  :bind ( :map flymake-mode-map
-          ("M-p" . flymake-goto-prev-error)
-          ("M-n" . flymake-goto-next-error)))
+  :defer 10
+  :config
+  (save-place-mode))
 
 ;;; hide-show
 (use-package hideshow
@@ -180,13 +181,25 @@
 ;;; save and switch window layouts
 (use-package winner
   :ensure nil
-  :hook (after-init . winner-mode))
+  :defer 10
+  :config
+  (winner-mode))
+
+;;; flymake
+(use-package flymake
+  :ensure nil
+  :hook (prog-mode . flymake-mode)
+  :bind ( :map flymake-mode-map
+          ("M-p" . flymake-goto-prev-error)
+          ("M-n" . flymake-goto-next-error)))
 
 ;;; eldoc mode
 (use-package eldoc
   :ensure nil
+  :defer 5
   :diminish eldoc-mode
-  :hook (after-init . global-eldoc-mode))
+  :config
+  (global-eldoc-mode))
 
 ;;; dired
 (use-package dired
@@ -200,9 +213,9 @@
   (when (eq system-type 'darwin)
     (setopt insert-directory-program "gls")
     (setopt dired-use-ls-dired t))
-  :bind (:map dired-mode-map
-              ("TAB"       . dired-next-line)
-              ("<backtab>" . dired-previous-line)))
+  :bind ( :map dired-mode-map
+          ("TAB"       . dired-next-line)
+          ("<backtab>" . dired-previous-line)))
 
 ;;; which function
 ;; (use-package which-func
@@ -224,35 +237,41 @@
 ;;; flyspell
 (use-package flyspell
   :ensure nil
-  :diminish flyspell-mode
   :defer t
-  :bind ((:map text-mode-map
-               ("<f5>" . flyspell-mode))
-         (:map prog-mode-map
-               ("<f5>" . flyspell-prog-mode)))
+  :diminish flyspell-mode
+  :bind (( :map text-mode-map
+           ("<f5>" . flyspell-mode))
+         ( :map prog-mode-map
+           ("<f5>" . flyspell-prog-mode)))
   :hook ((text-mode . flyspell-mode)
          (prog-mode . flyspell-prog-mode)))
 
 ;;; repeat mode
 (use-package repeat
   :ensure nil
-  :hook (after-init . repeat-mode))
+  :defer 10
+  :config
+  (repeat-mode))
 
 ;;; so-long mode
 (use-package so-long
   :ensure nil
-  :hook (after-init . global-so-long-mode))
+  :defer 10
+  :config
+  (global-so-long-mode))
 
 ;;; parentheses
 (use-package show-paren-mode
   :ensure nil
+  :defer 10
   :custom
   (show-paren-highlight-openparen t)
   (show-paren-style 'mixed)
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t)
   (show-paren-context-when-offscreen t)
-  :hook (after-init . show-paren-mode))
+  :config
+  (show-paren-mode))
 
 ;;; electric-pair-mode
 (use-package elec-pair
@@ -275,8 +294,10 @@
 ;;; which key
 (use-package which-key
   :ensure nil
+  :defer 10
   :diminish which-key-mode
-  :hook (after-init . which-key-mode))
+  :config
+  (which-key-mode))
 
 ;;; eglot mode: lsp
 (use-package eglot
@@ -303,9 +324,9 @@
   (doc-view-continuous t)
   (doc-view-resolution 300)
   (doc-view-scale-internally t)
-  :bind (:map doc-view-mode-map
-              ("<wheel-up>"   . doc-view-previous-page)
-              ("<wheel-down>" . doc-view-next-line-or-next-page))
+  :bind ( :map doc-view-mode-map
+          ("<wheel-up>"   . doc-view-previous-page)
+          ("<wheel-down>" . doc-view-next-line-or-next-page))
   :hook (doc-view-mode . doc-view-hide-modeline-mode))
 
 ;;; remap the buffer view
@@ -317,7 +338,7 @@
 ;;; eshell
 (use-package eshell
   :ensure nil
-  :defer t
+  :defer 10
   :config
   (add-to-list 'eshell-modules-list
                'eshell-rebind))
@@ -328,25 +349,6 @@
   :diminish outline-minor-mode
   :hook (emacs-lisp-mode . outline-minor-mode))
 
-
-
-;;; TODO email settings
-;; (setopt send-mail-function 'smtpmail-send-it)
-
-;; (use-package rmail
-;;   :ensure nil
-;;   :defer t
-;;   :custom
-;;   (rmail-preserve-inbox t))
-
-;; (use-package smtpmail
-;;   :ensure nil
-;;   :defer t
-;;   :init
-;;   (setq smtpmail-smtp-user "yly1228@foxmail.com"
-;;         smtpmail-smtp-server "smtp.qq.com"
-;;         smtpmail-smtp-service 465
-;;         smtpmail-stream-type 'ssl))
 
 
 ;;; Custom:

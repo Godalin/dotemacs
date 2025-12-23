@@ -252,8 +252,7 @@ Add new information to `marginalia-annotate-symbol' in the advice style."
 
 ;;; highlight the line diff
 (use-package diff-hl
-  :defer 5
-  :after magit
+  :defer t
   :custom
   (diff-hl-fallback-to-margin t)
   :config
