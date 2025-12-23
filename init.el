@@ -389,6 +389,8 @@
     :defer t
     :hook ((prog-mode text-mode) . handy-evil-mode)))
 
+(message "End init.el")
+
 ;;; Local Variables:
 ;;; byte-compile-warnings: (not free-vars)
 ;;; End:
