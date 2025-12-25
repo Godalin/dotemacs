@@ -2,6 +2,9 @@
 ;;; Commentary:
 ;;; Code:
 
+
+;;; `package's
+
 ;;; use `use-package' to use `use-package' package
 (use-package use-package
   :ensure nil
@@ -17,7 +20,7 @@
   (add-to-list 'package-archives
                '("melpa" . "https://melpa.org/packages/")))
 
-;;; package-install-vc
+;;; package-vc
 (use-package package-vc
   :ensure nil
   :custom
@@ -64,7 +67,7 @@
 
 (use-package files
   :ensure nil
-  :defer 10
+  :defer 5
   :custom
   (confirm-kill-processes nil "auto kill processes when exit")
   (make-backup-files nil "do not create backup files")
@@ -103,9 +106,15 @@
          ((prog-mode text-mode) . visual-line-mode)))
 
 ;;; use tab-bar to show something
-;; (use-package tab-bar
-;;   :ensure nil
-;;   :hook (after-init . tab-bar-mode))
+(use-package tab-bar
+  :ensure nil
+  :custom
+  (tab-bar-tab-hints t)
+  (tab-bar-close-button-show t)
+  (tab-bar-tab-name-function
+   #'tab-bar-tab-name-truncated)
+  (tab-bar-tab-name-truncated-max 20)
+  :hook (after-init . tab-bar-mode))
 
 ;;; better scroll
 (use-package pixel-scroll
@@ -158,7 +167,6 @@
 ;;; save last visited point
 (use-package saveplace
   :ensure nil
-  :defer 10
   :config
   (save-place-mode))
 
@@ -188,22 +196,6 @@
   :config
   (winner-mode))
 
-;;; flymake
-(use-package flymake
-  :ensure nil
-  :hook (prog-mode . flymake-mode)
-  :bind ( :map flymake-mode-map
-          ("M-p" . flymake-goto-prev-error)
-          ("M-n" . flymake-goto-next-error)))
-
-;;; eldoc mode
-(use-package eldoc
-  :ensure nil
-  :defer 5
-  :diminish eldoc-mode
-  :config
-  (global-eldoc-mode))
-
 ;;; dired
 (use-package dired
   :ensure nil
@@ -221,11 +213,13 @@
           ("<backtab>" . dired-previous-line)))
 
 ;;; which function
-;; (use-package which-func
-;;   :ensure nil
-;;   :custom
-;;   (which-func-display 'header)
-;;   :hook (after-init . which-function-mode))
+(use-package which-func
+  :ensure nil
+  :defer 2
+  :custom
+  (which-func-display 'header)
+  :config
+  (which-function-mode))
 
 ;;; dictionary
 (use-package dictionary
@@ -249,7 +243,6 @@
 ;;; repeat mode
 (use-package repeat
   :ensure nil
-  :defer 10
   :config
   (repeat-mode))
 
@@ -261,15 +254,14 @@
   (global-so-long-mode))
 
 ;;; parentheses
-(use-package show-paren-mode
+(use-package paren
   :ensure nil
-  :defer 10
   :custom
-  (show-paren-highlight-openparen t)
-  (show-paren-style 'mixed)
+  (show-paren-highlight-openparen     t)
+  (show-paren-style                   'mixed)
   (show-paren-when-point-inside-paren t)
   (show-paren-when-point-in-periphery t)
-  (show-paren-context-when-offscreen t)
+  (show-paren-context-when-offscreen  t)
   :config
   (show-paren-mode))
 
@@ -289,24 +281,49 @@
 (use-package abbrev
   :ensure nil
   :custom
+  (save-abbrevs 'silently)
   (abbrev-suggest t)
-  (save-abbrevs 'silently))
+  (abbrev-file-name
+   (expand-file-name "abbrev_defs.el"
+                     user-emacs-directory)))
 
 ;;; which key
 (use-package which-key
   :ensure nil
-  :defer 10
   :diminish which-key-mode
   :config
   (which-key-mode))
 
-;;; eglot mode: lsp
+
+
+;;; Emacs Eco-System
+
+;;; eldoc
+(use-package eldoc
+  :ensure nil
+  :defer 5
+  :diminish eldoc-mode
+  :config
+  (global-eldoc-mode))
+
+;;; flymake
+(use-package flymake
+  :ensure nil
+  ;; :hook (prog-mode . flymake-mode)
+  :bind ( :map flymake-mode-map
+          ("M-p" . flymake-goto-prev-error)
+          ("M-n" . flymake-goto-next-error)))
+
+;;; eglot lsp
 (use-package eglot
   :ensure nil
+  :after flymake
   :bind (("C-c e r" . eglot-reconnect)
          ("C-c e s" . eglot-ensure)
          ("C-c e f" . eglot-format)
          ("C-c e e" . eglot-code-actions)))
+
+
 
 ;;; file management
 (use-package recentf
@@ -350,12 +367,10 @@
 
 
 
-;;; Custom:
+;;; User Configuration Files
 ;;; additional configuration files
 (add-to-list 'load-path
              (expand-file-name "lisp" user-emacs-directory))
-
-;;; User Configuration Files
 
 ;;; ui settings
 (require 'init-ui)
@@ -369,8 +384,11 @@
 ;;; evil bindings
 (require 'init-evil)
 
-(require 'init-org)                     ; org mode settings
-(require 'init-lang)                    ; programming languages
+;;; org mode settings
+(require 'init-org)
+
+;;; programming languages
+(require 'init-lang)
 
 ;;; my custom lisp library(s)
 (when (file-directory-p "~/Projects/ELisp")
